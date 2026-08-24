@@ -11,7 +11,7 @@ import AnimalProfileModal from './components/common/AnimalProfileModal';
 import LandingPage from './components/layout/LandingPage';
 import LoginPage from './components/layout/LoginPage';
 
-// 5 Stakeholder Dashboards
+// 1. Farmer Pages
 import FarmerDashboard from './components/farmer/FarmerDashboard';
 import FarmerAnimalsView from './components/farmer/FarmerAnimalsView';
 import FarmerVaccinesView from './components/farmer/FarmerVaccinesView';
@@ -19,10 +19,32 @@ import FarmerAlertsView from './components/farmer/FarmerAlertsView';
 import FarmerTreatmentsView from './components/farmer/FarmerTreatmentsView';
 import ReportSickAnimalWizard from './components/farmer/ReportSickAnimalWizard';
 
+// 2. Field Worker Pages
 import FieldWorkerDashboard from './components/fieldWorker/FieldWorkerDashboard';
+import FieldVisitsView from './components/fieldWorker/FieldVisitsView';
+import FieldRegistryView from './components/fieldWorker/FieldRegistryView';
+import FieldIncidentsView from './components/fieldWorker/FieldIncidentsView';
+import FieldVaccinationView from './components/fieldWorker/FieldVaccinationView';
+import FieldSamplesView from './components/fieldWorker/FieldSamplesView';
+import FieldOfflineView from './components/fieldWorker/FieldOfflineView';
+
+// 3. Veterinarian Pages
 import VetDashboard from './components/vet/VetDashboard';
+import VetCasesView from './components/vet/VetCasesView';
+import VetTriageView from './components/vet/VetTriageView';
+import VetReferralsView from './components/vet/VetReferralsView';
+import VetTreatmentsView from './components/vet/VetTreatmentsView';
+
+// 4. District Command Pages
 import AdminDashboard from './components/admin/AdminDashboard';
+import DistrictOutbreaksView from './components/admin/DistrictOutbreaksView';
+import DistrictResponseView from './components/admin/DistrictResponseView';
+
+// 5. State Directorate Pages
 import StateAdminDashboard from './components/stateAdmin/StateAdminDashboard';
+import StateDistrictRiskView from './components/stateAdmin/StateDistrictRiskView';
+import StateVaccinationGapsView from './components/stateAdmin/StateVaccinationGapsView';
+import StateResourcesView from './components/stateAdmin/StateResourcesView';
 
 // Shared Sub-Views & Modals
 import AdvisoryCenter from './components/advisory/AdvisoryCenter';
@@ -95,23 +117,8 @@ function MainAppContent() {
 
         {/* Dynamic Screen / Tab Content Router */}
         <main className="flex-1 min-w-0">
-          {/* Shared Sub-Views */}
-          {activeTab === 'advisories' && <AdvisoryCenter />}
-          {activeTab === 'labs' && <LabReferralsView />}
-          {activeTab === 'gis' && (
-            <div className="space-y-6">
-              <GISDiseaseMap />
-            </div>
-          )}
-          {activeTab === 'analytics' && (
-            <div className="space-y-6">
-              <WeatherCorrelationWidget />
-              <BlockAnalyticsCharts />
-            </div>
-          )}
-
           {/* ======================================================== */}
-          {/* 1. FARMER WORKSPACE SPECIFIC ROUTED PAGES */}
+          {/* 1. FARMER WORKSPACE PAGES */}
           {/* ======================================================== */}
           {role === 'farmer' && (
             <>
@@ -120,6 +127,7 @@ function MainAppContent() {
               {activeTab === 'vaccines' && <FarmerVaccinesView />}
               {activeTab === 'alerts' && <FarmerAlertsView />}
               {activeTab === 'treatments' && <FarmerTreatmentsView />}
+              {activeTab === 'advisories' && <AdvisoryCenter />}
               {activeTab === 'report' && (
                 <div className="space-y-4">
                   <FarmerDashboard />
@@ -130,19 +138,79 @@ function MainAppContent() {
           )}
 
           {/* ======================================================== */}
-          {/* 2. OTHER 4 ROLE WORKSPACES */}
+          {/* 2. FIELD WORKER (FIELD SENTINEL) WORKSPACE PAGES */}
           {/* ======================================================== */}
-          {role === 'fieldWorker' && activeTab !== 'advisories' && activeTab !== 'labs' && (
-            <FieldWorkerDashboard />
+          {role === 'fieldWorker' && (
+            <>
+              {(activeTab === 'dashboard' || activeTab === 'home') && <FieldWorkerDashboard />}
+              {activeTab === 'schedule' && <FieldVisitsView />}
+              {activeTab === 'animals' && <FieldRegistryView />}
+              {activeTab === 'report' && <FieldIncidentsView />}
+              {activeTab === 'vaccines' && <FieldVaccinationView />}
+              {activeTab === 'labs' && <FieldSamplesView />}
+              {activeTab === 'offlineQueue' && <FieldOfflineView />}
+            </>
           )}
-          {role === 'vet' && activeTab !== 'advisories' && activeTab !== 'labs' && activeTab !== 'gis' && (
-            <VetDashboard />
+
+          {/* ======================================================== */}
+          {/* 3. VETERINARIAN (CLINICAL CONSOLE) WORKSPACE PAGES */}
+          {/* ======================================================== */}
+          {role === 'vet' && (
+            <>
+              {(activeTab === 'dashboard' || activeTab === 'home') && <VetDashboard />}
+              {activeTab === 'cases' && <VetCasesView />}
+              {activeTab === 'triage' && <VetTriageView />}
+              {activeTab === 'labs' && <LabReferralsView />}
+              {activeTab === 'referrals' && <VetReferralsView />}
+              {activeTab === 'treatments' && <VetTreatmentsView />}
+              {activeTab === 'gis' && (
+                <div className="space-y-6">
+                  <GISDiseaseMap />
+                </div>
+              )}
+            </>
           )}
-          {role === 'admin' && activeTab !== 'advisories' && activeTab !== 'gis' && activeTab !== 'analytics' && (
-            <AdminDashboard />
+
+          {/* ======================================================== */}
+          {/* 4. DISTRICT OFFICER (DISTRICT COMMAND) WORKSPACE PAGES */}
+          {/* ======================================================== */}
+          {role === 'admin' && (
+            <>
+              {(activeTab === 'dashboard' || activeTab === 'home') && <AdminDashboard />}
+              {activeTab === 'gis' && (
+                <div className="space-y-6">
+                  <GISDiseaseMap />
+                </div>
+              )}
+              {activeTab === 'outbreaks' && <DistrictOutbreaksView />}
+              {activeTab === 'analytics' && (
+                <div className="space-y-6">
+                  <WeatherCorrelationWidget />
+                  <BlockAnalyticsCharts />
+                </div>
+              )}
+              {activeTab === 'response' && <DistrictResponseView />}
+              {activeTab === 'advisories' && <AdvisoryCenter />}
+            </>
           )}
-          {role === 'stateAdmin' && activeTab !== 'advisories' && activeTab !== 'analytics' && (
-            <StateAdminDashboard />
+
+          {/* ======================================================== */}
+          {/* 5. STATE ADMINISTRATOR (STATE DIRECTORATE) WORKSPACE PAGES */}
+          {/* ======================================================== */}
+          {role === 'stateAdmin' && (
+            <>
+              {(activeTab === 'dashboard' || activeTab === 'home') && <StateAdminDashboard />}
+              {activeTab === 'districtRankings' && <StateDistrictRiskView />}
+              {activeTab === 'analytics' && (
+                <div className="space-y-6">
+                  <WeatherCorrelationWidget />
+                  <BlockAnalyticsCharts />
+                </div>
+              )}
+              {activeTab === 'vaccinationGaps' && <StateVaccinationGapsView />}
+              {activeTab === 'resources' && <StateResourcesView />}
+              {activeTab === 'advisories' && <AdvisoryCenter />}
+            </>
           )}
         </main>
       </div>
