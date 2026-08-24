@@ -16,17 +16,17 @@ import {
   Layers,
   Map,
   Globe,
-  Check
+  Check,
+  Play
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
-export default function LoginPage({ onLoginSuccess }) {
+export default function LoginPage({ onLoginSuccess, onOpenDemoModal, onOpenDemoCenter }) {
   const { enterWorkspace, language, setLanguage } = useApp();
   
-  const [authStep, setAuthStep] = useState('phone'); // 'phone' | 'otp' | 'roleSelect'
+  const [authStep, setAuthStep] = useState('phone'); // 'phone' | 'otp'
   const [phone, setPhone] = useState('9822451092');
   const [otp, setOtp] = useState(['4', '2', '8', '1', '9', '0']);
-  const [selectedRole, setSelectedRole] = useState('farmer');
   const [loading, setLoading] = useState(false);
 
   const handleSendOtp = (e) => {
@@ -43,13 +43,8 @@ export default function LoginPage({ onLoginSuccess }) {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-      setAuthStep('roleSelect');
+      if (onLoginSuccess) onLoginSuccess();
     }, 450);
-  };
-
-  const handleFinalWorkspaceEnter = () => {
-    enterWorkspace(selectedRole);
-    if (onLoginSuccess) onLoginSuccess();
   };
 
   return (
@@ -159,13 +154,27 @@ export default function LoginPage({ onLoginSuccess }) {
                 </button>
               </form>
 
-              <div className="p-3 bg-white rounded-xl border border-[#ECE6D6] text-xs text-slate-600 flex items-center justify-between shadow-xs">
-                <span>Demo Fast Login:</span>
-                <button 
-                  onClick={() => setAuthStep('roleSelect')}
-                  className="font-bold text-[#073B32] hover:underline"
+              {/* Fast Evaluation Options */}
+              <div className="space-y-2 pt-2">
+                <button
+                  type="button"
+                  onClick={onLoginSuccess}
+                  className="w-full p-3 bg-white hover:bg-slate-50 border border-[#ECE6D6] rounded-xl text-xs text-slate-700 font-bold flex items-center justify-between shadow-xs transition"
                 >
-                  Skip to Workspace Selection →
+                  <span>Fast Pass for Evaluators:</span>
+                  <span className="text-[#073B32] font-black">Choose Workspace →</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={onOpenDemoModal}
+                  className="w-full p-3 bg-gradient-to-r from-purple-900 to-indigo-900 text-white rounded-xl text-xs font-black flex items-center justify-between shadow-sm hover:shadow-md transition"
+                >
+                  <span className="flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-purple-300" />
+                    <span>TRY DEMO MODE (SIH JUDGES)</span>
+                  </span>
+                  <span>Instant Access →</span>
                 </button>
               </div>
 
@@ -205,8 +214,8 @@ export default function LoginPage({ onLoginSuccess }) {
                   disabled={loading}
                   className="w-full py-3.5 bg-[#073B32] hover:bg-[#052923] text-white rounded-xl font-bold text-xs shadow-md transition flex items-center justify-center gap-2"
                 >
-                  <CheckCircle2 className="w-4 h-4" />
-                  <span>{loading ? 'Verifying...' : 'Verify OTP & Continue'}</span>
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                  <span>{loading ? 'Verifying...' : 'Verify OTP & Select Workspace →'}</span>
                 </button>
               </form>
 
@@ -219,175 +228,6 @@ export default function LoginPage({ onLoginSuccess }) {
                   Resend Code
                 </button>
               </div>
-            </div>
-          )}
-
-          {/* STEP 3: ROLE SELECTION (Section 11) */}
-          {authStep === 'roleSelect' && (
-            <div className="w-full space-y-4 animate-fadeIn">
-              <div>
-                <span className="text-xs font-extrabold text-[#073B32] uppercase tracking-wider bg-[#D9F1E8] px-3 py-1 rounded-full border border-[#B3E2D2]">
-                  AUTHORIZED WORKSPACES
-                </span>
-                <h3 className="text-2xl sm:text-3xl font-black text-[#0A1020] mt-1">Choose your workspace</h3>
-                <p className="text-xs text-slate-600">Select the environment associated with your role</p>
-              </div>
-
-              {/* 5 Premium Horizontal Role Cards */}
-              <div className="space-y-2.5 max-h-[350px] overflow-y-auto pr-1">
-                {/* 1. Farmer */}
-                <div
-                  onClick={() => setSelectedRole('farmer')}
-                  className={`p-3.5 rounded-2xl border-2 cursor-pointer transition flex items-center justify-between ${
-                    selectedRole === 'farmer' 
-                      ? 'border-[#073B32] bg-white shadow-md' 
-                      : 'border-[#ECE6D6] bg-white/70 hover:border-slate-300'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-[#D9F1E8] text-[#073B32] flex items-center justify-center text-xl shrink-0">
-                      🌾
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-1.5">
-                        <h4 className="font-black text-sm text-[#0A1020]">Farmer / Livestock Owner</h4>
-                        <span className="text-[10px] font-bold bg-emerald-100 text-emerald-800 px-1.5 rounded">Ramesh Patil</span>
-                      </div>
-                      <p className="text-[11px] text-slate-600">Manage animals, report symptoms and receive local advisories.</p>
-                      <p className="text-[10px] text-slate-400 font-mono">Khedgaon • Baramati, Pune</p>
-                    </div>
-                  </div>
-                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
-                    selectedRole === 'farmer' ? 'border-[#073B32] bg-[#073B32] text-white' : 'border-slate-300'
-                  }`}>
-                    {selectedRole === 'farmer' && <Check className="w-3.5 h-3.5" />}
-                  </div>
-                </div>
-
-                {/* 2. Field Worker */}
-                <div
-                  onClick={() => setSelectedRole('fieldWorker')}
-                  className={`p-3.5 rounded-2xl border-2 cursor-pointer transition flex items-center justify-between ${
-                    selectedRole === 'fieldWorker' 
-                      ? 'border-teal-700 bg-white shadow-md' 
-                      : 'border-[#ECE6D6] bg-white/70 hover:border-slate-300'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-teal-100 text-teal-900 flex items-center justify-center text-xl shrink-0">
-                      🩺
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-1.5">
-                        <h4 className="font-black text-sm text-[#0A1020]">Field Worker / Pashu Sakhi</h4>
-                        <span className="text-[10px] font-bold bg-teal-100 text-teal-800 px-1.5 rounded">Sunita Pawar</span>
-                      </div>
-                      <p className="text-[11px] text-slate-600">Capture field intelligence, vaccination and sample data.</p>
-                      <p className="text-[10px] text-slate-400 font-mono">Baramati Sector 2 Operations</p>
-                    </div>
-                  </div>
-                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
-                    selectedRole === 'fieldWorker' ? 'border-teal-700 bg-teal-700 text-white' : 'border-slate-300'
-                  }`}>
-                    {selectedRole === 'fieldWorker' && <Check className="w-3.5 h-3.5" />}
-                  </div>
-                </div>
-
-                {/* 3. Veterinarian */}
-                <div
-                  onClick={() => setSelectedRole('vet')}
-                  className={`p-3.5 rounded-2xl border-2 cursor-pointer transition flex items-center justify-between ${
-                    selectedRole === 'vet' 
-                      ? 'border-blue-700 bg-white shadow-md' 
-                      : 'border-[#ECE6D6] bg-white/70 hover:border-slate-300'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-blue-100 text-blue-900 flex items-center justify-center text-xl shrink-0">
-                      👨‍⚕️
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-1.5">
-                        <h4 className="font-black text-sm text-[#0A1020]">Veterinarian / Clinical Officer</h4>
-                        <span className="text-[10px] font-bold bg-blue-100 text-blue-800 px-1.5 rounded">Dr. Anand Deshmukh</span>
-                      </div>
-                      <p className="text-[11px] text-slate-600">Review cases, triage risk and coordinate treatment.</p>
-                      <p className="text-[10px] text-slate-400 font-mono">Baramati Taluka Hospital</p>
-                    </div>
-                  </div>
-                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
-                    selectedRole === 'vet' ? 'border-blue-700 bg-blue-700 text-white' : 'border-slate-300'
-                  }`}>
-                    {selectedRole === 'vet' && <Check className="w-3.5 h-3.5" />}
-                  </div>
-                </div>
-
-                {/* 4. District Officer */}
-                <div
-                  onClick={() => setSelectedRole('admin')}
-                  className={`p-3.5 rounded-2xl border-2 cursor-pointer transition flex items-center justify-between ${
-                    selectedRole === 'admin' 
-                      ? 'border-indigo-700 bg-white shadow-md' 
-                      : 'border-[#ECE6D6] bg-white/70 hover:border-slate-300'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-900 flex items-center justify-center text-xl shrink-0">
-                      🏛️
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-1.5">
-                        <h4 className="font-black text-sm text-[#0A1020]">District Animal Health Command</h4>
-                        <span className="text-[10px] font-bold bg-indigo-100 text-indigo-800 px-1.5 rounded">Pune HQ</span>
-                      </div>
-                      <p className="text-[11px] text-slate-600">Monitor clusters, risk zones and response operations.</p>
-                      <p className="text-[10px] text-slate-400 font-mono">Pune Collectorate Headquarters</p>
-                    </div>
-                  </div>
-                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
-                    selectedRole === 'admin' ? 'border-indigo-700 bg-indigo-700 text-white' : 'border-slate-300'
-                  }`}>
-                    {selectedRole === 'admin' && <Check className="w-3.5 h-3.5" />}
-                  </div>
-                </div>
-
-                {/* 5. State Administrator */}
-                <div
-                  onClick={() => setSelectedRole('stateAdmin')}
-                  className={`p-3.5 rounded-2xl border-2 cursor-pointer transition flex items-center justify-between ${
-                    selectedRole === 'stateAdmin' 
-                      ? 'border-purple-700 bg-white shadow-md' 
-                      : 'border-[#ECE6D6] bg-white/70 hover:border-slate-300'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-purple-100 text-purple-900 flex items-center justify-center text-xl shrink-0">
-                      🗺️
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-1.5">
-                        <h4 className="font-black text-sm text-[#0A1020]">State Animal Health Intelligence</h4>
-                        <span className="text-[10px] font-bold bg-purple-100 text-purple-800 px-1.5 rounded">Maharashtra</span>
-                      </div>
-                      <p className="text-[11px] text-slate-600">Understand statewide trends, risk and resource priorities.</p>
-                      <p className="text-[10px] text-slate-400 font-mono">36 District Command Directorate</p>
-                    </div>
-                  </div>
-                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
-                    selectedRole === 'stateAdmin' ? 'border-purple-700 bg-purple-700 text-white' : 'border-slate-300'
-                  }`}>
-                    {selectedRole === 'stateAdmin' && <Check className="w-3.5 h-3.5" />}
-                  </div>
-                </div>
-              </div>
-
-              {/* Launch Workspace Button */}
-              <button
-                onClick={handleFinalWorkspaceEnter}
-                className="w-full py-3.5 bg-[#073B32] hover:bg-[#052923] text-white font-black rounded-xl text-xs shadow-md transition flex items-center justify-center gap-2 mt-3"
-              >
-                <span>Launch Workspace →</span>
-              </button>
             </div>
           )}
         </div>

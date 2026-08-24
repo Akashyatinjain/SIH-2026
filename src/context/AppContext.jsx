@@ -15,9 +15,12 @@ import { translations } from '../i18n/translations';
 const AppContext = createContext();
 
 export function AppProvider({ children }) {
-  // Screen State: 'home' | 'login' | 'otp' | 'roleSelect' | 'workspace'
+  // Screen State: 'home' | 'login' | 'workspaceSelect' | 'workspaceDetails' | 'demoCenter' | 'workspace'
   const [currentScreen, setCurrentScreen] = useState('home');
   
+  // Selected Workspace for Preview & Details: 'farmer' | 'fieldWorker' | 'vet' | 'admin' | 'stateAdmin'
+  const [selectedWorkspace, setSelectedWorkspace] = useState('farmer');
+
   // Authenticated Role: 'farmer' | 'fieldWorker' | 'vet' | 'admin' | 'stateAdmin'
   const [role, setRole] = useState('farmer'); 
   const [language, setLanguage] = useState('en'); // 'en' | 'mr' | 'hi'
@@ -26,6 +29,11 @@ export function AppProvider({ children }) {
   const [lastSyncedTime, setLastSyncedTime] = useState('12 min ago');
   const [activeTab, setActiveTab] = useState('dashboard');
   
+  // Demo Mode & Story State (For SIH Judges)
+  const [isDemoMode, setIsDemoMode] = useState(true);
+  const [demoStoryStage, setDemoStoryStage] = useState(1); // 1 to 9
+  const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
+
   // Modals & Drawers
   const [isIVROpen, setIsIVROpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
@@ -77,9 +85,6 @@ export function AppProvider({ children }) {
     }
   ]);
 
-  // Demo Tour State for SIH Evaluator Walkthrough
-  const [demoTourStep, setDemoTourStep] = useState(0);
-
   const t = translations[language] || translations.en;
 
   const toggleOffline = () => {
@@ -118,354 +123,210 @@ export function AppProvider({ children }) {
   // Submit New Sick Animal Report
   const submitSickAnimalReport = (reportData) => {
     const newCaseId = `PS-2026-${String(Math.floor(4282 + cases.length)).padStart(6, '0')}`;
-    
-    const hasSkinLesions = (reportData.symptoms || []).some(s => s.toLowerCase().includes('nodule') || s.toLowerCase().includes('skin') || s.toLowerCase().includes('गाठी') || s.toLowerCase().includes('गांठ'));
-    const hasFever = (reportData.symptoms || []).some(s => s.toLowerCase().includes('fever') || s.toLowerCase().includes('ताप') || s.toLowerCase().includes('बुखार'));
-    const hasSalivation = (reportData.symptoms || []).some(s => s.toLowerCase().includes('saliv') || s.toLowerCase().includes('लाळ') || s.toLowerCase().includes('लार'));
-    const hasMortality = reportData.recentDeaths;
-
-    let score = 40;
-    let suspected = "General Clinical Syndrome";
-    let riskLevel = "MEDIUM";
-
-    if (hasSkinLesions && hasFever) {
-      score = 86;
-      riskLevel = "HIGH";
-      suspected = "Lumpy Skin Disease (LSD) - High Contagion Suspect";
-    } else if (hasSalivation && hasFever) {
-      score = 92;
-      riskLevel = "CRITICAL";
-      suspected = "Foot & Mouth Disease (FMD) - Acute Vesicular";
-    } else if (hasMortality) {
-      score = 95;
-      riskLevel = "CRITICAL";
-      suspected = "Peracute Viral / Bacterial Outbreak Alert";
-    } else if (hasFever) {
-      score = 65;
-      riskLevel = "MEDIUM";
-      suspected = "Pyrexia of Unknown Origin (PUO)";
-    } else {
-      score = 30;
-      riskLevel = "LOW";
-      suspected = "Mild Ruminal Indigestion / Metabolic";
-    }
-
     const newCase = {
       caseId: newCaseId,
-      reportedAt: "Just now",
-      date: new Date().toISOString().slice(0, 16).replace('T', ' '),
+      animalId: reportData.animalTag || "MH-PUN-0241",
       farmerName: reportData.farmerName || "Ramesh Patil",
-      farmerPhone: reportData.farmerPhone || "+91 98224 51092",
       village: reportData.village || "Khedgaon",
       block: "Baramati",
       district: "Pune",
-      animalId: reportData.animalId || "MH-PUN-0241",
-      species: reportData.species || "Cattle (Cow)",
+      species: reportData.species || "Cattle (गाय)",
       breed: reportData.breed || "Gir Indigenous",
-      symptoms: reportData.symptoms || [],
-      duration: reportData.duration || "2 Days",
-      stoppedEating: reportData.stoppedEating || true,
-      milkDecreased: reportData.milkDecreased || true,
-      nearbySimilarCases: reportData.nearbySimilarCases || true,
-      recentDeaths: reportData.recentDeaths || false,
-      riskScore: score,
-      riskLevel: riskLevel,
-      suspectedDisease: suspected,
-      differentialList: [
-        { disease: "Lumpy Skin Disease (Capripoxvirus)", probability: "84%", rationale: "Reported nodular lesions with pyrexia & local cluster proximity" },
-        { disease: "Pseudo-Cowpox / Parapox", probability: "11%", rationale: "Milder localized symptoms" },
-        { disease: "Bovine Papillomatosis", probability: "5%", rationale: "Chronic warts without sudden acute fever" }
-      ],
+      symptoms: reportData.symptoms || ["High Fever (>104°F)", "Skin Nodules (2-5cm)"],
+      temperature: "104.8°F",
+      reportedAt: "Just now",
       status: "under_review",
-      assignedVet: "Dr. Anand Deshmukh (Baramati Taluka Hospital)",
-      locationCoord: { lat: 18.1524, lng: 74.5768 },
-      photoUrl: reportData.photoUrl || "https://images.unsplash.com/photo-1546445317-29f4545e9d53?auto=format&fit=crop&w=600&q=80",
-      labReferral: null,
-      hospitalReferral: null,
-      prescription: null
+      riskScore: 86,
+      riskLevel: "HIGH",
+      preliminaryAssessment: "High probability Capripoxvirus (Lumpy Skin Disease) nodular pyrexia with local spatial clustering.",
+      imageUrl: reportData.imageUrl || "https://images.unsplash.com/photo-1546445317-29f4545e9d53?auto=format&fit=crop&q=80&w=800",
+      assignedVet: "Dr. Anand Deshmukh",
+      lat: 18.1524,
+      lng: 74.5768
     };
 
-    if (isOffline) {
-      const offlineItem = {
-        id: `OFF-2026-${Math.floor(100 + Math.random() * 900)}`,
-        type: `Clinical Case: ${reportData.species}`,
-        timestamp: "Just now (Offline)",
-        dataSummary: `${newCaseId} - ${suspected} in ${reportData.village || 'Khedgaon'}`,
-        status: "pending",
-        pendingCase: newCase
-      };
-      setOfflineQueue(prev => [offlineItem, ...prev]);
-      addNotification("💾 Offline Report Queued", `Case saved locally. Will auto-sync when network is available.`, "info");
-      return newCase;
-    }
-
     setCases(prev => [newCase, ...prev]);
-    
-    setAnimals(prev => prev.map(a => {
-      if (a.id === reportData.animalId) {
-        return {
-          ...a,
-          healthStatus: "needs_attention",
-          diseaseReports: [{ caseId: newCaseId, date: "Today", suspected, status: "Under Review" }, ...(a.diseaseReports || [])]
-        };
-      }
-      return a;
-    }));
-
-    setHotspots(prev => prev.map(h => {
-      if (h.block === "Baramati") {
-        return {
-          ...h,
-          activeCases: h.activeCases + 1,
-          riskLevel: "CRITICAL",
-          lastReported: "Just now"
-        };
-      }
-      return h;
-    }));
-
-    addNotification("🚨 New Surveillance Alert", `New Case #${newCaseId} flagged as ${riskLevel} (${suspected}) in Khedgaon!`, "alert");
-
+    setSelectedCase(newCase);
+    addNotification("🚨 Critical Health Report Dispatched", `Case ${newCaseId} created for ${newCase.animalId}. Alerted Dr. Anand Deshmukh.`, "alert");
     return newCase;
   };
 
-  // Update Case Action
-  const updateCaseAction = (caseId, updates) => {
-    setCases(prev => prev.map(c => {
-      if (c.caseId === caseId) {
-        return { ...c, ...updates };
-      }
-      return c;
-    }));
-
-    if (updates.labReferral) {
-      const newSample = {
-        sampleId: updates.labReferral.sampleId,
-        caseId: caseId,
-        animalTag: "MH-PUN-0241 (Ganga)",
-        species: "Cattle (Cow)",
-        sampleType: updates.labReferral.sampleType,
-        testRequested: "Capripoxvirus (LSD) Real-time PCR",
-        collectedBy: "Sunita Pawar (Pashu Sakhi)",
-        collectedAt: new Date().toISOString().slice(0, 16).replace('T', ' '),
-        laboratory: updates.labReferral.targetLab,
-        transportStatus: "In Cold-Chain Courier",
-        workflowStep: "Dispatched",
-        result: "Pending Turnaround (~4h)",
-        statusBadge: "Testing Dispatched"
-      };
-      setLabSamples(prev => [newSample, ...prev]);
-      addNotification("🧪 Diagnostic Lab Sample Dispatched", `Barcode #${updates.labReferral.sampleId} dispatched to Regional Animal Health Lab, Pune for Case #${caseId}.`, "success");
-    }
-    if (updates.hospitalReferral) {
-      addNotification("🏥 Hospital Referral Created", `Emergency referral to ${updates.hospitalReferral.hospital} generated for Case #${caseId}.`, "info");
-    }
-    if (updates.prescription) {
-      addNotification("💊 Clinical Rx Recorded", `Treatment regimen recorded by ${updates.assignedVet || 'Dr. Anand Deshmukh'}.`, "success");
-    }
-    if (updates.status === 'resolved') {
-      addNotification("✅ Case Resolved", `Case #${caseId} marked as successfully treated and controlled.`, "success");
-    }
-  };
-
-  // Create Advisory
-  const createAdvisory = (advisoryData) => {
-    const newAdv = {
-      id: `ADV-${String(advisoryList.length + 1).padStart(2, '0')}`,
-      title: advisoryData.title,
-      category: advisoryData.category || "Epidemic Warning",
-      severity: advisoryData.severity || "HIGH",
-      date: "Just now",
-      audioMinutes: "2 min audio",
-      summary: advisoryData.message,
-      targetDistrict: advisoryData.targetDistrict || "Pune District",
-      channels: advisoryData.channels || ["App Notification", "SMS Broadcast"],
-      points: advisoryData.points || [advisoryData.recommendedAction]
-    };
-
-    setAdvisoryList(prev => [newAdv, ...prev]);
-    addNotification("📢 Government Advisory Broadcasted", `Advisory '${advisoryData.title}' sent to all farmers in ${advisoryData.targetDistrict} via App, SMS & IVR!`, "alert");
-    return newAdv;
-  };
-
-  // Register Animal
+  // Register New Animal
   const registerAnimal = (animalData) => {
-    const newId = `MH-PUN-${String(Math.floor(1100 + animals.length * 15)).padStart(4, '0')}`;
+    const newId = `MH-PUN-${String(Math.floor(1000 + animals.length)).padStart(4, '0')}`;
     const newAnimal = {
       id: newId,
-      name: animalData.name || "Nandi",
-      species: animalData.species || "Cattle",
-      breed: animalData.breed || "Gir Indigenous",
-      age: animalData.age || "2.5 Years",
-      sex: animalData.sex || "Female",
-      weight: animalData.weight || "350 kg",
-      owner: animalData.owner || "Ramesh Patil",
-      phone: animalData.phone || "+91 98224 51092",
-      location: animalData.location || "Khedgaon, Baramati, Pune",
-      lat: 18.1524,
-      lng: 74.5768,
+      name: animalData.name,
+      species: animalData.species,
+      breed: animalData.breed,
+      age: animalData.age || "3 Years",
+      weight: animalData.weight || "380 kg",
       healthStatus: "healthy",
-      milkYield: animalData.milkYield || "11.0 Liters/day",
-      calvings: 1,
-      rfidTag: `890401827${Math.floor(10000 + Math.random() * 90000)}`,
-      imageUrl: animalData.imageUrl || "https://images.unsplash.com/photo-1546445317-29f4545e9d53?auto=format&fit=crop&w=600&q=80",
-      vaccinations: [
-        { name: "FMD (Foot & Mouth)", date: "2025-11-10", nextDue: "2026-05-10", status: "Due in 12 days", batch: "FMD-PUN-849" }
-      ],
-      treatments: [],
-      diseaseReports: []
+      owner: animalData.owner || "Ramesh Patil",
+      location: animalData.location || "Khedgaon, Baramati, Pune",
+      rfidTag: animalData.rfidTag || `890401827${Math.floor(10000 + Math.random() * 90000)}`,
+      milkYield: animalData.milkYield || "11 Liters/day",
+      imageUrl: animalData.species.includes("Buffalo") 
+        ? "https://images.unsplash.com/photo-1596733430284-f7437764b1a9?auto=format&fit=crop&q=80&w=800"
+        : "https://images.unsplash.com/photo-1546445317-29f4545e9d53?auto=format&fit=crop&q=80&w=800"
     };
 
-    if (isOffline) {
-      const offlineItem = {
-        id: `OFF-REG-${Math.floor(100 + Math.random() * 900)}`,
-        type: `Animal Registration: ${newAnimal.name} (${newAnimal.species})`,
-        timestamp: "Just now (Offline)",
-        dataSummary: `RFID: ${newAnimal.rfidTag} | Owner: ${newAnimal.owner}`,
-        status: "pending",
-        pendingAnimal: newAnimal
-      };
-      setOfflineQueue(prev => [offlineItem, ...prev]);
-      addNotification("💾 Offline Animal Saved", `Animal ${newAnimal.name} saved offline. Will sync with district registry upon network.`, "info");
-      return newAnimal;
-    }
-
     setAnimals(prev => [newAnimal, ...prev]);
-    addNotification("📋 Animal Registered", `New Animal ${newAnimal.name} (${newId}) registered with Maharashtra Livestock Health Registry!`, "success");
+    addNotification("📋 Animal Registered", `Added ${newAnimal.name} (${newAnimal.species}) with RFID #${newAnimal.rfidTag}.`, "success");
     return newAnimal;
   };
 
-  // Report Sudden Mortality
-  const reportMortality = (mortalityData) => {
-    const reportSummary = `${mortalityData.count} ${mortalityData.species} deaths in ${mortalityData.village} (${mortalityData.suspectedCause})`;
-    
-    if (isOffline) {
-      const offlineItem = {
-        id: `OFF-MORT-${Math.floor(100 + Math.random() * 900)}`,
-        type: "Sudden Mortality Alert",
-        timestamp: "Just now (Offline)",
-        dataSummary: reportSummary,
-        status: "pending"
-      };
-      setOfflineQueue(prev => [offlineItem, ...prev]);
-      addNotification("💾 Mortality Saved Offline", "Mortality record queued locally for sync.", "info");
-      return;
-    }
-
-    setHotspots(prev => prev.map(h => {
-      if (h.block === "Baramati") {
-        return {
-          ...h,
-          recentMortality: h.recentMortality + parseInt(mortalityData.count || 1),
-          riskLevel: "CRITICAL"
-        };
-      }
-      return h;
-    }));
-
-    addNotification("⚠️ High Mortality Surveillance Trigger", `District Veterinary Taskforce alerted on ${mortalityData.count} sudden deaths in ${mortalityData.village}!`, "alert");
+  // Report Mortality
+  const reportMortality = (data) => {
+    addNotification("🚨 Sudden Mortality Logged", `Reported ${data.count} deaths of ${data.species} in ${data.village}. Rapid Response Team notified.`, "alert");
   };
 
-  // Sync Offline Queue
-  const syncOfflineQueue = () => {
-    if (offlineQueue.length === 0) return;
-
-    offlineQueue.forEach(item => {
-      if (item.pendingCase) {
-        setCases(prev => [item.pendingCase, ...prev]);
-      }
-      if (item.pendingAnimal) {
-        setAnimals(prev => [item.pendingAnimal, ...prev]);
-      }
-    });
-
-    setOfflineQueue([]);
-    setLastSyncedTime("Just now");
-    addNotification("🔄 Sync Complete", `Synchronized ${offlineQueue.length} offline surveillance records to Pune District Server!`, "success");
-  };
-
-  // User Authenticated Workspace Login Handler
+  // Switch Workspace / Persona
   const enterWorkspace = (roleKey) => {
     setRole(roleKey);
+    setSelectedWorkspace(roleKey);
     setActiveTab('dashboard');
     setCurrentScreen('workspace');
   };
 
+  // Demo Persona Quick Switcher
+  const switchDemoPersona = (roleKey) => {
+    setRole(roleKey);
+    setSelectedWorkspace(roleKey);
+    setActiveTab('dashboard');
+    addNotification(`🔄 Switched Persona to ${getRoleTitle(roleKey)}`, `Now viewing live demo as ${getPersonaName(roleKey)}.`, "info");
+  };
+
+  // Restart Demo Story
+  const restartDemoStory = () => {
+    setDemoStoryStage(1);
+    setRole('farmer');
+    setSelectedWorkspace('farmer');
+    setActiveTab('dashboard');
+    addNotification("🔄 Demo Story Reset", "Simulated surveillance event reset to Stage 01: Farmer Health Report.", "info");
+  };
+
+  // Advance Demo Story
+  const advanceDemoStory = () => {
+    setDemoStoryStage(prev => (prev < 9 ? prev + 1 : 1));
+  };
+
+  const getPersonaName = (r) => {
+    switch (r) {
+      case 'farmer': return 'Ramesh Patil (Farmer)';
+      case 'fieldWorker': return 'Sunita Pawar (Pashu Sakhi)';
+      case 'vet': return 'Dr. Anand Deshmukh (Veterinarian)';
+      case 'admin': return 'District Health Officer (Pune)';
+      case 'stateAdmin': return 'Director of Animal Husbandry (MH)';
+      default: return 'User';
+    }
+  };
+
+  const getRoleTitle = (r) => {
+    switch (r) {
+      case 'farmer': return 'Farmer / Livestock Owner';
+      case 'fieldWorker': return 'Field Sentinel / Pashu Sakhi';
+      case 'vet': return 'Veterinarian / Clinical Officer';
+      case 'admin': return 'District Animal Health Command';
+      case 'stateAdmin': return 'State Directorate Intelligence';
+      default: return 'Authorized Workspace';
+    }
+  };
+
+  // Offline Sync
+  const syncOfflineQueue = () => {
+    if (offlineQueue.length === 0) return;
+    addNotification("⚡ Offline Sync Complete", `Successfully uploaded ${offlineQueue.length} queued records to District Command.`, "success");
+    setOfflineQueue([]);
+    setLastSyncedTime("Just now");
+  };
+
+  // Logout function
   const logout = () => {
-    setCurrentScreen('home');
+    setCurrentScreen('workspaceSelect');
+    addNotification("🔒 Signed Out", "Returned to workspace selection screen.", "info");
   };
 
   return (
-    <AppContext.Provider value={{
-      currentScreen,
-      setCurrentScreen,
-      role,
-      setRole,
-      enterWorkspace,
-      logout,
-      language,
-      setLanguage,
-      t,
-      isOffline,
-      setIsOffline,
-      toggleOffline,
-      offlineQueue,
-      lastSyncedTime,
-      activeTab,
-      setActiveTab,
-      
-      // Modals
-      isIVROpen,
-      setIsIVROpen,
-      isNotificationsOpen,
-      setIsNotificationsOpen,
-      isNotificationOpen,
-      setIsNotificationOpen,
-      isReportModalOpen,
-      setIsReportModalOpen,
-      selectedAnimalForProfile,
-      setSelectedAnimalForProfile,
-      selectedAnimalForModal,
-      setSelectedAnimalForModal,
-      selectedCaseForDrawer: selectedCase || selectedCaseForDrawer,
-      setSelectedCaseForDrawer: setSelectedCase,
-      selectedCase,
-      setSelectedCase,
-      selectedHotspotForInspector,
-      setSelectedHotspotForInspector,
-      isOfflineModalOpen,
-      setIsOfflineModalOpen,
-      isRegisterAnimalOpen,
-      setIsRegisterAnimalOpen,
-      isMortalityModalOpen,
-      setIsMortalityModalOpen,
-      isAdvisoryStudioOpen,
-      setIsAdvisoryStudioOpen,
+    <AppContext.Provider
+      value={{
+        currentScreen,
+        setCurrentScreen,
+        selectedWorkspace,
+        setSelectedWorkspace,
+        role,
+        setRole,
+        enterWorkspace,
+        logout,
+        switchDemoPersona,
+        language,
+        setLanguage,
+        isOffline,
+        toggleOffline,
+        offlineQueue,
+        syncOfflineQueue,
+        lastSyncedTime,
+        activeTab,
+        setActiveTab,
+        
+        // Demo State
+        isDemoMode,
+        setIsDemoMode,
+        demoStoryStage,
+        setDemoStoryStage,
+        restartDemoStory,
+        advanceDemoStory,
+        isDemoModalOpen,
+        setIsDemoModalOpen,
+        getPersonaName,
+        getRoleTitle,
 
-      // Data & Actions
-      animals,
-      cases,
-      hotspots,
-      labSamples,
-      advisories: advisoryList,
-      advisoryList,
-      fieldSchedule: fieldVisits,
-      fieldVisits,
-      stateDistricts,
-      notifications,
-      addNotification,
-      addReport,
-      submitSickAnimalReport,
-      updateCaseAction,
-      createAdvisory,
-      registerAnimal,
-      reportMortality,
-      syncOfflineQueue,
+        // Modals
+        isIVROpen,
+        setIsIVROpen,
+        isNotificationsOpen,
+        setIsNotificationsOpen,
+        isNotificationOpen,
+        setIsNotificationOpen,
+        isReportModalOpen,
+        setIsReportModalOpen,
+        selectedAnimalForProfile,
+        setSelectedAnimalForProfile,
+        selectedAnimalForModal,
+        setSelectedAnimalForModal,
+        selectedCaseForDrawer,
+        setSelectedCaseForDrawer,
+        selectedCase,
+        setSelectedCase,
+        selectedHotspotForInspector,
+        setSelectedHotspotForInspector,
+        isOfflineModalOpen,
+        setIsOfflineModalOpen,
+        isRegisterAnimalOpen,
+        setIsRegisterAnimalOpen,
+        isMortalityModalOpen,
+        setIsMortalityModalOpen,
+        isAdvisoryStudioOpen,
+        setIsAdvisoryStudioOpen,
 
-      // Demo Tour
-      demoTourStep,
-      setDemoTourStep
-    }}>
+        // Data
+        animals,
+        cases,
+        hotspots,
+        labSamples,
+        advisories: advisoryList,
+        fieldVisits,
+        fieldSchedule: fieldVisits,
+        stateDistricts,
+        notifications,
+        addNotification,
+        addReport,
+        submitSickAnimalReport,
+        registerAnimal,
+        reportMortality,
+        t
+      }}
+    >
       {children}
     </AppContext.Provider>
   );

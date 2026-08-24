@@ -10,6 +10,10 @@ import IVRModal from './components/common/IVRModal';
 import AnimalProfileModal from './components/common/AnimalProfileModal';
 import LandingPage from './components/layout/LandingPage';
 import LoginPage from './components/layout/LoginPage';
+import WorkspaceSelectPage from './components/layout/WorkspaceSelectPage';
+import WorkspaceDetailsPage from './components/layout/WorkspaceDetailsPage';
+import DemoCenter from './components/demo/DemoCenter';
+import TryDemoModal from './components/demo/TryDemoModal';
 
 // 1. Farmer Pages
 import FarmerDashboard from './components/farmer/FarmerDashboard';
@@ -60,12 +64,14 @@ function MainAppContent() {
     setCurrentScreen, 
     role, 
     enterWorkspace,
+    selectedWorkspace,
+    setSelectedWorkspace,
     activeTab, 
     setActiveTab, 
     isAdvisoryStudioOpen,
     setIsAdvisoryStudioOpen,
-    isReportModalOpen,
-    setIsReportModalOpen
+    isDemoModalOpen,
+    setIsDemoModalOpen
   } = useApp();
 
   // SCREEN 1: Public Editorial Landing Page
@@ -82,23 +88,120 @@ function MainAppContent() {
         />
         <IVRModal />
         <NotificationCenter />
+        {isDemoModalOpen && (
+          <TryDemoModal 
+            onClose={() => setIsDemoModalOpen(false)} 
+            onOpenDemoCenter={() => {
+              setIsDemoModalOpen(false);
+              setCurrentScreen('demoCenter');
+            }}
+          />
+        )}
       </div>
     );
   }
 
-  // SCREEN 2: Split-Screen Authentication & Role Selection
-  if (currentScreen === 'login' || currentScreen === 'roleSelect') {
+  // SCREEN 2: Split-Screen Authentication (Phone + OTP)
+  if (currentScreen === 'login') {
     return (
       <div className="min-h-screen flex flex-col">
         <DemoBar />
-        <LoginPage onLoginSuccess={() => setCurrentScreen('workspace')} />
+        <LoginPage 
+          onLoginSuccess={() => setCurrentScreen('workspaceSelect')}
+          onOpenDemoModal={() => setIsDemoModalOpen(true)}
+          onOpenDemoCenter={() => setCurrentScreen('demoCenter')}
+        />
         <IVRModal />
         <NotificationCenter />
+        {isDemoModalOpen && (
+          <TryDemoModal 
+            onClose={() => setIsDemoModalOpen(false)} 
+            onOpenDemoCenter={() => {
+              setIsDemoModalOpen(false);
+              setCurrentScreen('demoCenter');
+            }}
+          />
+        )}
       </div>
     );
   }
 
-  // SCREEN 3: Role-Specific Authenticated Workspace
+  // SCREEN 3: Workspace Selection Page (Left List + Right Live Preview)
+  if (currentScreen === 'workspaceSelect') {
+    return (
+      <div className="min-h-screen flex flex-col bg-[#F6F3EA]">
+        <DemoBar />
+        <WorkspaceSelectPage 
+          onInspectDetails={() => setCurrentScreen('workspaceDetails')}
+          onEnterWorkspace={(wsKey) => enterWorkspace(wsKey)}
+          onOpenDemoModal={() => setIsDemoModalOpen(true)}
+          onOpenDemoCenter={() => setCurrentScreen('demoCenter')}
+        />
+        <IVRModal />
+        <NotificationCenter />
+        {isDemoModalOpen && (
+          <TryDemoModal 
+            onClose={() => setIsDemoModalOpen(false)} 
+            onOpenDemoCenter={() => {
+              setIsDemoModalOpen(false);
+              setCurrentScreen('demoCenter');
+            }}
+          />
+        )}
+      </div>
+    );
+  }
+
+  // SCREEN 4: Dedicated Workspace Details Briefing (Pre-Dashboard)
+  if (currentScreen === 'workspaceDetails') {
+    return (
+      <div className="min-h-screen flex flex-col bg-[#F6F3EA]">
+        <DemoBar />
+        <WorkspaceDetailsPage 
+          onBack={() => setCurrentScreen('workspaceSelect')}
+          onEnterDashboard={() => enterWorkspace(selectedWorkspace)}
+          onOpenDemoStory={() => setCurrentScreen('demoCenter')}
+        />
+        <IVRModal />
+        <NotificationCenter />
+        {isDemoModalOpen && (
+          <TryDemoModal 
+            onClose={() => setIsDemoModalOpen(false)} 
+            onOpenDemoCenter={() => {
+              setIsDemoModalOpen(false);
+              setCurrentScreen('demoCenter');
+            }}
+          />
+        )}
+      </div>
+    );
+  }
+
+  // SCREEN 5: Dedicated 9-Phase Story Mode Demo Center
+  if (currentScreen === 'demoCenter') {
+    return (
+      <div className="min-h-screen flex flex-col bg-[#F6F3EA]">
+        <DemoBar />
+        <DemoCenter 
+          onExit={() => setCurrentScreen('workspaceSelect')}
+          onOpenRoleDashboard={(roleKey) => enterWorkspace(roleKey)}
+        />
+        <IVRModal />
+        <NotificationCenter />
+        {isDemoModalOpen && (
+          <TryDemoModal 
+            onClose={() => setIsDemoModalOpen(false)} 
+            onOpenDemoCenter={() => {
+              setIsDemoModalOpen(false);
+              setCurrentScreen('demoCenter');
+            }}
+          />
+        )}
+      </div>
+    );
+  }
+
+  // SCREEN 6: Role-Specific Authenticated Workspace & Routed Sub-Pages
   return (
     <div className="min-h-screen bg-[#F6F3EA] flex flex-col selection:bg-[#149A84] selection:text-white">
       {/* Top Evaluator Helper Bar */}
@@ -222,6 +325,15 @@ function MainAppContent() {
       <IVRModal />
       <NotificationCenter />
       <AnimalProfileModal />
+      {isDemoModalOpen && (
+        <TryDemoModal 
+          onClose={() => setIsDemoModalOpen(false)} 
+          onOpenDemoCenter={() => {
+            setIsDemoModalOpen(false);
+            setCurrentScreen('demoCenter');
+          }}
+        />
+      )}
       {isAdvisoryStudioOpen && (
         <AdvisoryStudio onClose={() => setIsAdvisoryStudioOpen(false)} />
       )}
