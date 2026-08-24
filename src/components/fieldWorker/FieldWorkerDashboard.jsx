@@ -1,313 +1,228 @@
 import React, { useState } from 'react';
 import { 
-  Tag, 
-  Stethoscope, 
-  Skull, 
-  Syringe, 
-  TestTube2, 
-  WifiOff, 
-  RefreshCw, 
-  Plus, 
-  CheckCircle2, 
+  Users, 
   MapPin, 
-  Calendar,
-  AlertTriangle,
-  X,
-  FileText,
-  Clock,
-  Navigation,
+  Calendar, 
+  CheckCircle2, 
+  Clock, 
+  AlertTriangle, 
+  PlusCircle, 
+  Syringe, 
+  FileText, 
+  TestTube2, 
+  Radio, 
   ArrowRight,
-  Phone,
-  Database
+  Sparkles,
+  WifiOff,
+  Skull,
+  Send
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import RiskBadge from '../common/RiskBadge';
 
 export default function FieldWorkerDashboard() {
   const { 
-    registerAnimal, 
-    reportMortality, 
-    submitSickAnimalReport, 
-    offlineQueue, 
-    syncOfflineQueue, 
+    fieldSchedule, 
     isOffline, 
-    setIsOffline,
-    setIsOfflineModalOpen,
-    t,
-    addNotification
+    offlineQueue, 
+    addNotification 
   } = useApp();
 
-  const [activeModal, setActiveModal] = useState(null); // 'register' | 'mortality' | 'symptom'
-  const [selectedVillageOnMap, setSelectedVillageOnMap] = useState({
-    name: "Khedgaon",
-    monitoredAnimals: 17,
-    openCases: 2,
-    vacCoverage: "74%",
-    assignedVisits: 2,
-    status: "Active LSD Cluster Suspect"
-  });
+  const [activeTab, setActiveTab] = useState('schedule');
+  const [selectedVisit, setSelectedVisit] = useState(fieldSchedule[0]);
+  const [showToolModal, setShowToolModal] = useState(null);
 
-  // Timeline-Based Today's Visits (Exact requirement 18)
-  const timelineVisits = [
-    { time: "09:30", village: "Khedgaon", task: "Clinical verification", farmer: "Ramesh Patil", animal: "Ganga (Cow)", status: "In Progress", urgency: "HIGH" },
-    { time: "11:30", village: "Malegaon Budruk", task: "Vaccination drive", farmer: "Sanjay Jagtap", animal: "FMD Booster", status: "Scheduled", urgency: "MEDIUM" },
-    { time: "14:00", village: "Gunawadi", task: "Sample collection", farmer: "Balasaheb Shinde", animal: "Goat PPR Swab", status: "Scheduled", urgency: "HIGH" },
-    { time: "16:30", village: "Khedgaon", task: "Vaccination camp", farmer: "Gram Panchayat PHC", animal: "Ring Drive", status: "Scheduled", urgency: "LOW" }
-  ];
-
-  // Forms state
-  const [regForm, setRegForm] = useState({ name: "Gauri", species: "Cattle (Cow)", breed: "Gir Indigenous", owner: "Sopan Jadhav", phone: "+91 98901 23456", location: "Khedgaon Sector 2" });
-  const [mortForm, setMortForm] = useState({ species: "Sheep (Deccani)", count: "3", village: "Gunawadi", suspectedCause: "Sudden Death after Grazing" });
-  const [quickReport, setQuickReport] = useState({ village: "Malegaon Budruk", species: "Buffalo", symptoms: "High fever, swollen lymph nodes", owner: "Kisan Thorat" });
-
-  const handleRegSubmit = (e) => {
-    e.preventDefault();
-    registerAnimal(regForm);
-    setActiveModal(null);
-  };
-
-  const handleMortSubmit = (e) => {
-    e.preventDefault();
-    reportMortality(mortForm);
-    setActiveModal(null);
-  };
-
-  const handleQuickClinicalSubmit = (e) => {
-    e.preventDefault();
-    submitSickAnimalReport({
-      farmerName: quickReport.owner,
-      farmerPhone: "+91 97654 32199",
-      village: quickReport.village,
-      species: quickReport.species,
-      symptoms: [quickReport.symptoms],
-      recentDeaths: false,
-      duration: "1 Day"
-    });
-    setActiveModal(null);
+  const handleExecuteAction = (toolName) => {
+    addNotification(`📋 Action Logged: ${toolName}`, "Synchronized to Baramati Field Sentinel database.", "success");
+    alert(`Success: ${toolName} recorded and synchronized!`);
+    setShowToolModal(null);
   };
 
   return (
-    <div className="space-y-6 text-slate-900 pb-20">
-      {/* 1. Header: Field Sentinel */}
-      <div className="p-5 bg-gradient-to-r from-tealBrand via-deepForest to-midnight text-white rounded-2xl shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+    <div className="space-y-6 text-[#0A1020]">
+      {/* 1. Header: Operational Banner (Section 19) */}
+      <div className="p-6 bg-gradient-to-r from-teal-950 via-slate-900 to-[#0A1020] text-white rounded-3xl shadow-sm border border-teal-900 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <div className="inline-flex items-center gap-2 px-2.5 py-1 bg-white/10 rounded-full text-xs text-teal-200 border border-white/10 mb-1.5">
-            <span className="w-2 h-2 rounded-full bg-teal-300 animate-ping" />
-            <span>Field Sentinel Operations</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/10 rounded-full text-xs text-teal-200 border border-white/10 mb-2">
+            <span className="w-2 h-2 rounded-full bg-teal-400 animate-ping" />
+            <span>Field Sentinel • Sunita Pawar (पशु सखी)</span>
           </div>
-          <h2 className="text-xl sm:text-2xl font-black">Sunita Pawar (पशु सखी / Para-Vet)</h2>
-          <p className="text-xs text-teal-100 mt-0.5 flex items-center gap-1.5">
-            <MapPin className="w-3.5 h-3.5" />
-            <span>Assigned Territory: Khedgaon • Malegaon Budruk • Gunawadi</span>
+          <h2 className="text-2xl sm:text-3xl font-black">Today's Field Operations</h2>
+          <p className="text-xs text-teal-200 mt-0.5">
+            Assigned Territory: <span className="font-bold text-white">Khedgaon • Malegaon Budruk • Gunawadi</span>
           </p>
         </div>
 
-        {/* Offline Status Pill */}
-        <button
-          onClick={() => setIsOfflineModalOpen(true)}
-          className="p-3 bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl text-left transition shrink-0"
-        >
-          <div className="flex items-center gap-2 text-xs font-bold text-teal-200">
-            <RefreshCw className="w-4 h-4" />
-            <span>Offline Queue: {offlineQueue.length} records</span>
+        <div className="flex items-center gap-3">
+          <div className="bg-slate-900/90 px-3.5 py-2 rounded-2xl border border-teal-800 text-xs flex items-center gap-2">
+            <Clock className="w-4 h-4 text-teal-400" />
+            <div>
+              <span className="text-slate-400 block text-[10px]">Today's Target</span>
+              <span className="font-black text-white">4 Visits • 18 Cattle</span>
+            </div>
           </div>
-          <p className="text-[10px] text-slate-300 mt-0.5">{isOffline ? 'Offline Mode Active' : 'Online Auto-Syncing'}</p>
-        </button>
+        </div>
       </div>
 
-      {/* 2. TODAY'S FIELD PLAN (Timeline Visits) + Live Route Map Side-by-Side */}
+      {/* 2. Section 20: LIVE ROUTE MAP & TODAY'S FIELD PLAN (SIDE-BY-SIDE) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Left: Timeline Visits (7 cols) */}
-        <div className="lg:col-span-7 bg-white rounded-2xl border border-sand p-5 card-elevated space-y-4">
-          <div className="flex items-center justify-between border-b border-sand pb-3">
-            <h3 className="font-extrabold text-sm text-slate-900 flex items-center gap-2">
-              <Calendar className="w-4 h-4 text-tealBrand" />
-              <span>TODAY'S FIELD PLAN</span>
-            </h3>
-            <span className="text-xs font-mono text-slate-500">{timelineVisits.length} Scheduled Visits</span>
+        {/* Left: Interactive GPS Route Map (6 cols) */}
+        <div className="lg:col-span-6 bg-[#0A1020] text-white p-5 rounded-3xl border border-slate-800 shadow-md flex flex-col justify-between space-y-4">
+          <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div className="flex items-center gap-2">
+              <MapPin className="w-4 h-4 text-teal-400" />
+              <h3 className="font-extrabold text-sm text-slate-100">Live Territory Route Map</h3>
+            </div>
+            <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800">
+              GPS Active
+            </span>
           </div>
 
-          <div className="relative pl-6 space-y-4 before:absolute before:left-2.5 before:top-3 before:bottom-3 before:w-0.5 before:bg-sand">
-            {timelineVisits.map((v, idx) => (
-              <div key={idx} className="relative flex items-start gap-3 text-xs">
-                {/* Timeline Dot */}
-                <span className={`absolute -left-6 top-1 w-3 h-3 rounded-full border-2 border-white ${
-                  v.status === 'In Progress' ? 'bg-amber-500 animate-pulse' : 'bg-tealBrand'
-                }`} />
+          {/* SVG Visual Route Map */}
+          <div className="h-56 relative flex items-center justify-center my-2">
+            <svg viewBox="0 0 400 240" className="w-full h-full">
+              {/* Route Trajectory */}
+              <path 
+                d="M 60 160 Q 140 60 220 120 T 340 80" 
+                fill="none" 
+                stroke="#149A84" 
+                strokeWidth="3" 
+                strokeDasharray="6 4"
+                className="animate-pulse"
+              />
 
-                <div className="w-14 font-mono font-extrabold text-slate-900 shrink-0 pt-0.5">
-                  {v.time}
-                </div>
+              {/* Node 1: Khedgaon */}
+              <circle cx="60" cy="160" r="10" fill="#073B32" stroke="#149A84" strokeWidth="2" />
+              <text x="50" y="190" fill="#ffffff" fontSize="10" fontWeight="bold">09:30 Khedgaon</text>
 
-                <div className="flex-1 p-3.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1 hover:border-tealBrand transition">
-                  <div className="flex items-center justify-between">
-                    <span className="font-bold text-slate-900 text-sm">{v.village}</span>
-                    <RiskBadge level={v.urgency === 'HIGH' ? 'HIGH' : 'LOW'} size="sm" />
+              {/* Node 2: Malegaon */}
+              <circle cx="160" cy="90" r="8" fill="#149A84" stroke="#ffffff" strokeWidth="2" />
+              <text x="140" y="70" fill="#a7f3d0" fontSize="10">11:30 Malegaon</text>
+
+              {/* Node 3: Gunawadi */}
+              <circle cx="260" cy="140" r="8" fill="#E4A53A" stroke="#ffffff" strokeWidth="2" />
+              <text x="245" y="165" fill="#fde68a" fontSize="10">14:00 Gunawadi</text>
+
+              {/* Node 4: Khedgaon PHC */}
+              <circle cx="340" cy="80" r="8" fill="#5877D7" stroke="#ffffff" strokeWidth="2" />
+              <text x="310" y="60" fill="#bfdbfe" fontSize="10">16:30 PHC Shed</text>
+            </svg>
+          </div>
+
+          <div className="bg-slate-900 p-3 rounded-2xl border border-slate-800 flex items-center justify-between text-xs">
+            <span className="text-slate-400">Current Node: <strong className="text-white">Khedgaon Unit 4</strong></span>
+            <span className="text-teal-400 font-bold">ETA Next: 11:15 AM</span>
+          </div>
+        </div>
+
+        {/* Right: TODAY'S FIELD TIMELINE (6 cols) */}
+        <div className="lg:col-span-6 bg-white p-5 rounded-3xl border border-[#ECE6D6] shadow-xs space-y-3">
+          <h3 className="font-extrabold text-sm text-[#0A1020] flex items-center justify-between border-b border-[#ECE6D6] pb-2.5">
+            <span>TODAY'S VISIT SCHEDULE</span>
+            <span className="text-xs text-slate-500 font-mono">4 Assigned Tasks</span>
+          </h3>
+
+          <div className="space-y-2.5">
+            {fieldSchedule.map((visit) => (
+              <div 
+                key={visit.id}
+                onClick={() => setSelectedVisit(visit)}
+                className={`p-3.5 rounded-2xl border transition cursor-pointer ${
+                  selectedVisit.id === visit.id 
+                    ? "border-[#073B32] bg-[#D9F1E8]/30 shadow-xs" 
+                    : "border-[#ECE6D6] bg-[#F6F3EA] hover:border-slate-300"
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-mono font-black text-[#073B32]">{visit.time}</span>
+                    <span className="text-xs font-bold text-[#0A1020]">{visit.village}</span>
                   </div>
-
-                  <p className="font-bold text-tealBrand text-xs">{v.task}</p>
-                  <p className="text-slate-600 text-[11px]">Farmer: {v.farmer} • Target: {v.animal}</p>
+                  <RiskBadge level={visit.urgency} size="sm" />
                 </div>
+                <p className="text-xs text-slate-700 mt-1 font-semibold">
+                  {visit.purpose} — <span className="text-slate-500 font-normal">{visit.farmer}</span>
+                </p>
               </div>
             ))}
           </div>
         </div>
-
-        {/* Right: Live Route Map (5 cols) */}
-        <div className="lg:col-span-5 bg-midnight text-white rounded-2xl border border-slate-800 p-5 shadow-md flex flex-col justify-between space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-            <div className="flex items-center gap-2">
-              <MapPin className="w-4 h-4 text-teal-400" />
-              <h3 className="font-extrabold text-sm text-slate-100">Live Field Sentinel Route Map</h3>
-            </div>
-            <span className="text-[10px] font-mono text-teal-400">GPS Tracked</span>
-          </div>
-
-          <div className="h-56 relative flex items-center justify-center">
-            <svg viewBox="0 0 350 220" className="w-full h-full">
-              <line x1="80" y1="110" x2="175" y2="90" stroke="#334155" strokeWidth="3" />
-              <line x1="175" y1="90" x2="270" y2="140" stroke="#334155" strokeWidth="3" />
-              
-              <circle cx="175" cy="90" r="16" fill="#0F8B7A" stroke="#2dd4bf" strokeWidth="2" className="cursor-pointer" onClick={() => setSelectedVillageOnMap({ name: "Khedgaon", monitoredAnimals: 17, openCases: 2, vacCoverage: "74%", status: "Active LSD Cluster" })} />
-              <text x="175" y="65" fill="#5eead4" fontSize="11" fontWeight="bold" textAnchor="middle">09:30 Khedgaon</text>
-
-              <circle cx="80" cy="110" r="14" fill="#D95445" stroke="#f87171" strokeWidth="2" className="cursor-pointer" onClick={() => setSelectedVillageOnMap({ name: "Malegaon Budruk", monitoredAnimals: 22, openCases: 3, vacCoverage: "68%", status: "FMD Vaccination Drive" })} />
-              <text x="80" y="85" fill="#fca5a5" fontSize="10" textAnchor="middle">11:30 Malegaon</text>
-
-              <circle cx="270" cy="140" r="14" fill="#E1A33A" stroke="#fde047" strokeWidth="2" className="cursor-pointer" onClick={() => setSelectedVillageOnMap({ name: "Gunawadi", monitoredAnimals: 14, openCases: 1, vacCoverage: "79%", status: "Sample Swab Collection" })} />
-              <text x="270" y="165" fill="#fde68a" fontSize="10" textAnchor="middle">14:00 Gunawadi</text>
-            </svg>
-          </div>
-
-          <div className="p-3 bg-slate-900 rounded-xl border border-slate-800 text-xs space-y-1">
-            <div className="flex justify-between font-bold text-teal-300">
-              <span>{selectedVillageOnMap.name} Sector</span>
-              <span>Vac: {selectedVillageOnMap.vacCoverage}</span>
-            </div>
-            <p className="text-[11px] text-slate-300">Monitored: {selectedVillageOnMap.monitoredAnimals} Animals | Status: {selectedVillageOnMap.status}</p>
-          </div>
-        </div>
       </div>
 
-      {/* 3. COMPACT FLOATING FIELD WORKER ACTION BAR (Requirement 19) */}
-      <div className="fixed bottom-14 lg:bottom-6 left-1/2 -translate-x-1/2 z-40 bg-midnight text-white px-4 py-2.5 rounded-2xl shadow-2xl border border-slate-700 flex items-center gap-2 overflow-x-auto text-xs max-w-full">
-        <button
-          onClick={() => setActiveModal('register')}
-          className="px-3 py-1.5 bg-tealBrand hover:bg-teal-600 text-white rounded-xl font-bold transition flex items-center gap-1.5 shrink-0"
-        >
-          <Tag className="w-3.5 h-3.5" />
-          <span>Register Animal</span>
-        </button>
+      {/* 3. Section 21: FIELD WORKER QUICK ACTIONS TOOLBELT */}
+      <div className="bg-white rounded-3xl border border-[#ECE6D6] p-5 shadow-xs space-y-3">
+        <h3 className="font-black text-sm text-[#0A1020] uppercase tracking-wider">
+          Field Sentinel Quick Actions Toolbelt
+        </h3>
 
-        <button
-          onClick={() => setActiveModal('symptom')}
-          className="px-3 py-1.5 bg-coralRed hover:bg-red-600 text-white rounded-xl font-bold transition flex items-center gap-1.5 shrink-0"
-        >
-          <Stethoscope className="w-3.5 h-3.5" />
-          <span>Report Signs</span>
-        </button>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+          <button
+            onClick={() => handleExecuteAction("Register Animal with RFID Tag")}
+            className="p-4 bg-[#F6F3EA] hover:bg-[#D9F1E8] border border-[#ECE6D6] rounded-2xl text-left transition flex flex-col justify-between space-y-2 group"
+          >
+            <PlusCircle className="w-5 h-5 text-[#073B32] group-hover:scale-110 transition-transform" />
+            <div>
+              <h4 className="font-extrabold text-xs text-[#0A1020]">Register Animal</h4>
+              <p className="text-[10px] text-slate-500">RFID Tag & Owner</p>
+            </div>
+          </button>
 
-        <button
-          onClick={() => setActiveModal('mortality')}
-          className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-bold transition flex items-center gap-1.5 shrink-0"
-        >
-          <Skull className="w-3.5 h-3.5 text-red-400" />
-          <span>Log Mortality</span>
-        </button>
+          <button
+            onClick={() => handleExecuteAction("Report Clinical Signs")}
+            className="p-4 bg-[#F6F3EA] hover:bg-amber-50 border border-[#ECE6D6] rounded-2xl text-left transition flex flex-col justify-between space-y-2 group"
+          >
+            <FileText className="w-5 h-5 text-amber-700 group-hover:scale-110 transition-transform" />
+            <div>
+              <h4 className="font-extrabold text-xs text-[#0A1020]">Report Signs</h4>
+              <p className="text-[10px] text-slate-500">Field Symptoms Log</p>
+            </div>
+          </button>
 
-        <button
-          onClick={() => alert("Recording Vaccination Campaign batch Doses")}
-          className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-bold transition flex items-center gap-1.5 shrink-0"
-        >
-          <Syringe className="w-3.5 h-3.5 text-teal-400" />
-          <span>Vaccinate</span>
-        </button>
+          <button
+            onClick={() => handleExecuteAction("Log Sudden Mortality Event")}
+            className="p-4 bg-[#F6F3EA] hover:bg-red-50 border border-[#ECE6D6] rounded-2xl text-left transition flex flex-col justify-between space-y-2 group"
+          >
+            <Skull className="w-5 h-5 text-red-700 group-hover:scale-110 transition-transform" />
+            <div>
+              <h4 className="font-extrabold text-xs text-[#0A1020]">Log Mortality</h4>
+              <p className="text-[10px] text-slate-500">Early Outbreak Flag</p>
+            </div>
+          </button>
 
-        <button
-          onClick={() => alert("Collecting Diagnostic Sample Barcode #LAB-PUN-9829")}
-          className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-bold transition flex items-center gap-1.5 shrink-0"
-        >
-          <TestTube2 className="w-3.5 h-3.5 text-purple-400" />
-          <span>Collect Sample</span>
-        </button>
+          <button
+            onClick={() => handleExecuteAction("Vaccination Batch Log")}
+            className="p-4 bg-[#F6F3EA] hover:bg-emerald-50 border border-[#ECE6D6] rounded-2xl text-left transition flex flex-col justify-between space-y-2 group"
+          >
+            <Syringe className="w-5 h-5 text-[#149A84] group-hover:scale-110 transition-transform" />
+            <div>
+              <h4 className="font-extrabold text-xs text-[#0A1020]">Vaccinate</h4>
+              <p className="text-[10px] text-slate-500">Cold Chain Batch</p>
+            </div>
+          </button>
 
-        <button
-          onClick={() => setIsOfflineModalOpen(true)}
-          className="px-3 py-1.5 bg-amberBrand hover:bg-amber-600 text-slate-950 rounded-xl font-black transition flex items-center gap-1.5 shrink-0"
-        >
-          <Database className="w-3.5 h-3.5" />
-          <span>Offline Queue ({offlineQueue.length})</span>
-        </button>
+          <button
+            onClick={() => handleExecuteAction("Collect Diagnostic Swab Sample")}
+            className="p-4 bg-[#F6F3EA] hover:bg-purple-50 border border-[#ECE6D6] rounded-2xl text-left transition flex flex-col justify-between space-y-2 group"
+          >
+            <TestTube2 className="w-5 h-5 text-purple-700 group-hover:scale-110 transition-transform" />
+            <div>
+              <h4 className="font-extrabold text-xs text-[#0A1020]">Collect Sample</h4>
+              <p className="text-[10px] text-slate-500">Barcode Generator</p>
+            </div>
+          </button>
+
+          <button
+            onClick={() => handleExecuteAction("Sync Offline Queue")}
+            className="p-4 bg-[#F6F3EA] hover:bg-blue-50 border border-[#ECE6D6] rounded-2xl text-left transition flex flex-col justify-between space-y-2 group"
+          >
+            <WifiOff className="w-5 h-5 text-blue-700 group-hover:scale-110 transition-transform" />
+            <div>
+              <h4 className="font-extrabold text-xs text-[#0A1020]">Offline Queue</h4>
+              <p className="text-[10px] text-slate-500">{offlineQueue.length} Records Pending</p>
+            </div>
+          </button>
+        </div>
       </div>
-
-      {/* Action Modals */}
-      {activeModal === 'register' && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-xs">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 text-xs">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
-              <h3 className="font-bold text-base text-slate-900">Register New Animal & RFID Tag</h3>
-              <button onClick={() => setActiveModal(null)} className="p-1 text-slate-400 hover:text-slate-700">
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            <form onSubmit={handleRegSubmit} className="space-y-3">
-              <div>
-                <label className="block font-bold text-slate-700 mb-1">Animal Name</label>
-                <input type="text" value={regForm.name} onChange={e => setRegForm({...regForm, name: e.target.value})} className="w-full p-2.5 border border-slate-300 rounded-xl font-bold" required />
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">Species</label>
-                  <select value={regForm.species} onChange={e => setRegForm({...regForm, species: e.target.value})} className="w-full p-2.5 border border-slate-300 rounded-xl bg-white">
-                    <option>Cattle (Cow)</option>
-                    <option>Buffalo</option>
-                    <option>Goat</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">Owner Name</label>
-                  <input type="text" value={regForm.owner} onChange={e => setRegForm({...regForm, owner: e.target.value})} className="w-full p-2.5 border border-slate-300 rounded-xl" />
-                </div>
-              </div>
-              <button type="submit" className="w-full py-3 bg-tealBrand hover:bg-teal-700 text-white rounded-xl font-bold mt-2">
-                Register & Issue RFID Tag
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {activeModal === 'mortality' && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-xs">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-red-200 text-xs">
-            <div className="flex items-center justify-between border-b border-red-100 pb-3 mb-4">
-              <h3 className="font-bold text-base text-red-950">Log Sudden Mortality Incident</h3>
-              <button onClick={() => setActiveModal(null)} className="p-1 text-slate-400 hover:text-slate-700">
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            <form onSubmit={handleMortSubmit} className="space-y-3">
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">Species</label>
-                  <input type="text" value={mortForm.species} onChange={e => setMortForm({...mortForm, species: e.target.value})} className="w-full p-2.5 border border-slate-300 rounded-xl" />
-                </div>
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">Number of Deaths</label>
-                  <input type="number" value={mortForm.count} onChange={e => setMortForm({...mortForm, count: e.target.value})} className="w-full p-2.5 border border-slate-300 rounded-xl font-bold" min="1" required />
-                </div>
-              </div>
-              <div>
-                <label className="block font-bold text-slate-700 mb-1">Suspected Cause</label>
-                <textarea value={mortForm.suspectedCause} onChange={e => setMortForm({...mortForm, suspectedCause: e.target.value})} className="w-full p-2.5 border border-slate-300 rounded-xl h-20" required />
-              </div>
-              <button type="submit" className="w-full py-3 bg-coralRed hover:bg-red-700 text-white rounded-xl font-bold mt-2">
-                Log Mortality Alert to District Command
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

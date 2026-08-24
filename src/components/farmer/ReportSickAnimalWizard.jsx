@@ -1,88 +1,49 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
-  Check, 
+  X, 
   ChevronRight, 
-  ChevronLeft, 
+  ArrowLeft, 
+  Check, 
   Camera, 
   Mic, 
   MapPin, 
+  Sparkles, 
   AlertTriangle, 
   ShieldCheck, 
-  UploadCloud, 
-  Activity, 
-  CheckCircle2, 
-  ArrowRight,
-  Sparkles,
-  Info,
-  Calendar,
-  Layers,
-  RotateCcw
+  Clock, 
+  PhoneCall,
+  CheckCircle2,
+  Share2,
+  FileText
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
-import RiskBadge from '../common/RiskBadge';
 
-export default function ReportSickAnimalWizard({ onComplete }) {
-  const { 
-    animals, 
-    submitSickAnimalReport, 
-    t, 
-    setRole, 
-    setActiveTab, 
-    setSelectedCaseForDrawer,
-    cases,
-    demoTourStep,
-    setDemoTourStep
-  } = useApp();
+export default function ReportSickAnimalWizard({ onClose }) {
+  const { animals, addReport, addNotification } = useApp();
 
-  const [step, setStep] = useState(1);
-  const [selectedAnimal, setSelectedAnimal] = useState(animals[0] || null);
-  const [isNewAnimal, setIsNewAnimal] = useState(false);
-  const [newAnimalData, setNewAnimalData] = useState({ species: "Cattle (Cow)", breed: "Gir Indigenous", tag: "MH-PUN-0992", age: "3.5 Years" });
-  
-  // Symptoms Selected
+  const [step, setStep] = useState(1); // 1: Animal, 2: Symptoms, 3: Evidence, 4: Location, 5: Assessment
+  const [selectedAnimal, setSelectedAnimal] = useState(animals[0]);
   const [selectedSymptoms, setSelectedSymptoms] = useState([
     "High Fever (ताप)",
-    "Skin Nodules / Lumps (त्वचेवर गाठी)",
-    "Excessive Salivation (लाळ गळणे)",
-    "Sudden Milk Drop (दूध कमी होणे)"
+    "Nodular Skin Lumps (त्वचेवर गाठी)",
+    "Milk Yield Drop (दूध घट)"
   ]);
-
-  // Basic Questions
-  const [duration, setDuration] = useState("1 - 2 Days");
-  const [stoppedEating, setStoppedEating] = useState("Yes");
-  const [milkDecreased, setMilkDecreased] = useState("Yes");
-  const [nearbySimilar, setNearbySimilar] = useState("Yes");
-  const [recentDeaths, setRecentDeaths] = useState("No");
-
-  // Evidence
-  const [photoUploaded, setPhotoUploaded] = useState(true);
-  const [voiceRecorded, setVoiceRecorded] = useState(false);
-  const [isRecording, setIsRecording] = useState(false);
-  
-  // Submission result
-  const [createdCase, setCreatedCase] = useState(null);
+  const [duration, setDuration] = useState("2 Days");
+  const [stoppedEating, setStoppedEating] = useState(true);
+  const [nearbySimilarCases, setNearbySimilarCases] = useState(true);
+  const [voiceRecorded, setVoiceRecorded] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // If in demo tour mode step 2, pre-advance
-  useEffect(() => {
-    if (demoTourStep === 2 && step < 5) {
-      setStep(5);
-    }
-  }, [demoTourStep]);
-
   const symptomList = [
-    { id: "fever", label: t.symptomFever, icon: "🌡️" },
-    { id: "skin", label: t.symptomSkinLesions, icon: "🔴" },
-    { id: "salivation", label: t.symptomSalivation, icon: "💧" },
-    { id: "appetite", label: t.symptomLossAppetite, icon: "🌾" },
-    { id: "milk", label: t.symptomMilkDrop, icon: "🥛" },
-    { id: "nasal", label: t.symptomNasalDischarge, icon: "🤧" },
-    { id: "cough", label: t.symptomCough, icon: "🫁" },
-    { id: "diarrhea", label: t.symptomDiarrhea, icon: "⚠️" },
-    { id: "lameness", label: t.symptomLameness, icon: "🦵" },
-    { id: "weakness", label: t.symptomWeakness, icon: "🛌" },
-    { id: "mortality", label: t.symptomSuddenDeath, icon: "☠️" },
-    { id: "abortion", label: t.symptomAbortion, icon: "🐣" }
+    { id: "fever", label: "High Fever (ताप)", severity: "high" },
+    { id: "nodules", label: "Nodular Skin Lumps (त्वचेवर गाठी)", severity: "high" },
+    { id: "salivation", label: "Excessive Salivation (लाळ गळणे)", severity: "high" },
+    { id: "blisters", label: "Mouth / Foot Blisters (तोंडावर/खुरावर फोड)", severity: "critical" },
+    { id: "milk_drop", label: "Milk Yield Drop (दूध घट)", severity: "medium" },
+    { id: "respiratory", label: "Labored Breathing (श्वास घेण्यास त्रास)", severity: "high" },
+    { id: "diarrhea", label: "Severe Diarrhea (हगवण)", severity: "medium" },
+    { id: "lameness", label: "Lameness / Limping (लंगडणे)", severity: "medium" },
+    { id: "mortality", label: "Sudden Flock Death (अचानक मृत्यू)", severity: "critical" }
   ];
 
   const toggleSymptom = (label) => {
@@ -96,573 +57,354 @@ export default function ReportSickAnimalWizard({ onComplete }) {
   const handleFinalSubmit = () => {
     setIsSubmitting(true);
     setTimeout(() => {
-      const animalObj = isNewAnimal ? newAnimalData : selectedAnimal;
-      const res = submitSickAnimalReport({
+      setIsSubmitting(false);
+      
+      const newCase = {
+        caseId: "PS-2026-004281",
+        reportedAt: "Just now",
+        date: "2026-02-24 20:00",
         farmerName: "Ramesh Patil",
         farmerPhone: "+91 98224 51092",
         village: "Khedgaon",
-        animalId: animalObj.id || animalObj.tag || "MH-PUN-0241",
-        species: animalObj.species,
-        breed: animalObj.breed,
+        block: "Baramati",
+        district: "Pune",
+        animalId: selectedAnimal.id,
+        species: selectedAnimal.species,
+        breed: selectedAnimal.breed,
         symptoms: selectedSymptoms,
         duration: duration,
-        stoppedEating: stoppedEating === "Yes",
-        milkDecreased: milkDecreased === "Yes",
-        nearbySimilarCases: nearbySimilar === "Yes",
-        recentDeaths: recentDeaths === "Yes",
-        photoUrl: "https://images.unsplash.com/photo-1546445317-29f4545e9d53?auto=format&fit=crop&w=600&q=80"
-      });
-      setCreatedCase(res);
-      setIsSubmitting(false);
-      setStep(6);
-    }, 800);
+        stoppedEating: stoppedEating,
+        milkDecreased: true,
+        nearbySimilarCases: nearbySimilarCases,
+        recentDeaths: false,
+        riskScore: 86,
+        riskLevel: "HIGH",
+        suspectedDisease: "Lumpy Skin Disease (LSD) - Cluster Suspect",
+        status: "under_review",
+        assignedVet: "Dr. Anand Deshmukh",
+        locationCoord: { lat: 18.1524, lng: 74.5768 },
+        photoUrl: selectedAnimal.imageUrl
+      };
+
+      addReport(newCase);
+      addNotification("🚨 Preliminary Risk Assessment: High (86/100)", "Your case #PS-2026-004281 has been routed to Dr. Anand Deshmukh at Baramati Taluka Hospital.", "alert");
+      setStep(5); // Show Intelligence Assessment Screen
+    }, 600);
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-      {/* Wizard Progress Header */}
-      <div className="bg-gradient-to-r from-emerald-900 to-forest-900 text-white p-4 sm:p-6">
-        <div className="flex items-center justify-between mb-4">
+    <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+      <div className="bg-white rounded-3xl shadow-2xl border border-[#ECE6D6] max-w-2xl w-full overflow-hidden my-auto flex flex-col max-h-[90vh]">
+        {/* Header Ribbon */}
+        <div className="p-4 sm:p-5 bg-gradient-to-r from-[#073B32] to-[#0A1020] text-white flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 bg-emerald-500/20 border border-emerald-400/30 rounded-xl">
-              <Activity className="w-5 h-5 text-emerald-300" />
+            <div className="w-8 h-8 rounded-lg bg-[#149A84]/20 border border-[#149A84]/40 flex items-center justify-center text-white">
+              <Sparkles className="w-4 h-4 text-emerald-300" />
             </div>
             <div>
-              <h2 className="text-lg sm:text-xl font-bold">{t.reportWizardTitle}</h2>
-              <p className="text-xs text-emerald-200">Rapid Surveillance & Early Risk Triage</p>
+              <h3 className="font-black text-sm tracking-tight">Report Sick Animal (रोग नोंदणी)</h3>
+              <p className="text-[10px] text-emerald-200">Guided Clinical Triage Wizard • Step {step} of 5</p>
             </div>
           </div>
-          <span className="text-xs font-mono font-bold bg-white/10 px-2.5 py-1 rounded-full border border-white/10">
-            Step {step} of 6
-          </span>
+          <button 
+            onClick={onClose}
+            className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition"
+          >
+            <X className="w-4 h-4" />
+          </button>
         </div>
 
-        {/* Progress Bar Steps */}
-        <div className="grid grid-cols-6 gap-1 sm:gap-2 text-[10px] sm:text-xs">
-          {[
-            { s: 1, label: "Animal" },
-            { s: 2, label: "Symptoms" },
-            { s: 3, label: "Questions" },
-            { s: 4, label: "Evidence" },
-            { s: 5, label: "AI Triage" },
-            { s: 6, label: "Submitted" }
-          ].map((item) => (
-            <div 
-              key={item.s} 
-              className={`text-center pb-1 border-b-2 transition ${
-                step >= item.s ? 'border-emerald-400 text-emerald-200 font-bold' : 'border-white/20 text-white/50'
-              }`}
-            >
-              <span className="hidden sm:inline">{item.s}. </span>{item.label}
-            </div>
-          ))}
-        </div>
-      </div>
+        {/* Stepper Progress Bar */}
+        {step < 5 && (
+          <div className="bg-[#F6F3EA] px-5 py-2.5 border-b border-[#ECE6D6] flex items-center justify-between text-xs font-bold">
+            <span className={step >= 1 ? "text-[#073B32]" : "text-slate-400"}>01 Animal</span>
+            <ChevronRight className="w-3.5 h-3.5 text-slate-300" />
+            <span className={step >= 2 ? "text-[#073B32]" : "text-slate-400"}>02 Symptoms</span>
+            <ChevronRight className="w-3.5 h-3.5 text-slate-300" />
+            <span className={step >= 3 ? "text-[#073B32]" : "text-slate-400"}>03 Evidence</span>
+            <ChevronRight className="w-3.5 h-3.5 text-slate-300" />
+            <span className={step >= 4 ? "text-[#073B32]" : "text-slate-400"}>04 Location</span>
+          </div>
+        )}
 
-      {/* Wizard Step Content */}
-      <div className="p-4 sm:p-6">
-        {/* STEP 1: Select Animal */}
-        {step === 1 && (
-          <div className="space-y-4">
-            <div>
-              <h3 className="font-bold text-base text-slate-900">{t.selectAnimalPrompt}</h3>
-              <p className="text-xs text-slate-500">Choose from your registered livestock or add a new animal</p>
-            </div>
+        {/* Content Body */}
+        <div className="p-5 sm:p-6 overflow-y-auto flex-1 text-[#0A1020]">
+          {/* STEP 1: Select Animal */}
+          {step === 1 && (
+            <div className="space-y-4 animate-fadeIn">
+              <div>
+                <h4 className="font-black text-lg text-[#0A1020]">Which animal is showing symptoms?</h4>
+                <p className="text-xs text-slate-500">Select from your registered herd passport list</p>
+              </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {animals.map((a) => (
-                <div
-                  key={a.id}
-                  onClick={() => { setSelectedAnimal(a); setIsNewAnimal(false); }}
-                  className={`p-3.5 rounded-xl border-2 cursor-pointer transition flex items-center gap-3 ${
-                    selectedAnimal?.id === a.id && !isNewAnimal
-                      ? 'border-emerald-600 bg-emerald-50/50 shadow-xs'
-                      : 'border-slate-200 hover:border-slate-300'
-                  }`}
-                >
-                  <img src={a.imageUrl} alt={a.name} className="w-14 h-14 rounded-lg object-cover" />
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between">
-                      <h4 className="font-bold text-slate-900 text-sm">{a.name}</h4>
-                      <span className="text-[10px] font-mono bg-slate-100 px-1.5 py-0.5 rounded text-slate-600">
-                        {a.id}
-                      </span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {animals.slice(0, 4).map((animal) => (
+                  <div
+                    key={animal.id}
+                    onClick={() => setSelectedAnimal(animal)}
+                    className={`p-3.5 rounded-2xl border-2 cursor-pointer transition flex items-center gap-3 ${
+                      selectedAnimal.id === animal.id
+                        ? "border-[#073B32] bg-[#D9F1E8]/40 shadow-xs"
+                        : "border-[#ECE6D6] bg-[#F6F3EA] hover:border-slate-300"
+                    }`}
+                  >
+                    <img 
+                      src={animal.imageUrl} 
+                      alt={animal.name} 
+                      className="w-12 h-12 rounded-xl object-cover border border-slate-200" 
+                    />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <h5 className="font-extrabold text-sm text-[#0A1020] truncate">{animal.name}</h5>
+                        {selectedAnimal.id === animal.id && (
+                          <span className="w-4 h-4 rounded-full bg-[#073B32] text-white flex items-center justify-center text-[10px]">
+                            <Check className="w-3 h-3" />
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-xs text-slate-600 truncate">{animal.species} • {animal.breed}</p>
+                      <p className="text-[10px] font-mono text-slate-400">Tag: {animal.id}</p>
                     </div>
-                    <p className="text-xs text-slate-600">{a.species} • {a.breed}</p>
-                    <p className="text-[11px] text-slate-400">Age: {a.age} | Milk: {a.milkYield}</p>
                   </div>
-                  {selectedAnimal?.id === a.id && !isNewAnimal && (
-                    <div className="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0">
-                      <Check className="w-4 h-4" />
-                    </div>
-                  )}
-                </div>
-              ))}
-
-              {/* Add New Unregistered Animal option */}
-              <div
-                onClick={() => setIsNewAnimal(true)}
-                className={`p-3.5 rounded-xl border-2 border-dashed cursor-pointer transition flex items-center justify-center gap-2 ${
-                  isNewAnimal
-                    ? 'border-emerald-600 bg-emerald-50 shadow-xs'
-                    : 'border-slate-300 hover:border-slate-400 text-slate-600'
-                }`}
-              >
-                <span className="text-sm font-bold text-emerald-800">{t.addNewAnimalQuick}</span>
+                ))}
               </div>
             </div>
+          )}
 
-            {isNewAnimal && (
-              <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+          {/* STEP 2: Symptoms Selection */}
+          {step === 2 && (
+            <div className="space-y-4 animate-fadeIn">
+              <div>
+                <h4 className="font-black text-lg text-[#0A1020]">Select Observed Symptoms (लक्षणे)</h4>
+                <p className="text-xs text-slate-500">Tap all symptoms observed in {selectedAnimal.name}</p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                {symptomList.map((s) => {
+                  const isSelected = selectedSymptoms.includes(s.label);
+                  return (
+                    <button
+                      key={s.id}
+                      type="button"
+                      onClick={() => toggleSymptom(s.label)}
+                      className={`p-3 rounded-xl border text-left text-xs font-bold transition flex items-center justify-between ${
+                        isSelected 
+                          ? "border-[#073B32] bg-[#073B32] text-white shadow-xs" 
+                          : "border-[#ECE6D6] bg-[#F6F3EA] text-slate-800 hover:border-slate-300"
+                      }`}
+                    >
+                      <span>{s.label}</span>
+                      {isSelected && <Check className="w-4 h-4" />}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 pt-2">
                 <div>
-                  <label className="block text-slate-700 font-semibold mb-1">Species</label>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Duration of Sickness</label>
                   <select 
-                    value={newAnimalData.species} 
-                    onChange={e => setNewAnimalData({...newAnimalData, species: e.target.value})}
-                    className="w-full p-2 border border-slate-300 rounded-lg bg-white"
+                    value={duration} 
+                    onChange={e => setDuration(e.target.value)}
+                    className="w-full p-2.5 bg-[#F6F3EA] border border-[#ECE6D6] rounded-xl text-xs font-bold"
                   >
-                    <option>Cattle (Cow)</option>
-                    <option>Buffalo</option>
-                    <option>Goat</option>
-                    <option>Sheep</option>
-                    <option>Poultry</option>
+                    <option value="1 Day">1 Day (कालपासून)</option>
+                    <option value="2 Days">2 Days (दोन दिवस)</option>
+                    <option value="3-5 Days">3-5 Days</option>
+                    <option value="> 1 Week">More than 1 Week</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-slate-700 font-semibold mb-1">Breed / Identifier</label>
-                  <input 
-                    type="text" 
-                    value={newAnimalData.breed}
-                    onChange={e => setNewAnimalData({...newAnimalData, breed: e.target.value})}
-                    className="w-full p-2 border border-slate-300 rounded-lg"
-                    placeholder="e.g. Gir / Murrah"
-                  />
-                </div>
-                <div>
-                  <label className="block text-slate-700 font-semibold mb-1">Temporary Ear Tag / Ref</label>
-                  <input 
-                    type="text" 
-                    value={newAnimalData.tag}
-                    onChange={e => setNewAnimalData({...newAnimalData, tag: e.target.value})}
-                    className="w-full p-2 border border-slate-300 rounded-lg font-mono"
-                    placeholder="e.g. MH-PUN-XXXX"
-                  />
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* STEP 2: Select Symptoms (Big Touch Friendly Chips) */}
-        {step === 2 && (
-          <div className="space-y-4">
-            <div>
-              <h3 className="font-bold text-base text-slate-900">{t.symptomsPrompt}</h3>
-              <p className="text-xs text-slate-500">Tap to select all signs observed on the animal</p>
-            </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5">
-              {symptomList.map((item) => {
-                const isSelected = selectedSymptoms.includes(item.label);
-                return (
-                  <button
-                    key={item.id}
-                    type="button"
-                    onClick={() => toggleSymptom(item.label)}
-                    className={`p-3.5 rounded-xl border-2 text-left transition flex flex-col justify-between min-h-[85px] touch-active ${
-                      isSelected
-                        ? 'border-emerald-600 bg-emerald-50/80 shadow-xs'
-                        : 'border-slate-200 bg-white hover:border-slate-300'
-                    }`}
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Stopped Eating/Feeding?</label>
+                  <select 
+                    value={stoppedEating ? "yes" : "no"} 
+                    onChange={e => setStoppedEating(e.target.value === "yes")}
+                    className="w-full p-2.5 bg-[#F6F3EA] border border-[#ECE6D6] rounded-xl text-xs font-bold"
                   >
-                    <div className="flex items-center justify-between w-full">
-                      <span className="text-xl">{item.icon}</span>
-                      {isSelected ? (
-                        <span className="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs">
-                          ✓
-                        </span>
-                      ) : (
-                        <span className="w-5 h-5 rounded-full border border-slate-300" />
-                      )}
-                    </div>
-                    <span className={`text-xs font-bold mt-2 ${isSelected ? 'text-emerald-950' : 'text-slate-700'}`}>
-                      {item.label}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        {/* STEP 3: Basic Yes/No Questions */}
-        {step === 3 && (
-          <div className="space-y-4">
-            <div>
-              <h3 className="font-bold text-base text-slate-900">Simple Questions for Decision Support</h3>
-              <p className="text-xs text-slate-500">Helps the clinical algorithm assess infection speed and cluster risk</p>
-            </div>
-
-            <div className="space-y-3.5 text-xs sm:text-sm">
-              {/* Question 1 */}
-              <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <span className="font-semibold text-slate-800">{t.qDuration}</span>
-                <div className="flex gap-2">
-                  {["1 - 2 Days", "3 - 5 Days", "More than 5 Days"].map((d) => (
-                    <button
-                      key={d}
-                      type="button"
-                      onClick={() => setDuration(d)}
-                      className={`px-3 py-1.5 rounded-lg border font-semibold text-xs transition ${
-                        duration === d ? 'bg-emerald-700 text-white border-emerald-700' : 'bg-white text-slate-700 border-slate-300'
-                      }`}
-                    >
-                      {d}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Question 2 */}
-              <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between gap-2">
-                <span className="font-semibold text-slate-800">{t.qEating}</span>
-                <div className="flex gap-2">
-                  {["Yes", "No"].map((ans) => (
-                    <button
-                      key={ans}
-                      type="button"
-                      onClick={() => setStoppedEating(ans)}
-                      className={`px-4 py-1.5 rounded-lg border font-bold text-xs transition ${
-                        stoppedEating === ans ? 'bg-emerald-700 text-white border-emerald-700' : 'bg-white text-slate-700 border-slate-300'
-                      }`}
-                    >
-                      {ans}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Question 3 */}
-              <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between gap-2">
-                <span className="font-semibold text-slate-800">{t.qMilk}</span>
-                <div className="flex gap-2">
-                  {["Yes", "No"].map((ans) => (
-                    <button
-                      key={ans}
-                      type="button"
-                      onClick={() => setMilkDecreased(ans)}
-                      className={`px-4 py-1.5 rounded-lg border font-bold text-xs transition ${
-                        milkDecreased === ans ? 'bg-emerald-700 text-white border-emerald-700' : 'bg-white text-slate-700 border-slate-300'
-                      }`}
-                    >
-                      {ans}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Question 4 */}
-              <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between gap-2">
-                <span className="font-semibold text-slate-800">{t.qOthers}</span>
-                <div className="flex gap-2">
-                  {["Yes", "No"].map((ans) => (
-                    <button
-                      key={ans}
-                      type="button"
-                      onClick={() => setNearbySimilar(ans)}
-                      className={`px-4 py-1.5 rounded-lg border font-bold text-xs transition ${
-                        nearbySimilar === ans ? 'bg-emerald-700 text-white border-emerald-700' : 'bg-white text-slate-700 border-slate-300'
-                      }`}
-                    >
-                      {ans}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Question 5 */}
-              <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between gap-2">
-                <span className="font-semibold text-slate-800">{t.qDeaths}</span>
-                <div className="flex gap-2">
-                  {["Yes", "No"].map((ans) => (
-                    <button
-                      key={ans}
-                      type="button"
-                      onClick={() => setRecentDeaths(ans)}
-                      className={`px-4 py-1.5 rounded-lg border font-bold text-xs transition ${
-                        recentDeaths === ans ? 'bg-red-700 text-white border-red-700' : 'bg-white text-slate-700 border-slate-300'
-                      }`}
-                    >
-                      {ans}
-                    </button>
-                  ))}
+                    <option value="yes">Yes (चारा बंद केला)</option>
+                    <option value="no">No (खात आहे)</option>
+                  </select>
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* STEP 4: Upload Photo / Audio / GPS */}
-        {step === 4 && (
-          <div className="space-y-4">
-            <div>
-              <h3 className="font-bold text-base text-slate-900">{t.uploadPhotoTitle}</h3>
-              <p className="text-xs text-slate-500">{t.uploadPhotoDesc}</p>
-            </div>
+          {/* STEP 3: Evidence (Photo & Voice Memo) */}
+          {step === 3 && (
+            <div className="space-y-4 animate-fadeIn">
+              <div>
+                <h4 className="font-black text-lg text-[#0A1020]">Photo & Voice Evidence</h4>
+                <p className="text-xs text-slate-500">Helps veterinarian assess severity before dispatch</p>
+              </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {/* Photo Box */}
-              <div className="border-2 border-dashed border-emerald-300 rounded-xl p-4 bg-emerald-50/40 text-center space-y-3">
-                <div className="relative inline-block">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {/* Photo Capture Preview */}
+                <div className="p-4 bg-[#F6F3EA] rounded-2xl border-2 border-dashed border-[#ECE6D6] flex flex-col items-center justify-center text-center space-y-2 relative overflow-hidden">
                   <img 
-                    src="https://images.unsplash.com/photo-1546445317-29f4545e9d53?auto=format&fit=crop&w=600&q=80" 
-                    alt="Symptom preview" 
-                    className="w-32 h-24 object-cover rounded-lg border border-slate-300 mx-auto"
+                    src={selectedAnimal.imageUrl} 
+                    alt="Symptom photo" 
+                    className="w-full h-28 object-cover rounded-xl border border-slate-200" 
                   />
-                  <span className="absolute bottom-1 right-1 bg-emerald-700 text-white p-1 rounded-full text-[10px]">
-                    <Check className="w-3 h-3" />
+                  <span className="text-xs font-bold text-[#073B32] flex items-center gap-1">
+                    <Camera className="w-3.5 h-3.5" /> Skin Nodules Photo Attached
                   </span>
                 </div>
-                <div className="text-xs text-slate-600">
-                  <p className="font-bold text-emerald-900">Photo Attached: Cow_Skin_Nodules_01.jpg</p>
-                  <p className="text-[11px] text-slate-500">Tap to retake photo with camera</p>
-                </div>
-                <button 
-                  type="button"
-                  className="px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-bold text-slate-700 hover:bg-slate-50 transition inline-flex items-center gap-1.5"
-                >
-                  <Camera className="w-4 h-4 text-emerald-700" />
-                  <span>Retake Photo</span>
-                </button>
-              </div>
 
-              {/* Voice Note & GPS */}
-              <div className="space-y-3">
-                {/* Voice Box */}
-                <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="font-bold text-slate-800">{t.recordVoiceTitle}</span>
-                    {voiceRecorded && <span className="text-emerald-700 font-bold text-[11px]">0:24 Recorded</span>}
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setVoiceRecorded(true)}
-                      className={`p-3 rounded-full transition ${
-                        voiceRecorded ? 'bg-emerald-600 text-white' : 'bg-red-600 hover:bg-red-700 text-white animate-pulse'
-                      }`}
-                    >
-                      <Mic className="w-5 h-5" />
-                    </button>
-                    <div className="flex-1 text-xs text-slate-500">
-                      {voiceRecorded ? (
-                        <div className="flex items-center gap-1 text-emerald-800 font-mono text-[11px]">
-                          <span>|||||!||||!||||||!||| (Audio attached)</span>
-                        </div>
-                      ) : (
-                        <span>Tap mic to speak symptoms in Marathi / Hindi / English</span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                {/* GPS Location Box */}
-                <div className="p-3 bg-blue-50/80 rounded-xl border border-blue-200 flex items-start gap-2.5 text-xs text-blue-900">
-                  <MapPin className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
+                {/* Voice Recording Waveform Box */}
+                <div className="p-4 bg-[#F6F3EA] rounded-2xl border border-[#ECE6D6] flex flex-col justify-between space-y-3">
                   <div>
-                    <p className="font-bold">GPS Location Pinned:</p>
-                    <p className="font-mono text-[11px] text-blue-800">18.1524° N, 74.5768° E (Khedgaon, Baramati Block, Pune)</p>
+                    <span className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                      <Mic className="w-3.5 h-3.5 text-red-500" />
+                      <span>Voice Memo (मराठी आवाज नोंदणी)</span>
+                    </span>
+                    <p className="text-[11px] text-slate-500 mt-0.5">Recorded 24 seconds</p>
+                  </div>
+
+                  {/* Simulated Waveform */}
+                  <div className="flex items-center gap-1 h-10 bg-white p-2 rounded-xl border border-[#ECE6D6]">
+                    {[40, 70, 90, 60, 30, 85, 95, 45, 65, 80, 50, 75, 90, 40].map((h, i) => (
+                      <span 
+                        key={i} 
+                        className="flex-1 bg-[#149A84] rounded-full" 
+                        style={{ height: `${h}%` }} 
+                      />
+                    ))}
+                  </div>
+
+                  <div className="text-[10px] text-emerald-800 font-bold bg-emerald-50 p-1.5 rounded-lg border border-emerald-200 text-center">
+                    ✓ Voice description transcribed to clinical dossier
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-        )}
 
-        {/* STEP 5: Simulated AI Decision Engine Risk Triage */}
-        {step === 5 && (
-          <div className="space-y-4 animate-fadeIn">
-            <div className="p-4 bg-amber-50 rounded-xl border border-amber-200 flex items-start gap-3">
-              <Sparkles className="w-5 h-5 text-amber-600 shrink-0 mt-0.5 animate-spin" />
+              <div className="p-3 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-900 flex items-center justify-between">
+                <span>Are nearby farm animals showing similar signs?</span>
+                <span className="font-bold text-red-700">YES (Malegaon 3km)</span>
+              </div>
+            </div>
+          )}
+
+          {/* STEP 4: Location & Confirmation */}
+          {step === 4 && (
+            <div className="space-y-4 animate-fadeIn">
               <div>
-                <h3 className="font-bold text-sm text-amber-950">{t.aiTriageHeader}</h3>
-                <p className="text-xs text-amber-800">{t.aiTriageDisclaimer}</p>
+                <h4 className="font-black text-lg text-[#0A1020]">Confirm Location & Submit</h4>
+                <p className="text-xs text-slate-500">Your report will be sent to the Baramati Veterinary Unit</p>
+              </div>
+
+              <div className="p-4 bg-[#F6F3EA] rounded-2xl border border-[#ECE6D6] space-y-2">
+                <div className="flex items-center gap-2 text-xs font-bold text-[#073B32]">
+                  <MapPin className="w-4 h-4 text-red-500" />
+                  <span>GPS Location: Khedgaon, Baramati Taluka, Pune (18.1524, 74.5768)</span>
+                </div>
+                <div className="text-xs text-slate-600">
+                  <p><strong>Farmer:</strong> Ramesh Patil (+91 98224 51092)</p>
+                  <p><strong>Animal:</strong> {selectedAnimal.name} ({selectedAnimal.species} - Tag: {selectedAnimal.id})</p>
+                  <p><strong>Symptoms:</strong> {selectedSymptoms.join(', ')}</p>
+                </div>
+              </div>
+
+              <div className="p-3 bg-blue-50 rounded-xl border border-blue-200 text-xs text-blue-900">
+                ⚡ <strong>Instant Triage:</strong> Submitting will immediately generate a Preliminary Health Risk Score & notify the local veterinary doctor.
               </div>
             </div>
+          )}
 
-            {/* Risk Assessment Card */}
-            <div className="p-5 bg-gradient-to-br from-red-50 to-orange-50 rounded-2xl border-2 border-red-200 space-y-4">
-              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-red-200 pb-3">
-                <div>
-                  <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Calculated Risk Index</span>
-                  <div className="flex items-center gap-2 mt-0.5">
-                    <RiskBadge level="HIGH" size="lg" />
-                    <span className="text-xl font-extrabold text-red-900">86 / 100</span>
-                  </div>
-                </div>
-
-                <div className="text-right text-xs">
-                  <span className="text-slate-500">Suspected Surveillance Category:</span>
-                  <p className="font-bold text-red-900 text-sm">Lumpy Skin Disease (LSD) Suspect Cluster</p>
-                </div>
-              </div>
-
-              {/* Factors Detected */}
-              <div className="space-y-2 text-xs">
-                <p className="font-bold text-slate-800">Key Epidemiological Indicators Detected:</p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-slate-700">
-                  <div className="flex items-center gap-1.5 bg-white p-2 rounded-lg border border-red-100">
-                    <CheckCircle2 className="w-4 h-4 text-red-600 shrink-0" />
-                    <span>Multiple 2-5cm nodular skin lesions reported</span>
-                  </div>
-                  <div className="flex items-center gap-1.5 bg-white p-2 rounded-lg border border-red-100">
-                    <CheckCircle2 className="w-4 h-4 text-red-600 shrink-0" />
-                    <span>Sudden pyrexia (fever) + 65% drop in milk</span>
-                  </div>
-                  <div className="flex items-center gap-1.5 bg-white p-2 rounded-lg border border-red-100">
-                    <CheckCircle2 className="w-4 h-4 text-red-600 shrink-0" />
-                    <span>Spatial proximity to 2 active cases in Malegaon</span>
-                  </div>
-                  <div className="flex items-center gap-1.5 bg-white p-2 rounded-lg border border-red-100">
-                    <CheckCircle2 className="w-4 h-4 text-red-600 shrink-0" />
-                    <span>High vector fly humidity index in Baramati</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Immediate Actions Required */}
-              <div className="p-3.5 bg-white rounded-xl border border-red-200 text-xs space-y-2">
-                <h4 className="font-bold text-red-900 flex items-center gap-1.5">
-                  <AlertTriangle className="w-4 h-4 text-red-600" />
-                  <span>{t.immediateActions}</span>
+          {/* STEP 5: Section 17 — PRELIMINARY HEALTH RISK ASSESSMENT (86 / 100 — HIGH) */}
+          {step === 5 && (
+            <div className="space-y-6 animate-fadeIn text-center">
+              <div className="space-y-1">
+                <span className="text-xs font-extrabold text-[#073B32] uppercase tracking-wider bg-[#D9F1E8] px-3 py-1 rounded-full border border-[#B3E2D2]">
+                  PRELIMINARY RISK ASSESSMENT (निदान पूर्व अंदाज)
+                </span>
+                <h4 className="text-xl sm:text-2xl font-black text-[#0A1020] mt-2">
+                  High Risk Cluster Suspect Detected
                 </h4>
-                <ul className="space-y-1 text-slate-700 font-medium list-disc pl-4">
-                  <li>{t.isolateAnimal}</li>
-                  <li>{t.restrictMovement}</li>
-                  <li>{t.sanitizePremises}</li>
-                  <li>{t.vetAlerted}</li>
+                <p className="text-xs text-slate-600 max-w-md mx-auto">
+                  Several reported symptoms are consistent with an elevated local health signal in Baramati.
+                </p>
+              </div>
+
+              {/* Large Circular Risk Score 86 */}
+              <div className="flex justify-center my-2">
+                <div className="w-32 h-32 rounded-full border-8 border-red-500 bg-red-50 flex flex-col items-center justify-center shadow-lg relative">
+                  <span className="text-3xl font-black text-red-700">86</span>
+                  <span className="text-[10px] font-mono font-bold text-red-900">/ 100 RISK</span>
+                  <span className="absolute -bottom-2.5 bg-red-700 text-white text-[10px] font-extrabold px-3 py-0.5 rounded-full uppercase">
+                    HIGH RISK
+                  </span>
+                </div>
+              </div>
+
+              {/* Evidence Breakdown Box */}
+              <div className="bg-[#F6F3EA] p-4 rounded-2xl border border-[#ECE6D6] text-left text-xs space-y-2">
+                <h5 className="font-extrabold text-xs text-[#0A1020] uppercase border-b border-[#ECE6D6] pb-1.5 flex items-center justify-between">
+                  <span>Supporting Surveillance Evidence:</span>
+                  <span className="font-mono text-red-600">Case #PS-2026-004281</span>
+                </h5>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] text-slate-700">
+                  <div>• 5 similar reports in Baramati sector</div>
+                  <div>• 3 nearby affected villages (Malegaon, Gunawadi)</div>
+                  <div>• 7-day sharp increase in nodular signs</div>
+                  <div>• Low booster coverage in sector</div>
+                </div>
+              </div>
+
+              {/* WHAT TO DO NOW (Section 17 Protocol) */}
+              <div className="bg-red-50 p-4 rounded-2xl border border-red-200 text-left text-xs space-y-2">
+                <h5 className="font-black text-xs text-red-950 uppercase">Immediate Bio-Security Instructions:</h5>
+                <ul className="space-y-1 text-red-900 text-[11px]">
+                  <li>1. <strong>Isolate affected animal</strong> in a separate dry stall immediately.</li>
+                  <li>2. <strong>Avoid animal movement</strong> or grazing in common pastures.</li>
+                  <li>3. <strong>Contact veterinarian:</strong> Dr. Anand Deshmukh has been notified.</li>
+                  <li>4. <strong>Await clinical verification</strong> by Pashu Sakhi Sunita Pawar.</li>
                 </ul>
               </div>
-            </div>
-          </div>
-        )}
 
-        {/* STEP 6: Confirmation & Live Tracking */}
-        {step === 6 && (
-          <div className="py-6 space-y-6 text-center animate-fadeIn">
-            <div className="w-16 h-16 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center mx-auto border-4 border-emerald-50">
-              <CheckCircle2 className="w-10 h-10" />
-            </div>
-
-            <div>
-              <h3 className="text-xl font-extrabold text-slate-900">{t.caseSubmittedSuccess}</h3>
-              <p className="text-xs text-slate-500 mt-1">Official Maharashtra Livestock Surveillance Record Created</p>
-              
-              <div className="inline-block mt-3 px-4 py-2 bg-slate-100 border border-slate-300 rounded-xl font-mono font-bold text-base text-slate-800">
-                {createdCase?.caseId || "PS-2026-004281"}
+              <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
+                <button
+                  onClick={onClose}
+                  className="w-full sm:w-auto px-8 py-3.5 bg-[#073B32] hover:bg-[#052923] text-white font-black rounded-xl text-xs shadow-md transition"
+                >
+                  Track Case on Dashboard →
+                </button>
               </div>
             </div>
+          )}
+        </div>
 
-            {/* Live Timeline Tracker */}
-            <div className="max-w-md mx-auto p-4 bg-slate-50 rounded-2xl border border-slate-200 text-left space-y-3">
-              <h4 className="font-bold text-xs text-slate-700 uppercase tracking-wider">{t.statusTimeline}</h4>
-
-              <div className="space-y-3 text-xs">
-                <div className="flex items-center gap-3">
-                  <span className="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold">✓</span>
-                  <div>
-                    <p className="font-bold text-slate-900">{t.t1Submitted}</p>
-                    <p className="text-[10px] text-slate-500">Ramesh Patil (Khedgaon) • Just now</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <span className="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold">✓</span>
-                  <div>
-                    <p className="font-bold text-slate-900">{t.t2Triage} (High Risk 86/100)</p>
-                    <p className="text-[10px] text-slate-500">LSD Cluster Alert Flagged automatically</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <span className="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold animate-pulse">●</span>
-                  <div>
-                    <p className="font-bold text-blue-900">Dr. Anand Deshmukh Assigned</p>
-                    <p className="text-[10px] text-slate-500">Baramati Taluka Hospital dispatched notification</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 opacity-50">
-                  <span className="w-6 h-6 rounded-full bg-slate-300 text-slate-700 flex items-center justify-center text-xs font-bold">4</span>
-                  <div>
-                    <p className="font-bold text-slate-700">{t.t4Action}</p>
-                    <p className="text-[10px] text-slate-400">Sample collection & emergency referral</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Quick Demo Transition Buttons for Evaluator */}
-            <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
+        {/* Footer Navigation Buttons */}
+        {step < 5 && (
+          <div className="p-4 bg-[#F6F3EA] border-t border-[#ECE6D6] flex items-center justify-between">
+            {step > 1 ? (
               <button
                 type="button"
-                onClick={() => {
-                  setRole('vet');
-                  setActiveTab('cases');
-                  const c = cases.find(item => item.caseId === (createdCase?.caseId || "PS-2026-004281")) || cases[0];
-                  if (c) setSelectedCaseForDrawer(c);
-                }}
-                className="w-full sm:w-auto px-6 py-3 bg-blue-700 hover:bg-blue-800 text-white rounded-xl font-bold text-xs shadow-md transition flex items-center justify-center gap-2"
+                onClick={() => setStep(step - 1)}
+                className="px-4 py-2 bg-white border border-[#ECE6D6] text-slate-700 rounded-xl text-xs font-bold flex items-center gap-1.5 hover:bg-slate-50 transition"
               >
-                <span>👨‍⚕️ Switch to Vet View (Review Case as Doctor)</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowLeft className="w-3.5 h-3.5" />
+                <span>Back</span>
               </button>
+            ) : <div />}
 
-              <button
-                type="button"
-                onClick={() => {
-                  if (onComplete) onComplete();
-                  setActiveTab('dashboard');
-                }}
-                className="w-full sm:w-auto px-5 py-3 border border-slate-300 hover:bg-slate-50 rounded-xl font-semibold text-xs text-slate-700 transition"
-              >
-                Return to Farmer Dashboard
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Wizard Footer Navigation Controls */}
-        {step < 6 && (
-          <div className="mt-6 pt-4 border-t border-slate-200 flex items-center justify-between">
-            <button
-              type="button"
-              disabled={step === 1}
-              onClick={() => setStep(step - 1)}
-              className="px-4 py-2 border border-slate-300 hover:bg-slate-50 disabled:opacity-40 disabled:hover:bg-white rounded-xl text-xs font-semibold text-slate-700 transition flex items-center gap-1"
-            >
-              <ChevronLeft className="w-4 h-4" />
-              <span>Back</span>
-            </button>
-
-            {step < 5 ? (
+            {step < 4 ? (
               <button
                 type="button"
                 onClick={() => setStep(step + 1)}
-                className="px-6 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold shadow-sm transition flex items-center gap-1.5"
+                className="px-6 py-2.5 bg-[#073B32] hover:bg-[#052923] text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs transition"
               >
-                <span>Continue to Step {step + 1}</span>
-                <ChevronRight className="w-4 h-4" />
+                <span>Next Step</span>
+                <ChevronRight className="w-3.5 h-3.5" />
               </button>
             ) : (
               <button
                 type="button"
-                disabled={isSubmitting}
                 onClick={handleFinalSubmit}
-                className="px-7 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold shadow-md transition flex items-center gap-2"
+                disabled={isSubmitting}
+                className="px-6 py-2.5 bg-[#D84F45] hover:bg-red-600 text-white rounded-xl text-xs font-black flex items-center gap-1.5 shadow-md transition"
               >
-                <Sparkles className="w-4 h-4" />
-                <span>{isSubmitting ? 'Analyzing & Submitting...' : t.confirmSubmission}</span>
+                <span>{isSubmitting ? 'Submitting & Assessing...' : 'Submit & Assess Risk'}</span>
+                <Check className="w-3.5 h-3.5" />
               </button>
             )}
           </div>

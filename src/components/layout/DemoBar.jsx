@@ -1,143 +1,91 @@
 import React from 'react';
 import { 
   Sparkles, 
-  ArrowRight,
-  Shield,
-  Layers,
-  Home,
-  LogIn,
-  RotateCcw
+  RefreshCw, 
+  ArrowRight, 
+  ShieldCheck, 
+  Users, 
+  Building2, 
+  Stethoscope, 
+  Layers 
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
 export default function DemoBar() {
   const { 
-    currentScreen,
-    setCurrentScreen,
+    currentScreen, 
     role, 
-    enterWorkspace,
-    logout,
-    demoTourStep,
-    setDemoTourStep,
-    cases,
-    setSelectedCaseForDrawer,
-    setActiveTab
+    enterWorkspace, 
+    logout, 
+    setCurrentScreen,
+    addNotification
   } = useApp();
 
-  // Run the SIH Evaluator Guided Demo Steps
-  const handleRunDemoStep = (stepNumber) => {
-    setDemoTourStep(stepNumber);
-
-    if (stepNumber === 1) {
-      enterWorkspace('farmer');
-      setActiveTab('report');
-    } else if (stepNumber === 2) {
-      enterWorkspace('farmer');
-      setActiveTab('report');
-    } else if (stepNumber === 3) {
-      enterWorkspace('vet');
-      setActiveTab('cases');
-      const targetCase = cases.find(c => c.caseId === "PS-2026-004281") || cases[0];
-      if (targetCase) {
-        setSelectedCaseForDrawer(targetCase);
-      }
-    } else if (stepNumber === 4) {
-      enterWorkspace('admin');
-      setActiveTab('gis');
-    } else if (stepNumber === 5) {
-      enterWorkspace('stateAdmin');
-      setActiveTab('dashboard');
-    }
+  const handleSimulateSync = () => {
+    addNotification("⚡ Realtime Surveillance Sync", "Received 3 new automated disease reports from Baramati sub-centers.", "info");
   };
 
   return (
-    <div className="bg-slate-950 text-white text-xs border-b border-slate-800 z-40">
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 py-1.5 flex flex-wrap items-center justify-between gap-2">
-        {/* Left: Judge Demo Helper Title */}
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1.5 bg-emerald-950 text-emerald-300 px-2.5 py-0.5 rounded border border-emerald-800 font-bold text-[11px]">
-            <Shield className="w-3 h-3 text-emerald-400" />
-            <span>SIH 2026 Judge Demo Flow</span>
-          </div>
+    <div className="bg-[#0A1020] text-white text-[11px] py-1.5 px-3 border-b border-slate-800 flex items-center justify-between gap-3 shadow-md">
+      <div className="flex items-center gap-2 font-mono">
+        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+        <span className="font-bold text-emerald-300">DEMO ENVIRONMENT</span>
+        <span className="text-slate-500 hidden md:inline">• SIH 2026 Problem Statement 26128</span>
+      </div>
 
-          <div className="flex items-center gap-1 text-[11px]">
-            <button
-              onClick={() => logout()}
-              className={`px-2 py-0.5 rounded transition ${currentScreen === 'home' ? 'bg-slate-800 text-white font-bold' : 'text-slate-400 hover:text-white'}`}
-            >
-              Public Home
-            </button>
-            <span className="text-slate-600">•</span>
-            <button
-              onClick={() => setCurrentScreen('login')}
-              className={`px-2 py-0.5 rounded transition ${currentScreen === 'login' ? 'bg-slate-800 text-white font-bold' : 'text-slate-400 hover:text-white'}`}
-            >
-              Login / Role Select
-            </button>
-          </div>
-        </div>
-
-        {/* Guided SIH Outbreak Narrative Step Buttons */}
-        <div className="flex items-center gap-1 overflow-x-auto text-[11px]">
-          <button
-            onClick={() => handleRunDemoStep(1)}
-            className={`px-2 py-0.5 rounded border transition flex items-center gap-1 shrink-0 ${
-              demoTourStep === 1 
-                ? 'bg-emerald-600 text-white border-emerald-400 font-bold' 
-                : 'bg-slate-900 text-slate-300 border-slate-800 hover:bg-slate-800'
-            }`}
+      <div className="flex items-center gap-2 sm:gap-4">
+        {/* Quick Role Switcher for SIH Evaluator Demonstration */}
+        <div className="flex items-center gap-1 bg-slate-900 px-2 py-0.5 rounded-lg border border-slate-800 text-[10px]">
+          <span className="text-slate-400 font-bold mr-1 hidden sm:inline">Role Jump:</span>
+          <button 
+            onClick={() => enterWorkspace('farmer')} 
+            className={`px-1.5 py-0.5 rounded font-bold transition ${role === 'farmer' && currentScreen === 'workspace' ? 'bg-[#149A84] text-white' : 'text-slate-300 hover:text-white'}`}
           >
-            <span>1. 🐄 Farmer Report</span>
+            🌾 Farmer
           </button>
-          <ArrowRight className="w-3 h-3 text-slate-600 shrink-0" />
-
-          <button
-            onClick={() => handleRunDemoStep(2)}
-            className={`px-2 py-0.5 rounded border transition flex items-center gap-1 shrink-0 ${
-              demoTourStep === 2 
-                ? 'bg-emerald-600 text-white border-emerald-400 font-bold' 
-                : 'bg-slate-900 text-slate-300 border-slate-800 hover:bg-slate-800'
-            }`}
+          <button 
+            onClick={() => enterWorkspace('fieldWorker')} 
+            className={`px-1.5 py-0.5 rounded font-bold transition ${role === 'fieldWorker' && currentScreen === 'workspace' ? 'bg-teal-600 text-white' : 'text-slate-300 hover:text-white'}`}
           >
-            <span>2. 🤖 AI Risk Triage</span>
+            🩺 Field
           </button>
-          <ArrowRight className="w-3 h-3 text-slate-600 shrink-0" />
-
-          <button
-            onClick={() => handleRunDemoStep(3)}
-            className={`px-2 py-0.5 rounded border transition flex items-center gap-1 shrink-0 ${
-              demoTourStep === 3 
-                ? 'bg-blue-600 text-white border-blue-400 font-bold' 
-                : 'bg-slate-900 text-slate-300 border-slate-800 hover:bg-slate-800'
-            }`}
+          <button 
+            onClick={() => enterWorkspace('vet')} 
+            className={`px-1.5 py-0.5 rounded font-bold transition ${role === 'vet' && currentScreen === 'workspace' ? 'bg-blue-600 text-white' : 'text-slate-300 hover:text-white'}`}
           >
-            <span>3. 👨‍⚕️ Vet Case & Lab</span>
+            👨‍⚕️ Vet
           </button>
-          <ArrowRight className="w-3 h-3 text-slate-600 shrink-0" />
-
-          <button
-            onClick={() => handleRunDemoStep(4)}
-            className={`px-2 py-0.5 rounded border transition flex items-center gap-1 shrink-0 ${
-              demoTourStep === 4 
-                ? 'bg-indigo-600 text-white border-indigo-400 font-bold' 
-                : 'bg-slate-900 text-slate-300 border-slate-800 hover:bg-slate-800'
-            }`}
+          <button 
+            onClick={() => enterWorkspace('admin')} 
+            className={`px-1.5 py-0.5 rounded font-bold transition ${role === 'admin' && currentScreen === 'workspace' ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:text-white'}`}
           >
-            <span>4. 🏛️ District GIS Map</span>
+            🏛️ District
           </button>
-          <ArrowRight className="w-3 h-3 text-slate-600 shrink-0" />
-
-          <button
-            onClick={() => handleRunDemoStep(5)}
-            className={`px-2 py-0.5 rounded border transition flex items-center gap-1 shrink-0 ${
-              demoTourStep === 5 
-                ? 'bg-purple-600 text-white border-purple-400 font-bold' 
-                : 'bg-slate-900 text-slate-300 border-slate-800 hover:bg-slate-800'
-            }`}
+          <button 
+            onClick={() => enterWorkspace('stateAdmin')} 
+            className={`px-1.5 py-0.5 rounded font-bold transition ${role === 'stateAdmin' && currentScreen === 'workspace' ? 'bg-purple-600 text-white' : 'text-slate-300 hover:text-white'}`}
           >
-            <span>5. 🗺️ State Admin</span>
+            🗺️ State
           </button>
         </div>
+
+        <button
+          onClick={handleSimulateSync}
+          className="text-slate-400 hover:text-emerald-300 transition flex items-center gap-1 font-mono text-[10px]"
+          title="Simulate incoming telemetry data"
+        >
+          <RefreshCw className="w-3 h-3" />
+          <span className="hidden md:inline">Simulate Update</span>
+        </button>
+
+        {currentScreen !== 'home' && (
+          <button
+            onClick={() => setCurrentScreen('home')}
+            className="text-slate-400 hover:text-white transition text-[10px] font-bold underline"
+          >
+            Public Home
+          </button>
+        )}
       </div>
     </div>
   );

@@ -1,330 +1,300 @@
 import React, { useState } from 'react';
 import { 
   X, 
+  CheckCircle2, 
+  AlertTriangle, 
+  MapPin, 
+  Clock, 
+  Calendar, 
   Sparkles, 
   TestTube2, 
-  Hospital, 
-  Pill, 
-  CheckCircle, 
-  AlertTriangle, 
-  User, 
-  Phone, 
-  MapPin, 
-  Calendar, 
-  Clock, 
-  ShieldAlert, 
-  ArrowRight,
-  Send,
-  FileCheck,
-  Stethoscope,
+  FileText, 
+  Building2, 
+  Send, 
+  UserCheck, 
+  ShieldAlert,
+  Printer,
+  Syringe,
   Activity,
-  Layers,
-  ChevronRight
+  ArrowRight
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import RiskBadge from '../common/RiskBadge';
 
-export default function CaseDetailDrawer() {
-  const { 
-    selectedCaseForDrawer, 
-    setSelectedCaseForDrawer, 
-    updateCaseAction, 
-    setRole,
-    setActiveTab
-  } = useApp();
+export default function CaseDetailDrawer({ caseData, onClose }) {
+  const { addNotification } = useApp();
 
-  const [activeActionTab, setActiveActionTab] = useState('triage'); // 'triage' | 'treatment' | 'lab' | 'referral'
-  
-  // Lab Order Form State
-  const [labSampleType, setLabSampleType] = useState('Nasal Swab & Serum');
-  const [targetLab, setTargetLab] = useState('Regional Animal Health Diagnostic Lab, Aundh, Pune');
-  
-  // Referral Form State
-  const [targetHospital, setTargetHospital] = useState('Baramati Sub-District Veterinary Hospital (8.4 km)');
-  const [urgency, setUrgency] = useState('Immediate Isolation & Clinical Supervision');
+  const [prescriptionText, setPrescriptionText] = useState(
+    caseData.prescription || "Melt-inject Flunixin Meglumine (anti-pyretic) + Enrofloxacin 10% + TopiCure spray on skin nodules. Strict barn isolation for 21 days."
+  );
+  const [labSampleOrdered, setLabSampleOrdered] = useState(!!caseData.labReferral);
+  const [hospitalTransferred, setHospitalTransferred] = useState(!!caseData.hospitalReferral);
+  const [caseStatus, setCaseStatus] = useState(caseData.status || "under_review");
 
-  // Treatment Form State
-  const [prescriptionText, setPrescriptionText] = useState('Inj. Flunixin Meglumine 15ml IM + Inj. Ceftiofur Sodium 1g IM + Topical Neem & Zinc oxide paste for nodules. Daily isolation.');
-
-  if (!selectedCaseForDrawer) return null;
-
-  const c = selectedCaseForDrawer;
-
-  const handleOrderLab = (e) => {
-    e.preventDefault();
-    const barcode = `LAB-PUN-${Math.floor(9800 + Math.random() * 100)}`;
-    updateCaseAction(c.caseId, {
-      status: 'sample_pending',
-      labReferral: {
-        sampleId: barcode,
-        sampleType: labSampleType,
-        targetLab: targetLab,
-        dateSent: new Date().toISOString().slice(0, 16).replace('T', ' '),
-        status: "Sample Dispatched to Pune Lab"
-      }
-    });
-    alert(`Diagnostic Lab Sample Barcode #${barcode} created and courier dispatched!`);
+  const handleOrderLabSample = () => {
+    setLabSampleOrdered(true);
+    addNotification("🧪 Diagnostic Lab Order Dispatched", `Barcode #LAB-PUN-9821 generated for ${caseData.animalId}. Sample courier notified.`, "success");
+    alert(`Lab Sample Barcode #LAB-PUN-9821 generated for ${caseData.animalId}! Assigned to Regional Animal Health Laboratory, Pune.`);
   };
 
-  const handleCreateReferral = (e) => {
-    e.preventDefault();
-    updateCaseAction(c.caseId, {
-      hospitalReferral: {
-        hospital: targetHospital,
-        urgency: urgency,
-        status: "Referral Active - Bed Reserved in Quarantine Ward"
-      }
-    });
-    alert(`Sub-District Hospital Referral dispatched to ${targetHospital}!`);
-  };
-
-  const handleSavePrescription = (e) => {
-    e.preventDefault();
-    updateCaseAction(c.caseId, {
-      prescription: prescriptionText,
-      status: 'assigned'
-    });
-    alert(`Clinical Treatment Plan recorded for Case #${c.caseId}!`);
+  const handleTransferHospital = () => {
+    setHospitalTransferred(true);
+    addNotification("🚨 Emergency Hospital Transfer", `Admitted ${caseData.animalId} to Baramati Sub-District Quarantine Unit.`, "alert");
+    alert(`Emergency Isolation bed reserved at Baramati Sub-District Veterinary Hospital for ${caseData.animalId}.`);
   };
 
   const handleResolveCase = () => {
-    updateCaseAction(c.caseId, {
-      status: 'resolved'
-    });
-    setSelectedCaseForDrawer(null);
+    setCaseStatus("resolved");
+    addNotification("✅ Case Resolved", `Case ${caseData.caseId} marked as clinically resolved.`, "success");
+    alert(`Case ${caseData.caseId} marked as resolved!`);
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/70 backdrop-blur-sm p-2 sm:p-6 flex items-center justify-center animate-fadeIn selection:bg-tealBrand selection:text-white">
-      <div className="bg-white rounded-3xl max-w-6xl w-full max-h-[92vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
-        {/* Workspace Top Header */}
-        <div className="px-6 py-4 bg-midnight text-white border-b border-slate-800 flex items-center justify-between shrink-0">
+    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
+      <div className="bg-[#F6F3EA] rounded-3xl shadow-2xl border border-[#ECE6D6] max-w-7xl w-full my-auto flex flex-col max-h-[94vh] overflow-hidden text-[#0A1020]">
+        {/* Top Clinical Header Ribbon */}
+        <div className="p-4 bg-gradient-to-r from-[#073B32] via-[#0A1020] to-[#050811] text-white flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-tealBrand/20 text-tealBrand rounded-xl border border-tealBrand/30">
-              <Stethoscope className="w-5 h-5 text-teal-400" />
+            <div className="w-10 h-10 rounded-xl bg-[#149A84]/20 border border-[#149A84]/40 flex items-center justify-center text-white shrink-0">
+              <Sparkles className="w-5 h-5 text-emerald-300" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="font-extrabold text-white text-lg">{c.caseId}</h3>
-                <RiskBadge level={c.riskLevel} size="sm" />
-                <span className="text-[10px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded border border-slate-700">
-                  {c.status}
+                <span className="font-mono text-xs font-black text-emerald-400 uppercase tracking-wider">
+                  CLINICAL CASE WORKSPACE #{caseData.caseId}
                 </span>
+                <RiskBadge level={caseData.riskLevel} size="sm" />
               </div>
-              <p className="text-xs text-slate-400">Clinical Case Management Workspace • Dr. Anand Deshmukh</p>
+              <h2 className="text-base sm:text-lg font-black text-white">
+                {caseData.species} ({caseData.animalId}) — {caseData.suspectedDisease}
+              </h2>
             </div>
           </div>
 
-          <button 
-            onClick={() => setSelectedCaseForDrawer(null)}
-            className="p-1.5 text-slate-400 hover:text-white rounded-xl hover:bg-slate-800 transition"
-          >
-            <X className="w-6 h-6" />
-          </button>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-slate-300 font-mono hidden sm:inline">Reported {caseData.reportedAt}</span>
+            <button 
+              onClick={onClose}
+              className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
-        {/* 3-COLUMN CLINICAL WORKSPACE LAYOUT */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 bg-slate-50 text-xs">
-          
-          {/* LEFT COLUMN: Case Info, Animal Profile, Symptoms, History, Photos (4 cols) */}
-          <div className="lg:col-span-4 space-y-4">
-            {/* Animal & Farmer Dossier */}
-            <div className="p-4 bg-white rounded-2xl border border-slate-200 space-y-3 card-elevated">
-              <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Patient & Farmer Dossier</span>
-              
-              <div className="flex items-center gap-3 pt-1">
-                <img src={c.photoUrl} alt="Clinical lesion" className="w-16 h-16 rounded-xl object-cover border border-slate-300 shrink-0" />
+        {/* 3-COLUMN CLINICAL CASE WORKSPACE (Section 24) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 p-4 sm:p-5 overflow-y-auto flex-1 text-xs">
+          {/* ========================================================= */}
+          {/* COLUMN 1: ANIMAL & OWNER DOSSIER (Left - 3 cols) */}
+          {/* ========================================================= */}
+          <div className="lg:col-span-3 space-y-3">
+            {/* Animal Profile Card */}
+            <div className="bg-white p-4 rounded-2xl border border-[#ECE6D6] shadow-xs space-y-3">
+              <h3 className="font-black text-xs uppercase tracking-wider text-slate-700 border-b border-[#ECE6D6] pb-2">
+                Animal & Owner Dossier
+              </h3>
+
+              <div className="flex items-center gap-3">
+                <img 
+                  src={caseData.photoUrl || "https://images.unsplash.com/photo-1546445317-29f4545e9d53?auto=format&fit=crop&w=600&q=80"} 
+                  alt={caseData.animalId} 
+                  className="w-14 h-14 rounded-xl object-cover border border-slate-200"
+                />
                 <div>
-                  <h4 className="font-extrabold text-sm text-slate-900">{c.species} ({c.breed})</h4>
-                  <p className="text-[11px] font-mono text-slate-500">ID: {c.animalId}</p>
-                  <p className="text-[11px] text-tealBrand font-bold mt-0.5">Owner: {c.farmerName}</p>
+                  <h4 className="font-black text-sm text-[#0A1020]">{caseData.animalId}</h4>
+                  <p className="text-slate-600 font-semibold">{caseData.species} • {caseData.breed}</p>
+                  <p className="text-[10px] text-slate-400 font-mono">RFID: 89040182740921</p>
                 </div>
               </div>
 
-              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-1 text-slate-700">
-                <p><strong>Mobile:</strong> {c.farmerPhone}</p>
-                <p><strong>Location:</strong> {c.village}, Baramati Block</p>
-                <p><strong>Reported:</strong> {c.date} ({c.reportedAt})</p>
+              <div className="space-y-1.5 text-slate-700 border-t border-[#ECE6D6] pt-2">
+                <p><strong>Owner:</strong> {caseData.farmerName}</p>
+                <p><strong>Phone:</strong> {caseData.farmerPhone}</p>
+                <p className="flex items-center gap-1">
+                  <MapPin className="w-3 h-3 text-red-500" />
+                  <span>{caseData.village}, {caseData.block}, {caseData.district}</span>
+                </p>
               </div>
             </div>
 
-            {/* Reported Symptoms */}
-            <div className="p-4 bg-white rounded-2xl border border-slate-200 space-y-3 card-elevated">
-              <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Observed Clinical Signs</span>
+            {/* Medical & Vaccination History */}
+            <div className="bg-white p-4 rounded-2xl border border-[#ECE6D6] shadow-xs space-y-2">
+              <h3 className="font-black text-xs uppercase tracking-wider text-slate-700 border-b border-[#ECE6D6] pb-2">
+                Vaccination & Past Health
+              </h3>
+              <div className="space-y-1.5 text-[11px] text-slate-600">
+                <div className="flex justify-between">
+                  <span>FMD Booster:</span>
+                  <span className="font-bold text-amber-700">Due in 12 days</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>LSD Goat Pox:</span>
+                  <span className="font-bold text-emerald-700">Protected (Aug 2025)</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>HS Septicemia:</span>
+                  <span className="font-bold text-emerald-700">Protected (Sep 2025)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* ========================================================= */}
+          {/* COLUMN 2: CLINICAL OBSERVATIONS & DECISION SUPPORT (Center - 5 cols) */}
+          {/* ========================================================= */}
+          <div className="lg:col-span-5 space-y-3">
+            {/* Section 25: PASHUSURAKSHA DECISION SUPPORT PANEL */}
+            <div className="bg-gradient-to-br from-[#073B32] via-[#0A1020] to-[#050811] text-white p-4 rounded-2xl border border-slate-800 shadow-md space-y-3">
+              <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-emerald-400" />
+                  <h3 className="font-black text-xs uppercase tracking-wider text-slate-100">
+                    PASHUSURAKSHA DECISION SUPPORT
+                  </h3>
+                </div>
+                <span className="text-[10px] font-mono text-red-400 font-bold bg-red-950 px-2 py-0.5 rounded border border-red-800">
+                  Elevated Signal
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between bg-slate-900/90 p-3 rounded-xl border border-slate-800">
+                <div>
+                  <span className="text-[10px] text-slate-400 uppercase font-bold block">Calculated Risk Index</span>
+                  <span className="text-2xl font-black text-red-400 font-mono">86 / 100</span>
+                </div>
+                <div className="text-right text-[11px] text-slate-300">
+                  <span className="text-emerald-400 font-bold block">High Probability</span>
+                  <span>Spatial Cluster Correlation</span>
+                </div>
+              </div>
+
+              {/* Supporting Evidence Breakdown */}
+              <div className="space-y-1.5 text-[11px] text-slate-300">
+                <span className="font-bold text-slate-400 text-[10px] uppercase">Supporting Clinical Evidence:</span>
+                <p>• 5 related clinical reports logged in Baramati sector</p>
+                <p>• 3 nearby villages (Malegaon, Gunawadi) showing similar nodular signs</p>
+                <p>• Low vaccination coverage (74%) in Khedgaon unit</p>
+                <p>• 7-day sharp increase in similar symptoms</p>
+              </div>
+
+              {/* Suggested Protocol */}
+              <div className="bg-emerald-950/70 p-2.5 rounded-xl border border-emerald-800 text-[11px] text-emerald-200">
+                <strong>Suggested Protocol:</strong> 1. Field verification by Para-Vet 2. Sample collection for RT-PCR 3. Immediate shed liming 4. Nearby herd screening.
+              </div>
+            </div>
+
+            {/* Reported Symptoms & Photos */}
+            <div className="bg-white p-4 rounded-2xl border border-[#ECE6D6] shadow-xs space-y-3">
+              <h3 className="font-black text-xs uppercase tracking-wider text-slate-700 border-b border-[#ECE6D6] pb-2">
+                Reported Signs & Field Evidence
+              </h3>
+
               <div className="flex flex-wrap gap-1.5">
-                {c.symptoms.map((sym, idx) => (
-                  <span key={idx} className="px-2.5 py-1 bg-red-50 text-red-900 border border-red-200 rounded-lg font-bold">
-                    {sym}
+                {caseData.symptoms.map((s, i) => (
+                  <span key={i} className="px-2.5 py-1 bg-red-50 text-red-900 font-bold rounded-lg border border-red-200 text-xs">
+                    {s}
                   </span>
                 ))}
               </div>
 
-              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-1 text-slate-700">
-                <p>Duration: <strong>{c.duration}</strong></p>
-                <p>Anorexia (Stopped Eating): <strong>{c.stoppedEating ? 'Yes' : 'No'}</strong></p>
-                <p>Agalactia (Milk Drop): <strong>{c.milkDecreased ? 'Yes' : 'No'}</strong></p>
-                <p>Spatial Cluster Proximity: <strong>{c.nearbySimilarCases ? 'Yes (Malegaon cluster)' : 'No'}</strong></p>
+              <div className="grid grid-cols-2 gap-2 pt-2">
+                <div className="p-2.5 bg-[#F6F3EA] rounded-xl border border-[#ECE6D6]">
+                  <span className="text-slate-400 block text-[10px]">Symptom Duration:</span>
+                  <span className="font-bold text-[#0A1020] text-xs">{caseData.duration}</span>
+                </div>
+                <div className="p-2.5 bg-[#F6F3EA] rounded-xl border border-[#ECE6D6]">
+                  <span className="text-slate-400 block text-[10px]">Stopped Eating:</span>
+                  <span className="font-bold text-red-700 text-xs">{caseData.stoppedEating ? "Yes (Severe Inappetence)" : "No"}</span>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* CENTER COLUMN: Risk Assessment, Decision Support Panel, Timeline, Nearby Cases (5 cols) */}
-          <div className="lg:col-span-5 space-y-4">
-            {/* DISTINCTIVE DECISION SUPPORT PANEL */}
-            <div className="p-5 bg-gradient-to-br from-slate-900 via-midnight to-slate-950 text-white rounded-2xl border border-slate-800 space-y-4 shadow-md">
-              <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-                <h4 className="font-extrabold text-sm text-teal-300 flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-teal-400" />
-                  <span>PashuSuraksha Intelligence</span>
-                </h4>
-                <span className="text-[10px] font-mono text-slate-400">Decision Support Signal</span>
-              </div>
+          {/* ========================================================= */}
+          {/* COLUMN 3: CLINICAL ACTIONS & REFERRALS (Right - 4 cols) */}
+          {/* ========================================================= */}
+          <div className="lg:col-span-4 space-y-3">
+            {/* Treatment e-Prescription Box */}
+            <div className="bg-white p-4 rounded-2xl border border-[#ECE6D6] shadow-xs space-y-2">
+              <h3 className="font-black text-xs uppercase tracking-wider text-slate-700 border-b border-[#ECE6D6] pb-2 flex items-center justify-between">
+                <span>Clinical Treatment (Rx)</span>
+                <FileText className="w-3.5 h-3.5 text-blue-600" />
+              </h3>
 
-              <div className="grid grid-cols-2 gap-3 items-center">
-                <div className="p-3 bg-slate-900 rounded-xl border border-slate-800">
-                  <span className="text-[10px] text-slate-400 block">Risk Score</span>
-                  <span className="text-2xl font-black text-coralRed">{c.riskScore} / 100</span>
-                </div>
-                <div className="p-3 bg-slate-900 rounded-xl border border-slate-800">
-                  <span className="text-[10px] text-slate-400 block">System Confidence</span>
-                  <span className="text-xs font-extrabold text-teal-400">Decision-Support Signal</span>
-                </div>
-              </div>
+              <textarea
+                rows={3}
+                value={prescriptionText}
+                onChange={e => setPrescriptionText(e.target.value)}
+                className="w-full p-2.5 bg-[#F6F3EA] border border-[#ECE6D6] rounded-xl text-xs text-[#0A1020] font-mono focus:outline-none focus:border-[#149A84]"
+              />
 
-              {/* Evidence Panel */}
-              <div className="space-y-1.5">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Supporting Evidence</span>
-                <ul className="space-y-1 text-slate-300 text-[11px] list-disc pl-4">
-                  <li>5 related clinical reports logged in Baramati sector</li>
-                  <li>3 nearby villages showing similar nodular & pyrexic signs</li>
-                  <li>Low vaccination coverage (74%) in Khedgaon unit</li>
-                  <li>7-day sharp increase in similar symptoms</li>
-                </ul>
-              </div>
-
-              {/* Suggested Investigation Protocol */}
-              <div className="p-3 bg-tealBrand/10 rounded-xl border border-tealBrand/30 space-y-1 text-[11px] text-teal-200">
-                <p className="font-bold text-teal-300">Suggested Clinical Protocol:</p>
-                <p>1. Field verification by Para-Vet 2. Sample collection for RT-PCR 3. Immediate shed liming 4. Nearby herd screening</p>
-              </div>
+              <button
+                onClick={() => {
+                  addNotification("💊 e-Prescription Issued", `Sent digital Rx to Ramesh Patil (+91 98224 51092).`, "success");
+                  alert("Digital e-Prescription sent to Farmer via SMS & App notification!");
+                }}
+                className="w-full py-2 bg-[#073B32] hover:bg-[#052923] text-white font-bold rounded-xl text-xs shadow-xs transition"
+              >
+                Issue Digital e-Prescription
+              </button>
             </div>
 
-            {/* Differential Diagnosis List */}
-            <div className="p-4 bg-white rounded-2xl border border-slate-200 space-y-2 card-elevated">
-              <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Preliminary Risk Assessment</span>
-              <div className="space-y-1.5">
-                {c.differentialList?.map((diff, idx) => (
-                  <div key={idx} className="p-2.5 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between">
-                    <div>
-                      <p className="font-bold text-slate-900">{diff.disease}</p>
-                      <p className="text-[10px] text-slate-500">{diff.rationale}</p>
-                    </div>
-                    <span className="font-mono font-black text-tealBrand bg-teal-50 px-2 py-1 rounded">
-                      {diff.probability}
-                    </span>
+            {/* Diagnostic Lab Sample Order */}
+            <div className="bg-white p-4 rounded-2xl border border-[#ECE6D6] shadow-xs space-y-2">
+              <div className="flex items-center justify-between border-b border-[#ECE6D6] pb-2">
+                <span className="font-black text-xs uppercase tracking-wider text-slate-700">Laboratory Swab Referral</span>
+                <TestTube2 className="w-3.5 h-3.5 text-purple-600" />
+              </div>
+
+              {labSampleOrdered ? (
+                <div className="p-2.5 bg-purple-50 rounded-xl border border-purple-200 text-purple-950 space-y-1">
+                  <div className="flex items-center justify-between font-mono font-bold">
+                    <span>Barcode: #LAB-PUN-9821</span>
+                    <span className="text-[10px] bg-purple-200 px-1.5 py-0.5 rounded">Ordered</span>
                   </div>
-                ))}
-              </div>
+                  <p className="text-[10px] text-purple-800">Target: Regional Animal Health Diagnostic Lab, Pune</p>
+                </div>
+              ) : (
+                <button
+                  onClick={handleOrderLabSample}
+                  className="w-full py-2.5 bg-purple-700 hover:bg-purple-800 text-white font-bold rounded-xl text-xs shadow-xs transition flex items-center justify-center gap-1.5"
+                >
+                  <TestTube2 className="w-3.5 h-3.5" />
+                  <span>Order Diagnostic RT-PCR Barcode</span>
+                </button>
+              )}
             </div>
-          </div>
 
-          {/* RIGHT COLUMN: Actions (Assign, Request Sample, Refer Lab, Start Treatment, Escalate, Resolve) (3 cols) */}
-          <div className="lg:col-span-3 space-y-4">
-            <div className="p-4 bg-white rounded-2xl border border-slate-200 space-y-3 card-elevated">
-              <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Clinical Actions</span>
-
-              <div className="space-y-2">
-                <button
-                  onClick={() => setActiveActionTab('treatment')}
-                  className={`w-full py-2.5 px-3 rounded-xl font-bold text-left transition flex items-center gap-2 ${
-                    activeActionTab === 'treatment' ? 'bg-tealBrand text-white' : 'bg-slate-100 hover:bg-slate-200 text-slate-800'
-                  }`}
-                >
-                  <Pill className="w-4 h-4" />
-                  <span>Start Treatment (Rx)</span>
-                </button>
-
-                <button
-                  onClick={() => setActiveActionTab('lab')}
-                  className={`w-full py-2.5 px-3 rounded-xl font-bold text-left transition flex items-center gap-2 ${
-                    activeActionTab === 'lab' ? 'bg-tealBrand text-white' : 'bg-slate-100 hover:bg-slate-200 text-slate-800'
-                  }`}
-                >
-                  <TestTube2 className="w-4 h-4" />
-                  <span>Refer Laboratory</span>
-                </button>
-
-                <button
-                  onClick={() => setActiveActionTab('referral')}
-                  className={`w-full py-2.5 px-3 rounded-xl font-bold text-left transition flex items-center gap-2 ${
-                    activeActionTab === 'referral' ? 'bg-tealBrand text-white' : 'bg-slate-100 hover:bg-slate-200 text-slate-800'
-                  }`}
-                >
-                  <Hospital className="w-4 h-4" />
-                  <span>Escalate to Hospital</span>
-                </button>
+            {/* Hospital Isolation Bed Referral */}
+            <div className="bg-white p-4 rounded-2xl border border-[#ECE6D6] shadow-xs space-y-2">
+              <div className="flex items-center justify-between border-b border-[#ECE6D6] pb-2">
+                <span className="font-black text-xs uppercase tracking-wider text-slate-700">Hospital Quarantine Unit</span>
+                <Building2 className="w-3.5 h-3.5 text-indigo-600" />
               </div>
 
-              {/* Dynamic Action Forms */}
-              {activeActionTab === 'treatment' && (
-                <form onSubmit={handleSavePrescription} className="pt-2 space-y-2 border-t border-slate-100">
-                  <label className="block font-bold text-slate-700 text-[11px]">Record Prescription</label>
-                  <textarea 
-                    value={prescriptionText}
-                    onChange={e => setPrescriptionText(e.target.value)}
-                    className="w-full p-2 border border-slate-300 rounded-lg h-20 text-[11px] font-mono"
-                    required
-                  />
-                  <button type="submit" className="w-full py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg font-bold">
-                    Save & Send Rx SMS
-                  </button>
-                </form>
-              )}
-
-              {activeActionTab === 'lab' && (
-                <form onSubmit={handleOrderLab} className="pt-2 space-y-2 border-t border-slate-100">
-                  <label className="block font-bold text-slate-700 text-[11px]">Specimen Type</label>
-                  <select 
-                    value={labSampleType} 
-                    onChange={e => setLabSampleType(e.target.value)}
-                    className="w-full p-2 border border-slate-300 rounded-lg bg-white text-[11px]"
-                  >
-                    <option>Nasal Swab & Serum</option>
-                    <option>Scab / Skin Biopsy</option>
-                    <option>Whole Blood in EDTA</option>
-                  </select>
-                  <button type="submit" className="w-full py-2 bg-blue-700 hover:bg-blue-800 text-white rounded-lg font-bold">
-                    Order Lab Barcode
-                  </button>
-                </form>
-              )}
-
-              {activeActionTab === 'referral' && (
-                <form onSubmit={handleCreateReferral} className="pt-2 space-y-2 border-t border-slate-100">
-                  <label className="block font-bold text-slate-700 text-[11px]">Facility</label>
-                  <input 
-                    type="text" 
-                    value={targetHospital} 
-                    onChange={e => setTargetHospital(e.target.value)}
-                    className="w-full p-2 border border-slate-300 rounded-lg text-[11px]"
-                  />
-                  <button type="submit" className="w-full py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-bold">
-                    Transfer Patient
-                  </button>
-                </form>
-              )}
-
-              {/* Resolve Case */}
-              <div className="pt-3 border-t border-slate-200">
+              {hospitalTransferred ? (
+                <div className="p-2.5 bg-indigo-50 rounded-xl border border-indigo-200 text-indigo-950 font-bold">
+                  ✓ Isolation Bed Reserved at Baramati Hospital
+                </div>
+              ) : (
                 <button
-                  onClick={handleResolveCase}
-                  className="w-full py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl font-bold transition flex items-center justify-center gap-1.5"
+                  onClick={handleTransferHospital}
+                  className="w-full py-2.5 bg-indigo-700 hover:bg-indigo-800 text-white font-bold rounded-xl text-xs shadow-xs transition flex items-center justify-center gap-1.5"
                 >
-                  <CheckCircle className="w-4 h-4" />
-                  <span>Resolve & Close Case</span>
+                  <Building2 className="w-3.5 h-3.5" />
+                  <span>Refer to Isolation Hospital</span>
                 </button>
-              </div>
+              )}
             </div>
+
+            {/* Mark Case Resolved */}
+            <button
+              onClick={handleResolveCase}
+              className="w-full py-3 bg-emerald-700 hover:bg-emerald-800 text-white font-black rounded-xl text-xs shadow-md transition flex items-center justify-center gap-1.5"
+            >
+              <CheckCircle2 className="w-4 h-4" />
+              <span>Resolve & Close Case</span>
+            </button>
           </div>
         </div>
       </div>

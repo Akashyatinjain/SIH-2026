@@ -1,14 +1,14 @@
-import React from 'react';
-import {
-  Shield,
-  Activity,
-  Users,
-  MapPin,
-  Sparkles,
-  ArrowRight,
-  CheckCircle2,
-  ShieldAlert,
-  PhoneCall,
+import React, { useState } from 'react';
+import { 
+  Shield, 
+  Activity, 
+  Users, 
+  MapPin, 
+  Sparkles, 
+  ArrowRight, 
+  CheckCircle2, 
+  ShieldAlert, 
+  PhoneCall, 
   FileText,
   BarChart3,
   Stethoscope,
@@ -24,30 +24,90 @@ import {
   Database,
   Network,
   AlertTriangle,
+  Flame,
+  Globe
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
 export default function LandingPage({ onAccessPlatform, onReportIssue }) {
   const { enterWorkspace, setIsIVROpen } = useApp();
+  const [hoveredNode, setHoveredNode] = useState(null);
+
+  const ecosystemNodes = [
+    {
+      id: "farmer",
+      name: "Farmer / Herder",
+      role: "Symptom Logging & Herd Passport",
+      tag: "Source Signal",
+      icon: "🌾",
+      desc: "Reports early clinical signs via App or 1800 IVR; receives instant AI risk triage and ring vaccination advisories.",
+      color: "border-emerald-500 bg-emerald-50/70"
+    },
+    {
+      id: "fieldWorker",
+      name: "Field Worker (Pashu Sakhi)",
+      role: "Field Sentinel & Sample Logistics",
+      tag: "First Responder",
+      icon: "🩺",
+      desc: "Executes on-ground verification, collects diagnostic swabs with cold-chain barcodes, and synchronizes offline queues.",
+      color: "border-teal-500 bg-teal-50/70"
+    },
+    {
+      id: "vet",
+      name: "Veterinary Officer",
+      role: "Clinical Decision Workbench",
+      tag: "Medical Authority",
+      icon: "👨‍⚕️",
+      desc: "Reviews triage evidence, prescribes digital treatments, orders laboratory RT-PCR panels, and initiates quarantine transfers.",
+      color: "border-blue-500 bg-blue-50/70"
+    },
+    {
+      id: "lab",
+      name: "Diagnostic Laboratory",
+      role: "Molecular & Serological Validation",
+      tag: "Gold Standard",
+      icon: "🧪",
+      desc: "Processes real-time RT-PCR / ELISA samples under BSL-2/3 conditions with cold-chain chain-of-custody tracking.",
+      color: "border-purple-500 bg-purple-50/70"
+    },
+    {
+      id: "district",
+      name: "District Command Center",
+      role: "GIS Hotspot & Rapid Containment",
+      tag: "Tactical HQ",
+      icon: "🏛️",
+      desc: "Monitors 13 talukas with spatial clustering maps, deploys Mobile Veterinary Units, and broadcasts farmer ring SMS.",
+      color: "border-indigo-500 bg-indigo-50/70"
+    },
+    {
+      id: "state",
+      name: "State Directorate",
+      role: "Strategic Epidemiological Command",
+      tag: "Strategic Directorate",
+      icon: "🗺️",
+      desc: "Aggregates 36 districts into risk heatmaps, forecasts vector density surges, and allocates state emergency vaccines.",
+      color: "border-rose-500 bg-rose-50/70"
+    }
+  ];
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col justify-between selection:bg-emerald-500 selection:text-white">
-      {/* 1. Top Govt Credibility Ribbon */}
-      <div className="bg-slate-900 text-white text-xs py-2.5 px-4 border-b border-slate-800 shadow-lg">
+    <div className="min-h-screen bg-[#F6F3EA] text-[#0A1020] flex flex-col justify-between selection:bg-[#149A84] selection:text-white font-sans">
+      {/* 1. Official Government Header Ribbon */}
+      <div className="bg-[#0A1020] text-white text-xs py-2 px-4 border-b border-slate-800 shadow-md">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
           <div className="flex items-center gap-2.5 min-w-0">
-            <Shield className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-            <span className="font-bold truncate">
+            <Shield className="w-4 h-4 text-[#149A84] shrink-0" />
+            <span className="font-bold tracking-tight truncate">
               Government of Maharashtra • Department of Animal Husbandry & Dairying
             </span>
           </div>
-          <div className="flex items-center gap-3 text-slate-400 text-[11px] hidden lg:flex flex-shrink-0">
-            <span className="px-2 py-0.5 bg-slate-800 rounded-full font-medium">
+          <div className="flex items-center gap-3 text-slate-400 text-[11px] hidden lg:flex shrink-0 font-mono">
+            <span className="px-2 py-0.5 bg-slate-900 rounded-full border border-slate-800">
               SIH 2026 Problem Statement 26128
             </span>
-            <span className="text-slate-600">•</span>
-            <span className="text-emerald-400 font-mono flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span>•</span>
+            <span className="text-[#149A84] flex items-center gap-1.5 font-bold">
+              <span className="w-2 h-2 rounded-full bg-[#149A84] animate-ping" />
               Surveillance Grid Active
             </span>
           </div>
@@ -55,214 +115,181 @@ export default function LandingPage({ onAccessPlatform, onReportIssue }) {
       </div>
 
       {/* 2. Main Navigation Bar */}
-      <nav className="bg-white/80 backdrop-blur-lg border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+      <nav className="bg-[#F6F3EA]/90 backdrop-blur-md border-b border-[#ECE6D6] sticky top-0 z-30 shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-800 to-emerald-950 flex items-center justify-center text-white shadow-md border border-emerald-700 flex-shrink-0">
-              <Shield className="w-6 h-6 text-emerald-300" />
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#073B32] to-[#0A1020] flex items-center justify-center text-white shadow-sm border border-[#073B32] shrink-0">
+              <Shield className="w-5 h-5 text-emerald-300" />
             </div>
             <div className="min-w-0">
-              <span className="text-lg font-black tracking-tight text-slate-900 flex items-center gap-2">
-                <span className="truncate">PASHUSURAKSHA</span>
-                <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full border border-emerald-200 flex-shrink-0">
+              <div className="flex items-center gap-2">
+                <span className="text-base sm:text-lg font-black tracking-tight text-[#0A1020]">
+                  PASHUSURAKSHA
+                </span>
+                <span className="text-[10px] bg-[#D9F1E8] text-[#073B32] font-bold px-2 py-0.5 rounded-full border border-[#B3E2D2] shrink-0">
                   पशुरक्षा
                 </span>
-              </span>
-              <p className="text-[11px] text-slate-500 font-medium truncate">
-                Livestock Health Intelligence Network
+              </div>
+              <p className="text-[11px] text-[#7C9687] font-semibold truncate">
+                Livestock Health Surveillance • Early Warning • Response Intelligence
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             <button
               onClick={() => setIsIVROpen(true)}
-              className="px-3.5 py-2.5 border border-slate-300 hover:bg-slate-50 rounded-xl text-xs font-bold text-slate-700 transition-all hover:border-emerald-400 hover:shadow-md flex items-center gap-2 hidden md:flex group"
+              className="px-3.5 py-2 border border-[#ECE6D6] hover:bg-white rounded-xl text-xs font-bold text-[#073B32] transition flex items-center gap-1.5 hidden md:flex shadow-xs"
             >
-              <PhoneCall className="w-4 h-4 text-emerald-700 group-hover:scale-110 transition-transform" />
-              <span className="hidden lg:inline">IVR Helpline (1800-180-1551)</span>
-              <span className="lg:hidden">IVR Helpline</span>
+              <PhoneCall className="w-3.5 h-3.5 text-[#149A84]" />
+              <span className="hidden lg:inline">IVR Voice (1800-180-1551)</span>
+              <span className="lg:hidden">1800 IVR</span>
             </button>
 
             <button
               onClick={onAccessPlatform}
-              className="px-5 py-2.5 bg-gradient-to-r from-emerald-800 to-emerald-700 hover:from-emerald-900 hover:to-emerald-800 text-white rounded-xl text-xs font-bold shadow-md hover:shadow-lg transition-all hover:scale-[1.02] active:scale-95 flex items-center gap-2"
+              className="px-5 py-2.5 bg-[#073B32] hover:bg-[#052923] text-white rounded-xl text-xs font-bold shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 flex items-center gap-1.5"
             >
               <span>Access PashuSuraksha</span>
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>
       </nav>
 
-      {/* 3. Hero Section with Stylized Maharashtra Map Visual */}
-      <section className="relative overflow-hidden pt-10 pb-16 lg:py-24 bg-gradient-to-b from-white via-slate-50 to-emerald-50/40">
-        {/* Decorative background elements */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-emerald-100 rounded-full mix-blend-multiply filter blur-3xl opacity-40 animate-blob" />
-          <div className="absolute bottom-20 right-10 w-72 h-72 bg-teal-100 rounded-full mix-blend-multiply filter blur-3xl opacity-40 animate-blob animation-delay-2000" />
-        </div>
-
+      {/* 3. Hero Section with Stylized Maharashtra Map & Telemetry Mesh */}
+      <section className="relative overflow-hidden pt-10 pb-16 lg:py-20 bg-gradient-to-b from-[#F6F3EA] via-white to-[#F6F3EA] border-b border-[#ECE6D6]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 relative">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-            {/* Left Content Column */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+            {/* Left Content Column (7 cols) */}
             <div className="lg:col-span-7 space-y-6 text-left">
-              <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-emerald-100/90 border border-emerald-300 text-emerald-900 text-xs font-bold shadow-sm">
-                <span className="relative flex h-2.5 w-2.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-600" />
-                </span>
-                <span>Government of Maharashtra • Animal Health Surveillance Platform</span>
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#D9F1E8] border border-[#B3E2D2] text-[#073B32] text-xs font-bold shadow-xs">
+                <span className="w-2 h-2 rounded-full bg-[#149A84] animate-ping" />
+                <span>GOVERNMENT OF MAHARASHTRA • ANIMAL HEALTH INTELLIGENCE</span>
               </div>
 
-              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.1]">
-                Protecting Livestock Through{' '}
-                <span className="bg-gradient-to-r from-emerald-700 to-teal-600 bg-clip-text text-transparent">
-                  Early Health Intelligence
-                </span>
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-[#0A1020] tracking-tight leading-[1.1]">
+                Protecting Livestock Through <span className="text-[#149A84]">Early Health Intelligence</span>
               </h1>
 
-              <p className="text-base sm:text-lg text-slate-600 font-medium leading-relaxed max-w-2xl">
-                PashuSuraksha connects farmers, field workers, veterinarians, laboratories and government teams to detect, investigate and contain animal-health risks faster.
+              <p className="text-base sm:text-lg text-slate-700 font-medium leading-relaxed max-w-2xl">
+                PashuSuraksha connects farmers, field workers, veterinarians, laboratories and government teams to detect animal-health risks before they become outbreaks.
               </p>
 
-              <div className="flex flex-wrap items-center gap-3 pt-2">
+              <div className="flex flex-wrap items-center gap-3.5 pt-2">
                 <button
                   onClick={onReportIssue}
-                  className="px-6 py-4 bg-gradient-to-r from-emerald-700 to-emerald-600 hover:from-emerald-800 hover:to-emerald-700 text-white font-extrabold rounded-xl text-sm shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center gap-2 group"
+                  className="px-6 py-4 bg-[#D84F45] hover:bg-red-600 text-white font-black rounded-2xl text-sm shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 flex items-center gap-2.5 border border-red-400"
                 >
                   <span className="text-lg">🐄</span>
                   <span>Report an Animal Health Issue</span>
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="w-4 h-4" />
                 </button>
 
                 <button
                   onClick={onAccessPlatform}
-                  className="px-6 py-4 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-sm shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5 flex items-center gap-2"
+                  className="px-6 py-4 bg-[#0A1020] hover:bg-slate-900 text-white font-extrabold rounded-2xl text-sm shadow-md hover:shadow-lg transition-all flex items-center gap-2"
                 >
-                  <Layers className="w-4 h-4" />
-                  <span>Access PashuSuraksha</span>
+                  <Layers className="w-4 h-4 text-emerald-400" />
+                  <span>Enter Surveillance Platform</span>
                 </button>
               </div>
 
-              <div className="pt-4 flex flex-wrap items-center gap-4 sm:gap-6 text-xs text-slate-600 font-medium border-t border-slate-200">
-                <div className="flex items-center gap-2">
-                  <MapPin className="w-4 h-4 text-emerald-600" />
+              <div className="pt-4 flex flex-wrap items-center gap-5 text-xs text-slate-600 font-semibold border-t border-[#ECE6D6]">
+                <div className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-[#149A84]" />
                   <span>Real-time GIS Hotspot Mapping</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Activity className="w-4 h-4 text-emerald-600" />
+                <div className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-[#149A84]" />
                   <span>AI Clinical Decision Support</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Radio className="w-4 h-4 text-emerald-600" />
+                <div className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-[#149A84]" />
                   <span>Offline Sync & IVR Voice</span>
                 </div>
               </div>
             </div>
 
-            {/* Right Stylized Maharashtra Map Visual with Floating Cards */}
+            {/* Right Live Interactive Maharashtra Surveillance Visualization (5 cols) */}
             <div className="lg:col-span-5 relative">
-              <div className="absolute -top-4 -right-4 w-24 h-24 bg-emerald-500/20 rounded-full blur-2xl" />
-              <div className="bg-slate-950 rounded-3xl p-6 sm:p-7 border border-slate-800 shadow-2xl text-white relative overflow-hidden">
-                {/* Glow effect */}
-                <div className="absolute -top-20 -right-20 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl" />
-
-                {/* Header Overlay */}
-                <div className="flex items-center justify-between pb-3 border-b border-slate-800 text-xs relative">
+              <div className="bg-[#0A1020] rounded-3xl p-5 sm:p-6 border border-slate-800 shadow-2xl text-white relative overflow-hidden">
+                {/* Visual Header */}
+                <div className="flex items-center justify-between pb-3 border-b border-slate-800 text-xs">
                   <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse" />
-                    <span className="font-bold text-slate-200">Maharashtra Early Warning Radar</span>
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#D84F45] animate-pulse" />
+                    <span className="font-bold text-slate-100">Maharashtra Early Warning Radar</span>
                   </div>
-                  <span className="font-mono text-emerald-400 flex items-center gap-1.5">
-                    <Zap className="w-3 h-3" />
-                    Live Grid
-                  </span>
+                  <span className="font-mono text-[#149A84] text-[11px]">Live Telemetry</span>
                 </div>
 
-                {/* SVG Silhouette Map of Maharashtra */}
-                <div className="py-5 relative flex items-center justify-center">
+                {/* Animated SVG Silhouette Map with Pulsing Clusters */}
+                <div className="py-4 relative flex items-center justify-center">
                   <svg viewBox="0 0 400 280" className="w-full h-auto">
                     <defs>
-                      <linearGradient id="mapGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#1e293b" />
-                        <stop offset="100%" stopColor="#0f172a" />
+                      <linearGradient id="mapMeshGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#111D3C" />
+                        <stop offset="100%" stopColor="#0A1020" />
                       </linearGradient>
-                      <filter id="glow">
-                        <feGaussianBlur stdDeviation="3" result="coloredBlur" />
-                        <feMerge>
-                          <feMergeNode in="coloredBlur" />
-                          <feMergeNode in="SourceGraphic" />
-                        </feMerge>
-                      </filter>
                     </defs>
 
-                    {/* Maharashtra Mesh */}
-                    <path d="M 60 100 L 140 40 L 260 50 L 350 110 L 380 200 L 310 260 L 180 250 L 90 220 Z"
-                      fill="url(#mapGradient)" stroke="#334155" strokeWidth="1.5" strokeDasharray="3 3" />
+                    {/* Maharashtra Mesh Silhouette */}
+                    <path 
+                      d="M 60 100 L 140 40 L 260 50 L 350 110 L 380 200 L 310 260 L 180 250 L 90 220 Z" 
+                      fill="url(#mapMeshGrad)" 
+                      stroke="#1C305F" 
+                      strokeWidth="2" 
+                      strokeDasharray="4 4" 
+                    />
 
-                    {/* Grid lines */}
-                    <line x1="60" y1="150" x2="380" y2="150" stroke="#1e293b" strokeWidth="0.5" strokeDasharray="2 2" />
-                    <line x1="60" y1="200" x2="380" y2="200" stroke="#1e293b" strokeWidth="0.5" strokeDasharray="2 2" />
-                    <line x1="150" y1="60" x2="150" y2="250" stroke="#1e293b" strokeWidth="0.5" strokeDasharray="2 2" />
-                    <line x1="250" y1="60" x2="250" y2="250" stroke="#1e293b" strokeWidth="0.5" strokeDasharray="2 2" />
+                    {/* Subtle grid lines */}
+                    <line x1="60" y1="150" x2="380" y2="150" stroke="#1C305F" strokeWidth="0.8" strokeDasharray="2 2" />
+                    <line x1="150" y1="40" x2="150" y2="250" stroke="#1C305F" strokeWidth="0.8" strokeDasharray="2 2" />
+                    <line x1="250" y1="50" x2="250" y2="260" stroke="#1C305F" strokeWidth="0.8" strokeDasharray="2 2" />
 
-                    {/* Active Cluster Ring: Baramati */}
-                    <circle cx="210" cy="170" r="32" fill="#ef4444" fillOpacity="0.25" className="animate-pulse" filter="url(#glow)" />
-                    <circle cx="210" cy="170" r="8" fill="#ef4444" stroke="#ffffff" strokeWidth="2" />
-                    <circle cx="210" cy="170" r="12" fill="none" stroke="#ef4444" strokeWidth="1" strokeDasharray="3 3" className="animate-spin-slow" />
-                    <text x="225" y="174" fill="#fecaca" fontSize="11" fontWeight="bold">Baramati (LSD Cluster)</text>
+                    {/* Baramati Active Pulsing Danger Cluster */}
+                    <circle cx="210" cy="170" r="34" fill="#D84F45" fillOpacity="0.25" className="animate-ping" />
+                    <circle cx="210" cy="170" r="14" fill="#D84F45" fillOpacity="0.4" />
+                    <circle cx="210" cy="170" r="7" fill="#D84F45" stroke="#FFFFFF" strokeWidth="2" />
+                    <text x="225" y="174" fill="#FECACA" fontSize="11" fontWeight="bold">Baramati (LSD Cluster)</text>
 
-                    {/* Active Cluster Ring: Daund */}
-                    <circle cx="250" cy="140" r="24" fill="#ef4444" fillOpacity="0.2" className="animate-pulse" />
-                    <circle cx="250" cy="140" r="6" fill="#ef4444" stroke="#ffffff" strokeWidth="1.5" />
-                    <text x="262" y="144" fill="#fda4af" fontSize="9">Daund (Avian Alert)</text>
+                    {/* Daund Active Cluster */}
+                    <circle cx="250" cy="135" r="22" fill="#D84F45" fillOpacity="0.2" className="animate-pulse" />
+                    <circle cx="250" cy="135" r="6" fill="#D84F45" stroke="#FFFFFF" strokeWidth="1.5" />
+                    <text x="262" y="139" fill="#FDA4AF" fontSize="9">Daund (Avian Alert)</text>
 
-                    {/* Nodes: Vet Hospital & Regional Lab */}
-                    <circle cx="290" cy="220" r="7" fill="#a855f7" stroke="#ffffff" strokeWidth="2" />
-                    <circle cx="290" cy="220" r="10" fill="none" stroke="#a855f7" strokeWidth="1" strokeDasharray="2 2" />
-                    <text x="300" y="224" fill="#e9d5ff" fontSize="9">Pune Regional Lab</text>
+                    {/* Pune Regional Lab Node */}
+                    <circle cx="290" cy="220" r="6" fill="#A855F7" stroke="#FFFFFF" strokeWidth="1.5" />
+                    <text x="302" y="224" fill="#E9D5FF" fontSize="9">Pune Regional Lab</text>
 
-                    <circle cx="190" cy="110" r="7" fill="#3b82f6" stroke="#ffffff" strokeWidth="2" />
-                    <circle cx="190" cy="110" r="10" fill="none" stroke="#3b82f6" strokeWidth="1" strokeDasharray="2 2" />
-                    <text x="202" y="114" fill="#bfdbfe" fontSize="9">Sub-District Hosp</text>
+                    {/* Sub-District Hospital Node */}
+                    <circle cx="190" cy="110" r="6" fill="#3B82F6" stroke="#FFFFFF" strokeWidth="1.5" />
+                    <text x="202" y="114" fill="#BFDBFE" fontSize="9">Sub-District Hosp</text>
 
-                    {/* Thin Data Connection Lines */}
-                    <line x1="210" y1="170" x2="250" y2="140" stroke="#ef4444" strokeWidth="1.5" strokeDasharray="4 2" className="animate-pulse" />
-                    <line x1="210" y1="170" x2="190" y2="110" stroke="#38bdf8" strokeWidth="1.5" />
-                    <line x1="210" y1="170" x2="290" y2="220" stroke="#a855f7" strokeWidth="1.5" />
+                    {/* Realtime Connection Network Lines */}
+                    <line x1="210" y1="170" x2="250" y2="135" stroke="#D84F45" strokeWidth="1.5" strokeDasharray="3 3" />
+                    <line x1="210" y1="170" x2="190" y2="110" stroke="#38BDF8" strokeWidth="1.5" />
+                    <line x1="210" y1="170" x2="290" y2="220" stroke="#A855F7" strokeWidth="1.5" />
                   </svg>
                 </div>
 
-                {/* 4 Floating Intelligence Cards */}
-                <div className="grid grid-cols-2 gap-3 text-xs pt-2 relative">
-                  <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800 hover:border-emerald-700 transition-colors cursor-default group">
-                    <div className="flex items-center gap-1.5 mb-1">
-                      <FileText className="w-3 h-3 text-slate-500 group-hover:text-emerald-500 transition-colors" />
-                      <span className="text-[10px] text-slate-400">Reports</span>
-                    </div>
-                    <p className="font-extrabold text-amber-400 text-sm">17 Active Reports</p>
+                {/* 4 Floating Live Intelligence Readouts (Section 06) */}
+                <div className="grid grid-cols-2 gap-2 text-xs pt-1">
+                  <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800">
+                    <span className="text-[10px] text-slate-400 font-bold uppercase">Active Clusters</span>
+                    <p className="font-black text-[#D84F45] text-sm mt-0.5">4 Emerging Clusters</p>
                   </div>
-                  <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800 hover:border-red-700 transition-colors cursor-default group">
-                    <div className="flex items-center gap-1.5 mb-1">
-                      <AlertTriangle className="w-3 h-3 text-slate-500 group-hover:text-red-500 transition-colors" />
-                      <span className="text-[10px] text-slate-400">Clusters</span>
-                    </div>
-                    <p className="font-extrabold text-red-400 text-sm">4 Emerging Clusters</p>
+                  <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800">
+                    <span className="text-[10px] text-slate-400 font-bold uppercase">High-Risk Zones</span>
+                    <p className="font-black text-[#E4A53A] text-sm mt-0.5">17 High-Risk Villages</p>
                   </div>
-                  <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800 hover:border-emerald-700 transition-colors cursor-default group">
-                    <div className="flex items-center gap-1.5 mb-1">
-                      <Syringe className="w-3 h-3 text-slate-500 group-hover:text-emerald-500 transition-colors" />
-                      <span className="text-[10px] text-slate-400">Vaccination</span>
-                    </div>
-                    <p className="font-extrabold text-emerald-400 text-sm">78.4% Coverage</p>
+                  <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800">
+                    <span className="text-[10px] text-slate-400 font-bold uppercase">State Vaccine</span>
+                    <p className="font-black text-[#149A84] text-sm mt-0.5">78.4% Coverage</p>
                   </div>
-                  <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800 hover:border-blue-700 transition-colors cursor-default group">
-                    <div className="flex items-center gap-1.5 mb-1">
-                      <Clock className="w-3 h-3 text-slate-500 group-hover:text-blue-500 transition-colors" />
-                      <span className="text-[10px] text-slate-400">Response</span>
-                    </div>
-                    <p className="font-extrabold text-blue-400 text-sm">2h 14m Avg Response</p>
+                  <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800">
+                    <span className="text-[10px] text-slate-400 font-bold uppercase">Response Velocity</span>
+                    <p className="font-black text-blue-400 text-sm mt-0.5">2h 14m Avg Response</p>
                   </div>
                 </div>
               </div>
@@ -271,256 +298,273 @@ export default function LandingPage({ onAccessPlatform, onReportIssue }) {
         </div>
       </section>
 
-      {/* 4. Section: ONE HEALTH NETWORK (Data Flow Ecosystem) */}
-      <section className="py-16 bg-white border-y border-slate-200 relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[120%] h-1 bg-gradient-to-r from-transparent via-emerald-200 to-transparent" />
-        </div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-10">
-          <div className="text-center space-y-3 max-w-2xl mx-auto">
-            <span className="inline-flex items-center gap-2 text-xs font-extrabold text-emerald-800 uppercase tracking-wider bg-emerald-50 px-4 py-1.5 rounded-full border border-emerald-200">
-              <Network className="w-3 h-3" />
-              Unified Stakeholder Ecosystem
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-black text-slate-900">One Health Network</h2>
-            <p className="text-sm text-slate-500">Continuous telemetry flowing seamlessly from rural sheds to state command</p>
+      {/* 4. Section 07: Live Surveillance Ticker Strip */}
+      <div className="bg-[#073B32] text-white py-3 px-4 border-y border-[#095B4E] overflow-hidden shadow-inner">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-6 text-xs font-mono">
+          <div className="flex items-center gap-2 shrink-0 font-bold text-[#D9F1E8]">
+            <Zap className="w-4 h-4 text-emerald-300 animate-pulse" />
+            <span className="uppercase tracking-wider">LIVE TELEMETRY:</span>
           </div>
 
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-3 relative">
+          <div className="flex items-center gap-6 overflow-x-auto text-[11px] shrink-0">
+            <span className="flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+              <span>🟢 Surveillance network operational (36 Districts)</span>
+            </span>
+            <span className="text-[#7ACAB1]">•</span>
+            <span className="flex items-center gap-1.5 text-red-300 font-bold">
+              <span>🔴 4 high-risk clusters detected (Baramati, Daund, Indapur)</span>
+            </span>
+            <span className="text-[#7ACAB1]">•</span>
+            <span className="flex items-center gap-1.5 text-amber-300">
+              <span>🟡 17 vaccination gaps identified in sub-districts</span>
+            </span>
+            <span className="text-[#7ACAB1]">•</span>
+            <span className="flex items-center gap-1.5 text-blue-200">
+              <span>🔵 31 new reports in the last 24 hours</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* 5. Section 08: Visual Narrative — FROM FIRST SYMPTOM TO FAST RESPONSE */}
+      <section className="py-14 bg-white border-b border-[#ECE6D6]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-10">
+          <div className="text-center space-y-2 max-w-2xl mx-auto">
+            <span className="text-xs font-extrabold text-[#073B32] uppercase tracking-wider bg-[#D9F1E8] px-3 py-1 rounded-full border border-[#B3E2D2]">
+              CONNECTED SURVEILLANCE NARRATIVE
+            </span>
+            <h2 className="text-2xl sm:text-4xl font-black text-[#0A1020]">From First Symptom to Fast Response</h2>
+            <p className="text-xs sm:text-sm text-slate-600">
+              How PashuSuraksha turns isolated clinical signs into rapid containment & ring vaccination
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 relative">
             {[
-              { role: "Farmer", desc: "Symptom reporting & herd health", icon: "🌾", color: "hover:border-emerald-400" },
-              { role: "Field Worker", desc: "Field visits & tag registrations", icon: "🩺", color: "hover:border-teal-400" },
-              { role: "Veterinarian", desc: "Clinical triage & treatments", icon: "👨‍⚕️", color: "hover:border-blue-400" },
-              { role: "Laboratory", desc: "Diagnostic testing & PCR validation", icon: "🧪", color: "hover:border-purple-400" },
-              { role: "District", desc: "GIS mapping & outbreak response", icon: "🏛️", color: "hover:border-indigo-400" },
-              { role: "State", desc: "Strategic surveillance & resource allocation", icon: "🗺️", color: "hover:border-rose-400" }
-            ].map((item, idx, arr) => (
-              <React.Fragment key={item.role}>
-                <div className={`bg-slate-50 p-4 rounded-2xl border-2 border-slate-200 ${item.color} text-center w-full lg:w-44 space-y-2 shadow-sm hover:shadow-lg transition-all cursor-default group relative`}>
-                  <span className="text-3xl inline-block group-hover:scale-110 transition-transform">{item.icon}</span>
-                  <h3 className="font-extrabold text-sm text-slate-900">{item.role}</h3>
-                  <p className="text-[11px] text-slate-500 leading-tight">{item.desc}</p>
-                  <div className="absolute top-2 right-2 w-2 h-2 rounded-full bg-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+              { step: "01", title: "Report", desc: "Farmer reports signs via App or 1800 IVR with GPS.", icon: "🌾", color: "border-emerald-500 bg-emerald-50/50" },
+              { step: "02", title: "Assess", desc: "Risk engine identifies high-risk cluster patterns (86/100).", icon: "🤖", color: "border-amber-500 bg-amber-50/50" },
+              { step: "03", title: "Verify", desc: "Veterinarian reviews evidence & issues e-Prescription.", icon: "👨‍⚕️", color: "border-blue-500 bg-blue-50/50" },
+              { step: "04", title: "Investigate", desc: "Field worker & laboratory respond with barcode sample.", icon: "🧪", color: "border-purple-500 bg-purple-50/50" },
+              { step: "05", title: "Contain", desc: "District GIS maps cluster & deploys Mobile Response Team.", icon: "🚨", color: "border-red-500 bg-red-50/50" },
+              { step: "06", title: "Prevent", desc: "Multilingual ring advisory sent to 1,420 neighboring farms.", icon: "💉", color: "border-teal-500 bg-teal-50/50" }
+            ].map((p, idx) => (
+              <div key={idx} className={`p-4 rounded-2xl border-2 ${p.color} space-y-2 flex flex-col justify-between shadow-xs hover:shadow-md transition`}>
+                <div className="flex items-center justify-between">
+                  <span className="text-2xl">{p.icon}</span>
+                  <span className="text-[10px] font-mono font-black text-slate-500">STEP {p.step}</span>
                 </div>
-                {idx < arr.length - 1 && (
-                  <div className="hidden lg:flex items-center text-slate-300">
-                    <ChevronRight className="w-5 h-5 text-emerald-600" />
-                  </div>
-                )}
-              </React.Fragment>
+                <div>
+                  <h3 className="font-extrabold text-sm text-[#0A1020]">{p.title}</h3>
+                  <p className="text-[11px] text-slate-600 mt-1 leading-relaxed">{p.desc}</p>
+                </div>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 5. Section: FROM FIRST SYMPTOM TO EARLY RESPONSE */}
-      <section className="py-16 bg-slate-900 text-white relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[50%] h-[50%] bg-emerald-500/5 rounded-full blur-3xl" />
-        </div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-10 relative">
-          <div className="text-center space-y-3 max-w-2xl mx-auto">
-            <span className="inline-flex items-center gap-2 text-xs font-extrabold text-emerald-400 uppercase tracking-wider bg-emerald-950 px-4 py-1.5 rounded-full border border-emerald-800">
-              <Activity className="w-3 h-3" />
-              Connected Surveillance Narrative
+      {/* 6. Section 09: PLATFORM ECOSYSTEM (Interactive Center Hub) */}
+      <section className="py-14 bg-[#F6F3EA] border-b border-[#ECE6D6]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-8">
+          <div className="text-center space-y-2 max-w-2xl mx-auto">
+            <span className="text-xs font-extrabold text-[#073B32] uppercase tracking-wider bg-[#D9F1E8] px-3 py-1 rounded-full border border-[#B3E2D2]">
+              PLATFORM ECOSYSTEM
             </span>
-            <h2 className="text-2xl sm:text-3xl font-black text-white">From First Symptom to Early Response</h2>
+            <h2 className="text-2xl sm:text-3xl font-black text-[#0A1020]">Unified Stakeholder Intelligence Grid</h2>
+            <p className="text-xs sm:text-sm text-slate-600">
+              Hover over each node to inspect real-time data exchange & operational authority
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-3">
-            {[
-              { step: "01", title: "Report", desc: "Farmer logs fever & nodule signs via App or IVR.", color: "border-emerald-500", icon: FileText },
-              { step: "02", title: "Risk Assessment", desc: "AI engine calculates High Risk score (86/100).", color: "border-amber-500", icon: Activity },
-              { step: "03", title: "Vet Verification", desc: "Doctor Anand Deshmukh inspects & prescribes Rx.", color: "border-blue-500", icon: Stethoscope },
-              { step: "04", title: "Laboratory", desc: "Sample barcode #LAB-PUN-9821 sent for RT-PCR.", color: "border-purple-500", icon: TestTube2 },
-              { step: "05", title: "Outbreak Detection", desc: "GIS map detects 3-village cluster in Baramati.", color: "border-red-500", icon: MapPin },
-              { step: "06", title: "Containment", desc: "Rapid Response Unit deployed to 5km radius.", color: "border-rose-500", icon: ShieldAlert },
-              { step: "07", title: "Prevention", desc: "Multi-lingual ring advisory sent to 1,420 farmers.", color: "border-teal-500", icon: Radio }
-            ].map((p) => {
-              const Icon = p.icon;
-              return (
-                <div key={p.step} className={`p-4 bg-slate-950 rounded-2xl border-t-4 ${p.color} border-x border-b border-slate-800 space-y-3 hover:bg-slate-900 transition-colors group`}>
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-mono font-bold text-slate-500">PHASE {p.step}</span>
-                    <Icon className="w-4 h-4 text-slate-600 group-hover:text-emerald-400 transition-colors" />
-                  </div>
-                  <h3 className="font-extrabold text-sm text-white">{p.title}</h3>
-                  <p className="text-[11px] text-slate-400 leading-relaxed">{p.desc}</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {ecosystemNodes.map((node) => (
+              <div
+                key={node.id}
+                onMouseEnter={() => setHoveredNode(node.id)}
+                onMouseLeave={() => setHoveredNode(null)}
+                className={`p-5 rounded-2xl border-2 bg-white ${node.color} shadow-xs hover:shadow-md transition cursor-pointer flex flex-col justify-between space-y-3`}
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-3xl">{node.icon}</span>
+                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-white border border-slate-200 text-slate-700">
+                    {node.tag}
+                  </span>
                 </div>
-              );
-            })}
+
+                <div>
+                  <h3 className="font-black text-sm text-[#0A1020]">{node.name}</h3>
+                  <p className="text-xs font-semibold text-[#149A84] mt-0.5">{node.role}</p>
+                  <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">{node.desc}</p>
+                </div>
+
+                <div className="pt-2 border-t border-slate-200/60 flex items-center justify-between text-xs font-bold text-[#073B32]">
+                  <span>Role Workspace</span>
+                  <ChevronRight className="w-4 h-4" />
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* 6. Section: ROLE ENTRY — 5 Asymmetric Panels */}
-      <section className="py-16 bg-slate-50 relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-10">
-          <div className="text-center space-y-3 max-w-2xl mx-auto">
-            <span className="inline-flex items-center gap-2 text-xs font-extrabold text-emerald-800 uppercase tracking-wider bg-emerald-50 px-4 py-1.5 rounded-full border border-emerald-200">
-              <Users className="w-3 h-3" />
-              Role-Based Workspaces
+      {/* 7. Section 11: ROLE ENTRY PANELS (5 Asymmetric Panels) */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-8">
+          <div className="text-center space-y-2 max-w-2xl mx-auto">
+            <span className="text-xs font-extrabold text-[#073B32] uppercase tracking-wider bg-[#D9F1E8] px-3 py-1 rounded-full border border-[#B3E2D2]">
+              AUTHORIZED ENVIRONMENTS
             </span>
-            <h2 className="text-2xl sm:text-3xl font-black text-slate-900">Built for Everyone Responsible for Animal Health</h2>
-            <p className="text-sm text-slate-500">Authenticate to launch your specific workspace console</p>
+            <h2 className="text-2xl sm:text-4xl font-black text-[#0A1020]">Built for Everyone Responsible for Animal Health</h2>
+            <p className="text-xs sm:text-sm text-slate-600">
+              Sign in to your designated role workspace to begin surveillance operations
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
             {/* Panel 1: Farmer (7 cols) */}
             <div
               onClick={onAccessPlatform}
-              className="md:col-span-7 bg-white p-7 rounded-3xl border-2 border-slate-200 shadow-sm hover:shadow-xl hover:border-emerald-500 transition-all group cursor-pointer flex flex-col justify-between space-y-5 relative overflow-hidden"
+              className="md:col-span-7 bg-[#F6F3EA] p-6 rounded-3xl border-2 border-[#ECE6D6] hover:border-[#149A84] transition cursor-pointer shadow-xs hover:shadow-lg flex flex-col justify-between space-y-4 group"
             >
-              <div className="absolute top-0 right-0 w-40 h-40 bg-emerald-50 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="space-y-3 relative">
+              <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-4xl group-hover:scale-110 transition-transform">🌾</span>
-                  <span className="text-xs font-bold bg-emerald-100 text-emerald-800 px-3 py-1.5 rounded-full flex items-center gap-1.5">
-                    <Sparkles className="w-3 h-3" />
+                  <span className="text-4xl">🌾</span>
+                  <span className="text-xs font-extrabold bg-[#D9F1E8] text-[#073B32] px-3 py-1 rounded-full border border-[#B3E2D2]">
                     Farmer Workspace
                   </span>
                 </div>
-                <h3 className="text-2xl font-black text-slate-900 group-hover:text-emerald-700 transition-colors">
-                  "Report symptoms in seconds."
+                <h3 className="text-xl sm:text-2xl font-black text-[#0A1020] group-hover:text-[#149A84] transition">
+                  “Report symptoms in under 60 seconds.”
                 </h3>
-                <p className="text-sm text-slate-600 max-w-lg leading-relaxed">
-                  Designed for rural cattle owners with large touch targets, visual symptom chips, 6-step reporting wizard, AI risk triage, vaccination reminders, and digital health passports.
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                  Mobile-first rural interface with large touch symptom chips, camera uploads, voice memo wave recording, and digital animal health passports.
                 </p>
               </div>
 
-              <div className="flex items-center gap-2 text-sm font-extrabold text-emerald-800 pt-2 group-hover:gap-3 transition-all relative">
+              <div className="flex items-center gap-2 text-xs font-extrabold text-[#073B32] pt-2">
                 <span>Enter Workspace</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </div>
             </div>
 
             {/* Panel 2: Field Worker (5 cols) */}
             <div
               onClick={onAccessPlatform}
-              className="md:col-span-5 bg-white p-7 rounded-3xl border-2 border-slate-200 shadow-sm hover:shadow-xl hover:border-teal-500 transition-all group cursor-pointer flex flex-col justify-between space-y-5 relative overflow-hidden"
+              className="md:col-span-5 bg-[#F6F3EA] p-6 rounded-3xl border-2 border-[#ECE6D6] hover:border-teal-500 transition cursor-pointer shadow-xs hover:shadow-lg flex flex-col justify-between space-y-4 group"
             >
-              <div className="absolute top-0 right-0 w-40 h-40 bg-teal-50 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="space-y-3 relative">
+              <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-4xl group-hover:scale-110 transition-transform">🩺</span>
-                  <span className="text-xs font-bold bg-teal-100 text-teal-800 px-3 py-1.5 rounded-full flex items-center gap-1.5">
-                    <Zap className="w-3 h-3" />
+                  <span className="text-4xl">🩺</span>
+                  <span className="text-xs font-extrabold bg-teal-100 text-teal-900 px-3 py-1 rounded-full border border-teal-200">
                     Field Sentinel
                   </span>
                 </div>
-                <h3 className="text-2xl font-black text-slate-900 group-hover:text-teal-700 transition-colors">
-                  "Capture what is happening on the ground."
+                <h3 className="text-xl font-black text-[#0A1020] group-hover:text-teal-700 transition">
+                  “Capture field intelligence on the ground.”
                 </h3>
-                <p className="text-sm text-slate-600 leading-relaxed">
-                  Daily field visit schedules, village route map, sudden mortality logging, and offline queue auto-sync.
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Daily timeline visit schedule, live route map, sudden mortality logging, and offline queue auto-sync.
                 </p>
               </div>
 
-              <div className="flex items-center gap-2 text-sm font-extrabold text-teal-800 pt-2 group-hover:gap-3 transition-all relative">
+              <div className="flex items-center gap-2 text-xs font-extrabold text-teal-800 pt-2">
                 <span>Enter Workspace</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </div>
             </div>
 
             {/* Panel 3: Veterinarian (4 cols) */}
             <div
               onClick={onAccessPlatform}
-              className="md:col-span-4 bg-white p-7 rounded-3xl border-2 border-slate-200 shadow-sm hover:shadow-xl hover:border-blue-500 transition-all group cursor-pointer flex flex-col justify-between space-y-5 relative overflow-hidden"
+              className="md:col-span-4 bg-[#F6F3EA] p-6 rounded-3xl border-2 border-[#ECE6D6] hover:border-blue-500 transition cursor-pointer shadow-xs hover:shadow-lg flex flex-col justify-between space-y-4 group"
             >
-              <div className="absolute top-0 right-0 w-40 h-40 bg-blue-50 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="space-y-3 relative">
+              <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-4xl group-hover:scale-110 transition-transform">👨‍⚕️</span>
-                  <span className="text-xs font-bold bg-blue-100 text-blue-800 px-3 py-1.5 rounded-full flex items-center gap-1.5">
-                    <Stethoscope className="w-3 h-3" />
-                    Clinical Console
+                  <span className="text-4xl">👨‍⚕️</span>
+                  <span className="text-xs font-extrabold bg-blue-100 text-blue-900 px-3 py-1 rounded-full border border-blue-200">
+                    Clinical Workbench
                   </span>
                 </div>
-                <h3 className="text-xl font-black text-slate-900 group-hover:text-blue-700 transition-colors">
-                  "Investigate cases with decision support."
+                <h3 className="text-lg font-black text-[#0A1020] group-hover:text-blue-700 transition">
+                  “Investigate cases with decision support.”
                 </h3>
-                <p className="text-sm text-slate-600 leading-relaxed">
-                  Clinical case management, AI differential diagnosis, lab orders, and e-prescriptions.
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Clinical dossier, AI differential diagnosis, diagnostic lab barcodes, and e-prescriptions.
                 </p>
               </div>
 
-              <div className="flex items-center gap-2 text-sm font-extrabold text-blue-800 pt-2 group-hover:gap-3 transition-all relative">
+              <div className="flex items-center gap-2 text-xs font-extrabold text-blue-800 pt-2">
                 <span>Enter Workspace</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </div>
             </div>
 
             {/* Panel 4: District Officer (4 cols) */}
             <div
               onClick={onAccessPlatform}
-              className="md:col-span-4 bg-white p-7 rounded-3xl border-2 border-slate-200 shadow-sm hover:shadow-xl hover:border-indigo-500 transition-all group cursor-pointer flex flex-col justify-between space-y-5 relative overflow-hidden"
+              className="md:col-span-4 bg-[#F6F3EA] p-6 rounded-3xl border-2 border-[#ECE6D6] hover:border-indigo-500 transition cursor-pointer shadow-xs hover:shadow-lg flex flex-col justify-between space-y-4 group"
             >
-              <div className="absolute top-0 right-0 w-40 h-40 bg-indigo-50 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="space-y-3 relative">
+              <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-4xl group-hover:scale-110 transition-transform">🏛️</span>
-                  <span className="text-xs font-bold bg-indigo-100 text-indigo-800 px-3 py-1.5 rounded-full flex items-center gap-1.5">
-                    <Building2 className="w-3 h-3" />
+                  <span className="text-4xl">🏛️</span>
+                  <span className="text-xs font-extrabold bg-indigo-100 text-indigo-900 px-3 py-1 rounded-full border border-indigo-200">
                     District Command
                   </span>
                 </div>
-                <h3 className="text-xl font-black text-slate-900 group-hover:text-indigo-700 transition-colors">
-                  "See emerging risks across your territory."
+                <h3 className="text-lg font-black text-[#0A1020] group-hover:text-indigo-700 transition">
+                  “Monitor spatial clusters across Pune.”
                 </h3>
-                <p className="text-sm text-slate-600 leading-relaxed">
-                  Interactive GIS disease risk map, spatial cluster alerts, and advisory studio.
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  GIS disease risk map, spatial cluster alerts, and multichannel farmer advisory broadcasting.
                 </p>
               </div>
 
-              <div className="flex items-center gap-2 text-sm font-extrabold text-indigo-800 pt-2 group-hover:gap-3 transition-all relative">
+              <div className="flex items-center gap-2 text-xs font-extrabold text-indigo-800 pt-2">
                 <span>Enter Workspace</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </div>
             </div>
 
-            {/* Panel 5: State Administrator (4 cols) */}
+            {/* Panel 5: State Admin (4 cols) */}
             <div
               onClick={onAccessPlatform}
-              className="md:col-span-4 bg-white p-7 rounded-3xl border-2 border-slate-200 shadow-sm hover:shadow-xl hover:border-purple-500 transition-all group cursor-pointer flex flex-col justify-between space-y-5 relative overflow-hidden"
+              className="md:col-span-4 bg-[#F6F3EA] p-6 rounded-3xl border-2 border-[#ECE6D6] hover:border-purple-500 transition cursor-pointer shadow-xs hover:shadow-lg flex flex-col justify-between space-y-4 group"
             >
-              <div className="absolute top-0 right-0 w-40 h-40 bg-purple-50 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="space-y-3 relative">
+              <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-4xl group-hover:scale-110 transition-transform">🗺️</span>
-                  <span className="text-xs font-bold bg-purple-100 text-purple-800 px-3 py-1.5 rounded-full flex items-center gap-1.5">
-                    <TrendingUp className="w-3 h-3" />
+                  <span className="text-4xl">🗺️</span>
+                  <span className="text-xs font-extrabold bg-purple-100 text-purple-900 px-3 py-1 rounded-full border border-purple-200">
                     State Directorate
                   </span>
                 </div>
-                <h3 className="text-xl font-black text-slate-900 group-hover:text-purple-700 transition-colors">
-                  "Understand animal-health patterns across Maharashtra."
+                <h3 className="text-lg font-black text-[#0A1020] group-hover:text-purple-700 transition">
+                  “Statewide 36-district strategic overview.”
                 </h3>
-                <p className="text-sm text-slate-600 leading-relaxed">
-                  36 district risk rankings, vaccination gap analysis, vector forecasts, and emergency resource allocation.
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Maharashtra district risk heatmaps, vaccination gap analysis, vector forecasts, and fund dispatches.
                 </p>
               </div>
 
-              <div className="flex items-center gap-2 text-sm font-extrabold text-purple-800 pt-2 group-hover:gap-3 transition-all relative">
+              <div className="flex items-center gap-2 text-xs font-extrabold text-purple-800 pt-2">
                 <span>Enter Workspace</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 7. Footer */}
-      <footer className="bg-slate-950 text-slate-500 py-8 px-4 text-center text-xs border-t border-slate-900 relative overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-1 bg-gradient-to-r from-transparent via-emerald-500 to-transparent" />
+      {/* 8. Footer */}
+      <footer className="bg-[#0A1020] text-slate-400 py-8 px-4 text-center text-xs border-t border-slate-800">
         <div className="max-w-4xl mx-auto space-y-2">
-          <div className="flex items-center justify-center gap-2 mb-3">
-            <Shield className="w-4 h-4 text-emerald-600" />
-            <p className="font-bold text-slate-400">PASHUSURAKSHA — Smart India Hackathon (SIH) 2026 Problem Statement 26128</p>
+          <div className="flex items-center justify-center gap-2">
+            <Shield className="w-4 h-4 text-[#149A84]" />
+            <p className="font-bold text-slate-200">PASHUSURAKSHA — Smart India Hackathon (SIH) 2026 Problem Statement 26128</p>
           </div>
-          <p className="text-slate-600">Government of Maharashtra • Department of Animal Husbandry & Dairying</p>
-          <p className="text-slate-700 mt-3 flex items-center justify-center gap-2">
-            <Database className="w-3 h-3" />
-            <span>Powered by the One Health Surveillance Grid</span>
+          <p className="text-slate-500">Government of Maharashtra • Department of Animal Husbandry & Dairying</p>
+          <p className="text-slate-600 font-mono text-[11px] pt-2">
+            Livestock Health Surveillance • Early Warning • Response Intelligence Platform
           </p>
         </div>
       </footer>
