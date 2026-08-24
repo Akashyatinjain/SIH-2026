@@ -10,53 +10,53 @@ import {
   TestTube2, 
   Hospital, 
   Layers, 
-  TrendingUp,
-  Database,
-  Calendar
+  TrendingUp, 
+  Database, 
+  Calendar 
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
 export default function BottomNav() {
-  const { role, activeTab, setActiveTab, setIsOfflineModalOpen, offlineQueue } = useApp();
+  const { role, activeTab, setActiveTab, setIsOfflineModalOpen, offlineQueue, language, t } = useApp();
 
   const getNavTabs = () => {
     if (role === 'farmer') {
       return [
-        { id: 'dashboard', label: 'Home', icon: Home },
-        { id: 'animals', label: 'Animals', icon: ListChecks },
-        { id: 'report', label: 'Report', icon: PlusCircle, isMain: true },
-        { id: 'vaccines', label: 'Vaccines', icon: Syringe },
-        { id: 'alerts', label: 'Alerts', icon: AlertTriangle }
+        { id: 'dashboard', label: t.dashboard || 'Home', icon: Home },
+        { id: 'animals', label: t.myAnimals || 'Animals', icon: ListChecks },
+        { id: 'report', label: language === 'mr' ? 'नोंदवा' : language === 'hi' ? 'रिपोर्ट' : 'Report', icon: PlusCircle, isMain: true },
+        { id: 'vaccines', label: t.vaccination || 'Vaccines', icon: Syringe },
+        { id: 'alerts', label: t.localAlerts || 'Alerts', icon: AlertTriangle }
       ];
     } else if (role === 'fieldWorker') {
       return [
-        { id: 'dashboard', label: 'Ops', icon: Home },
-        { id: 'schedule', label: 'Visits', icon: Calendar },
-        { id: 'report', label: 'Incident', icon: Activity, isMain: true },
-        { id: 'animals', label: 'Registry', icon: ListChecks },
-        { id: 'offlineQueue', label: 'Offline', icon: Database }
+        { id: 'dashboard', label: language === 'mr' ? 'कार्य' : language === 'hi' ? 'कार्य' : 'Ops', icon: Home },
+        { id: 'schedule', label: language === 'mr' ? 'भेटी' : language === 'hi' ? 'दौरे' : 'Visits', icon: Calendar },
+        { id: 'report', label: language === 'mr' ? 'तक्रार' : language === 'hi' ? 'घटना' : 'Incident', icon: Activity, isMain: true },
+        { id: 'animals', label: language === 'mr' ? 'नोंदणी' : language === 'hi' ? 'पंजी' : 'Registry', icon: ListChecks },
+        { id: 'offlineQueue', label: language === 'mr' ? 'ऑफलाइन' : language === 'hi' ? 'ऑफलाइन' : 'Offline', icon: Database }
       ];
     } else if (role === 'vet') {
       return [
-        { id: 'dashboard', label: 'Home', icon: Home },
-        { id: 'cases', label: 'Cases', icon: Activity, isMain: true },
-        { id: 'labs', label: 'Lab', icon: TestTube2 },
-        { id: 'referrals', label: 'Referrals', icon: Hospital },
-        { id: 'gis', label: 'Surveillance', icon: Map }
+        { id: 'dashboard', label: language === 'mr' ? 'मुख्य' : language === 'hi' ? 'मुख्य' : 'Home', icon: Home },
+        { id: 'cases', label: t.cases || 'Cases', icon: Activity, isMain: true },
+        { id: 'labs', label: language === 'mr' ? 'लॅब' : language === 'hi' ? 'लैब' : 'Lab', icon: TestTube2 },
+        { id: 'referrals', label: language === 'mr' ? 'रेफरल' : language === 'hi' ? 'रेफरल' : 'Referrals', icon: Hospital },
+        { id: 'gis', label: language === 'mr' ? 'नकाशा' : language === 'hi' ? 'नक्शा' : 'Surveillance', icon: Map }
       ];
     } else if (role === 'admin') {
       return [
-        { id: 'dashboard', label: 'Command', icon: Home },
-        { id: 'gis', label: 'GIS Map', icon: Map, isMain: true },
-        { id: 'outbreaks', label: 'Outbreaks', icon: Activity },
-        { id: 'analytics', label: 'Trends', icon: TrendingUp }
+        { id: 'dashboard', label: language === 'mr' ? 'कमांड' : language === 'hi' ? 'कमांड' : 'Command', icon: Home },
+        { id: 'gis', label: language === 'mr' ? 'नकाशा' : language === 'hi' ? 'नक्शा' : 'GIS Map', icon: Map, isMain: true },
+        { id: 'outbreaks', label: language === 'mr' ? 'प्रादुर्भाव' : language === 'hi' ? 'प्रकोप' : 'Outbreaks', icon: Activity },
+        { id: 'analytics', label: language === 'mr' ? 'कल' : language === 'hi' ? 'ट्रेंड्स' : 'Trends', icon: TrendingUp }
       ];
     } else {
       return [
-        { id: 'dashboard', label: 'State Overview', icon: Home },
-        { id: 'districtRankings', label: 'District Risk', icon: Layers, isMain: true },
-        { id: 'analytics', label: 'Intelligence', icon: TrendingUp },
-        { id: 'vaccines', label: 'Gaps', icon: Syringe }
+        { id: 'dashboard', label: language === 'mr' ? 'राज्य' : language === 'hi' ? 'राज्य' : 'State', icon: Home },
+        { id: 'districtRankings', label: language === 'mr' ? 'धोका' : language === 'hi' ? 'जोखिम' : 'District Risk', icon: Layers, isMain: true },
+        { id: 'analytics', label: language === 'mr' ? 'विश्लेषण' : language === 'hi' ? 'विश्लेषण' : 'Intelligence', icon: TrendingUp },
+        { id: 'vaccines', label: language === 'mr' ? 'अंतर' : language === 'hi' ? 'गैप' : 'Gaps', icon: Syringe }
       ];
     }
   };
@@ -83,9 +83,9 @@ export default function BottomNav() {
               <button
                 key={tab.id}
                 onClick={() => handleTabClick(tab)}
-                className="flex flex-col items-center justify-center -mt-5 bg-gradient-to-tr from-emerald-800 to-forest-700 text-white rounded-full w-12 h-12 shadow-lg border-2 border-white transform active:scale-95 transition"
+                className="flex flex-col items-center justify-center -mt-5 bg-gradient-to-tr from-emerald-800 to-[#073B32] text-white rounded-full w-12 h-12 shadow-lg border-2 border-white transform active:scale-95 transition"
               >
-                <Icon className="w-6 h-6" />
+                <Icon className="w-6 h-6 text-emerald-300" />
               </button>
             );
           }

@@ -137,6 +137,23 @@ export default function LandingPage({ onAccessPlatform, onReportIssue }) {
           </div>
 
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            {/* Language Selector Pill */}
+            <div className="flex items-center bg-white border border-[#ECE6D6] rounded-full p-0.5 shadow-xs text-xs font-black">
+              {['en', 'mr', 'hi'].map((l) => (
+                <button
+                  key={l}
+                  onClick={() => setLanguage(l)}
+                  className={`px-2.5 py-1 rounded-full transition ${
+                    language === l 
+                      ? 'bg-[#073B32] text-white shadow-xs' 
+                      : 'text-slate-600 hover:text-[#0A1020]'
+                  }`}
+                >
+                  {l === 'en' ? 'ENG' : l === 'mr' ? 'मराठी' : 'हिंदी'}
+                </button>
+              ))}
+            </div>
+
             <button
               onClick={() => setIsIVROpen(true)}
               className="px-3.5 py-2 border border-[#ECE6D6] hover:bg-white rounded-xl text-xs font-bold text-[#073B32] transition flex items-center gap-1.5 hidden md:flex shadow-xs"
@@ -150,7 +167,7 @@ export default function LandingPage({ onAccessPlatform, onReportIssue }) {
               onClick={onAccessPlatform}
               className="px-5 py-2.5 bg-[#073B32] hover:bg-[#052923] text-white rounded-xl text-xs font-bold shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 flex items-center gap-1.5"
             >
-              <span>Access PashuSuraksha</span>
+              <span>{language === 'mr' ? 'प्रणाली प्रवेश करा' : language === 'hi' ? 'प्लेटफॉर्म एक्सेस करें' : 'Access PashuSuraksha'}</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>

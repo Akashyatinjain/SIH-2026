@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
   Shield, 
   MapPin, 
@@ -10,7 +10,8 @@ import {
   User, 
   ChevronDown,
   Sparkles,
-  PhoneCall
+  PhoneCall,
+  Check
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
@@ -26,18 +27,63 @@ export default function Header() {
     setLanguage,
     logout,
     setIsIVROpen,
-    currentScreen
+    currentScreen,
+    t
   } = useApp();
 
+  const [isLangDropdownOpen, setIsLangDropdownOpen] = useState(false);
+  const langRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (langRef.current && !langRef.current.contains(event.target)) {
+        setIsLangDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   const roleMeta = {
-    farmer: { title: "Farmer Workspace", location: "Khedgaon • Baramati, Pune", icon: "🌾", name: "Ramesh Patil" },
-    fieldWorker: { title: "Field Sentinel Operations", location: "Baramati Sector 2", icon: "🩺", name: "Sunita Pawar (पशु सखी)" },
-    vet: { title: "Clinical Intelligence Workbench", location: "Baramati Taluka Hospital", icon: "👨‍⚕️", name: "Dr. Anand Deshmukh" },
-    admin: { title: "Pune District Command HQ", location: "District Collectorate, Pune", icon: "🏛️", name: "Pune Command Officer" },
-    stateAdmin: { title: "Maharashtra Animal Health Intelligence", location: "State Directorate, Maharashtra", icon: "🗺️", name: "State Directorate Officer" }
+    farmer: { 
+      title: language === 'mr' ? "शेतकरी कार्यक्षेत्र" : language === 'hi' ? "किसान कार्यक्षेत्र" : "Farmer Workspace", 
+      location: language === 'mr' ? "खेडगाव • बारामती, पुणे" : language === 'hi' ? "खेडगांव • बारामती, पुणे" : "Khedgaon • Baramati, Pune", 
+      icon: "🌾", 
+      name: language === 'mr' ? "रमेश पाटील" : language === 'hi' ? "रमेश पाटिल" : "Ramesh Patil" 
+    },
+    fieldWorker: { 
+      title: language === 'mr' ? "क्षेत्रीय सहाय्यक कक्ष" : language === 'hi' ? "फील्ड वर्कर कक्ष" : "Field Sentinel Operations", 
+      location: language === 'mr' ? "बारामती विभाग २" : language === 'hi' ? "बारामती सेक्टर २" : "Baramati Sector 2", 
+      icon: "🩺", 
+      name: language === 'mr' ? "सुनिता पवार (पशु सखी)" : language === 'hi' ? "सुनीता पवार (पशु सखी)" : "Sunita Pawar (Pashu Sakhi)" 
+    },
+    vet: { 
+      title: language === 'mr' ? "पशुवैद्यकीय रुग्णालय कक्ष" : language === 'hi' ? "पशु चिकित्सालय कंसोल" : "Clinical Intelligence Workbench", 
+      location: language === 'mr' ? "बारामती तालुका रुग्णालय" : language === 'hi' ? "बारामती तालुका अस्पताल" : "Baramati Taluka Hospital", 
+      icon: "👨‍⚕️", 
+      name: language === 'mr' ? "डॉ. आनंद देशमुख" : language === 'hi' ? "डॉ. आनंद देशमुख" : "Dr. Anand Deshmukh" 
+    },
+    admin: { 
+      title: language === 'mr' ? "पुणे जिल्हा नियंत्रण कक्ष" : language === 'hi' ? "पुणे जिला नियंत्रण केंद्र" : "Pune District Command HQ", 
+      location: language === 'mr' ? "जिल्हाधिकारी कार्यालय, पुणे" : language === 'hi' ? "जिलाधिकारी कार्यालय, पुणे" : "District Collectorate, Pune", 
+      icon: "🏛️", 
+      name: language === 'mr' ? "जिल्हा नियंत्रण अधिकारी" : language === 'hi' ? "जिला नियंत्रण अधिकारी" : "Pune Command Officer" 
+    },
+    stateAdmin: { 
+      title: language === 'mr' ? "महाराष्ट्र राज्य पशु आरोग्य संचालनालय" : language === 'hi' ? "महाराष्ट्र राज्य पशु स्वास्थ्य निदेशालय" : "Maharashtra Animal Health Intelligence", 
+      location: language === 'mr' ? "मध्यवर्ती संचालनालय, मुंबई" : language === 'hi' ? "केंद्रीय निदेशालय, मुंबई" : "State Directorate, Maharashtra", 
+      icon: "🗺️", 
+      name: language === 'mr' ? "राज्य संचालक" : language === 'hi' ? "राज्य निदेशक" : "State Directorate Officer" 
+    }
   };
 
   const current = roleMeta[role] || roleMeta.farmer;
+
+  const languages = [
+    { code: 'en', label: 'ENG', fullName: 'English' },
+    { code: 'mr', label: 'मराठी', fullName: 'मराठी (Marathi)' },
+    { code: 'hi', label: 'हिंदी', fullName: 'हिंदी (Hindi)' }
+  ];
 
   return (
     <header className="bg-white border-b border-[#ECE6D6] sticky top-0 z-40 shadow-xs">
@@ -50,7 +96,7 @@ export default function Header() {
           <div className="min-w-0">
             <div className="flex items-center gap-2">
               <span className="text-sm sm:text-base font-black tracking-tight text-[#0A1020]">
-                PASHUSURAKSHA
+                {t.appName || "PASHUSURAKSHA"}
               </span>
               <span className="text-[10px] bg-[#D9F1E8] text-[#073B32] font-bold px-2 py-0.5 rounded-full border border-[#B3E2D2] hidden sm:inline-block">
                 {current.title}
@@ -65,7 +111,7 @@ export default function Header() {
 
         {/* Right: Telemetry Controls & User Profile */}
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-          {/* Online/Offline Status Indicator (Section 35) */}
+          {/* Online/Offline Status Indicator */}
           <button
             onClick={toggleOffline}
             className={`px-2.5 py-1.5 rounded-xl text-xs font-mono font-bold flex items-center gap-1.5 transition ${
@@ -78,12 +124,12 @@ export default function Header() {
             {isOffline ? (
               <>
                 <WifiOff className="w-3.5 h-3.5 text-amber-600" />
-                <span className="hidden sm:inline">OFFLINE (Queued)</span>
+                <span className="hidden sm:inline">{t.offlineMode || "OFFLINE"}</span>
               </>
             ) : (
               <>
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-                <span className="hidden sm:inline">ONLINE</span>
+                <span className="hidden sm:inline">{t.online || "ONLINE"}</span>
               </>
             )}
           </button>
@@ -98,16 +144,46 @@ export default function Header() {
             <span className="hidden lg:inline">1800-180-1551</span>
           </button>
 
-          {/* Language Selector */}
-          <select
-            value={language}
-            onChange={(e) => setLanguage(e.target.value)}
-            className="px-2 py-1.5 border border-[#ECE6D6] rounded-xl text-xs font-bold bg-[#F6F3EA] text-slate-800 focus:outline-none"
-          >
-            <option value="en">ENG</option>
-            <option value="mr">मराठी</option>
-            <option value="hi">हिंदी</option>
-          </select>
+          {/* ======================================================== */}
+          {/* POLISHED LANGUAGE SELECTOR PILL (ENG ⌵ / मराठी ⌵ / हिंदी ⌵) */}
+          {/* ======================================================== */}
+          <div className="relative" ref={langRef}>
+            <button
+              onClick={() => setIsLangDropdownOpen(!isLangDropdownOpen)}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#F6F3EA] hover:bg-[#EAE4D7] border border-[#ECE6D6] rounded-full text-xs font-black text-[#0A1020] transition shadow-xs focus:outline-none focus:ring-2 focus:ring-[#149A84]"
+              title="Change Display Language"
+            >
+              <Globe className="w-3.5 h-3.5 text-[#073B32]" />
+              <span>{language === 'en' ? 'ENG' : language === 'mr' ? 'मराठी' : 'हिंदी'}</span>
+              <ChevronDown className={`w-3.5 h-3.5 text-slate-500 transition-transform ${isLangDropdownOpen ? 'rotate-180' : ''}`} />
+            </button>
+
+            {/* Language Dropdown Menu */}
+            {isLangDropdownOpen && (
+              <div className="absolute right-0 mt-2 w-44 bg-white rounded-2xl shadow-xl border border-[#ECE6D6] py-1.5 z-50 animate-in fade-in zoom-in-95">
+                <div className="px-3 py-1 text-[10px] font-black uppercase tracking-wider text-slate-400 border-b border-slate-100 mb-1">
+                  Select Language (भाषा)
+                </div>
+                {languages.map((l) => (
+                  <button
+                    key={l.code}
+                    onClick={() => {
+                      setLanguage(l.code);
+                      setIsLangDropdownOpen(false);
+                    }}
+                    className={`w-full px-3.5 py-2 text-left text-xs font-bold flex items-center justify-between transition ${
+                      language === l.code 
+                        ? 'bg-[#D9F1E8] text-[#073B32]' 
+                        : 'text-slate-700 hover:bg-slate-50'
+                    }`}
+                  >
+                    <span>{l.fullName}</span>
+                    {language === l.code && <Check className="w-4 h-4 text-[#073B32]" />}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
 
           {/* Notifications Trigger */}
           <button

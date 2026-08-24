@@ -115,16 +115,37 @@ export default function LoginPage({ onLoginSuccess, onOpenDemoModal, onOpenDemoC
         </div>
 
         {/* RIGHT SIDE: Warm Ivory Authentication Panel (7 cols) */}
-        <div className="lg:col-span-7 p-6 sm:p-10 flex flex-col justify-center bg-[#F6F3EA]">
+        <div className="lg:col-span-7 p-6 sm:p-10 flex flex-col justify-center bg-[#F6F3EA] relative">
+          {/* Top Right Language Selector */}
+          <div className="absolute top-5 right-5 flex items-center bg-white border border-[#ECE6D6] rounded-full p-0.5 shadow-xs text-xs font-black">
+            {['en', 'mr', 'hi'].map((l) => (
+              <button
+                key={l}
+                onClick={() => setLanguage(l)}
+                className={`px-2.5 py-0.5 rounded-full transition ${
+                  language === l 
+                    ? 'bg-[#073B32] text-white shadow-xs' 
+                    : 'text-slate-600 hover:text-[#0A1020]'
+                }`}
+              >
+                {l === 'en' ? 'ENG' : l === 'mr' ? 'मराठी' : 'हिंदी'}
+              </button>
+            ))}
+          </div>
+
           {/* STEP 1: Phone Number Input */}
           {authStep === 'phone' && (
             <div className="max-w-md mx-auto w-full space-y-6 animate-fadeIn">
               <div>
                 <span className="text-xs font-extrabold text-[#073B32] uppercase tracking-wider bg-[#D9F1E8] px-3 py-1 rounded-full border border-[#B3E2D2]">
-                  SECURE AUTHENTICATION
+                  {language === 'mr' ? 'सुरक्षित प्रवेश' : language === 'hi' ? 'सुरक्षित प्रमाणीकरण' : 'SECURE AUTHENTICATION'}
                 </span>
-                <h3 className="text-2xl sm:text-3xl font-black text-[#0A1020] mt-2">Access your workspace</h3>
-                <p className="text-xs text-slate-600 mt-1">Sign in with your registered mobile number</p>
+                <h3 className="text-2xl sm:text-3xl font-black text-[#0A1020] mt-2">
+                  {language === 'mr' ? 'आपल्या खात्यात प्रवेश करा' : language === 'hi' ? 'अपने खाते में लॉगिन करें' : 'Access your workspace'}
+                </h3>
+                <p className="text-xs text-slate-600 mt-1">
+                  {language === 'mr' ? 'आपल्या नोंदणीकृत मोबाईल नंबरने लॉगिन करा' : language === 'hi' ? 'अपने पंजीकृत मोबाइल नंबर से लॉगिन करें' : 'Sign in with your registered mobile number'}
+                </p>
               </div>
 
               <form onSubmit={handleSendOtp} className="space-y-4">
