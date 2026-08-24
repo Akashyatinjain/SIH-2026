@@ -30,7 +30,7 @@ import {
 import { useApp } from '../../context/AppContext';
 
 export default function LandingPage({ onAccessPlatform, onReportIssue }) {
-  const { enterWorkspace, setIsIVROpen } = useApp();
+  const { enterWorkspace, setIsIVROpen, language, setLanguage } = useApp();
   const [hoveredNode, setHoveredNode] = useState(null);
 
   const ecosystemNodes = [
