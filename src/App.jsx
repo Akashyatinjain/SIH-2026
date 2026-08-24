@@ -13,6 +13,12 @@ import LoginPage from './components/layout/LoginPage';
 
 // 5 Stakeholder Dashboards
 import FarmerDashboard from './components/farmer/FarmerDashboard';
+import FarmerAnimalsView from './components/farmer/FarmerAnimalsView';
+import FarmerVaccinesView from './components/farmer/FarmerVaccinesView';
+import FarmerAlertsView from './components/farmer/FarmerAlertsView';
+import FarmerTreatmentsView from './components/farmer/FarmerTreatmentsView';
+import ReportSickAnimalWizard from './components/farmer/ReportSickAnimalWizard';
+
 import FieldWorkerDashboard from './components/fieldWorker/FieldWorkerDashboard';
 import VetDashboard from './components/vet/VetDashboard';
 import AdminDashboard from './components/admin/AdminDashboard';
@@ -35,7 +41,9 @@ function MainAppContent() {
     activeTab, 
     setActiveTab, 
     isAdvisoryStudioOpen,
-    setIsAdvisoryStudioOpen 
+    setIsAdvisoryStudioOpen,
+    isReportModalOpen,
+    setIsReportModalOpen
   } = useApp();
 
   // SCREEN 1: Public Editorial Landing Page
@@ -70,11 +78,11 @@ function MainAppContent() {
 
   // SCREEN 3: Role-Specific Authenticated Workspace
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col selection:bg-emerald-500 selection:text-white">
+    <div className="min-h-screen bg-[#F6F3EA] flex flex-col selection:bg-[#149A84] selection:text-white">
       {/* Top Evaluator Helper Bar */}
       <DemoBar />
 
-      {/* Official Government Workspace Header (Without role tabs!) */}
+      {/* Official Government Workspace Header (Without global role tabs!) */}
       <Header />
 
       {/* Connectivity Banner */}
@@ -102,15 +110,39 @@ function MainAppContent() {
             </div>
           )}
 
-          {/* 5 Distinct Role Workspaces */}
-          {activeTab !== 'advisories' && activeTab !== 'labs' && activeTab !== 'gis' && activeTab !== 'analytics' && (
+          {/* ======================================================== */}
+          {/* 1. FARMER WORKSPACE SPECIFIC ROUTED PAGES */}
+          {/* ======================================================== */}
+          {role === 'farmer' && (
             <>
-              {role === 'farmer' && <FarmerDashboard />}
-              {role === 'fieldWorker' && <FieldWorkerDashboard />}
-              {role === 'vet' && <VetDashboard />}
-              {role === 'admin' && <AdminDashboard />}
-              {role === 'stateAdmin' && <StateAdminDashboard />}
+              {(activeTab === 'dashboard' || activeTab === 'home') && <FarmerDashboard />}
+              {activeTab === 'animals' && <FarmerAnimalsView />}
+              {activeTab === 'vaccines' && <FarmerVaccinesView />}
+              {activeTab === 'alerts' && <FarmerAlertsView />}
+              {activeTab === 'treatments' && <FarmerTreatmentsView />}
+              {activeTab === 'report' && (
+                <div className="space-y-4">
+                  <FarmerDashboard />
+                  <ReportSickAnimalWizard onClose={() => setActiveTab('dashboard')} />
+                </div>
+              )}
             </>
+          )}
+
+          {/* ======================================================== */}
+          {/* 2. OTHER 4 ROLE WORKSPACES */}
+          {/* ======================================================== */}
+          {role === 'fieldWorker' && activeTab !== 'advisories' && activeTab !== 'labs' && (
+            <FieldWorkerDashboard />
+          )}
+          {role === 'vet' && activeTab !== 'advisories' && activeTab !== 'labs' && activeTab !== 'gis' && (
+            <VetDashboard />
+          )}
+          {role === 'admin' && activeTab !== 'advisories' && activeTab !== 'gis' && activeTab !== 'analytics' && (
+            <AdminDashboard />
+          )}
+          {role === 'stateAdmin' && activeTab !== 'advisories' && activeTab !== 'analytics' && (
+            <StateAdminDashboard />
           )}
         </main>
       </div>

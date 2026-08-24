@@ -18,7 +18,7 @@ export function AppProvider({ children }) {
   // Screen State: 'home' | 'login' | 'otp' | 'roleSelect' | 'workspace'
   const [currentScreen, setCurrentScreen] = useState('home');
   
-  // Authenticated Role: 'farmer' | 'fieldWorker' | 'vet' | 'district' | 'stateAdmin'
+  // Authenticated Role: 'farmer' | 'fieldWorker' | 'vet' | 'admin' | 'stateAdmin'
   const [role, setRole] = useState('farmer'); 
   const [language, setLanguage] = useState('en'); // 'en' | 'mr' | 'hi'
   const [isOffline, setIsOffline] = useState(false);
@@ -28,9 +28,13 @@ export function AppProvider({ children }) {
   
   // Modals & Drawers
   const [isIVROpen, setIsIVROpen] = useState(false);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [selectedAnimalForProfile, setSelectedAnimalForProfile] = useState(null);
+  const [selectedAnimalForModal, setSelectedAnimalForModal] = useState(null);
   const [selectedCaseForDrawer, setSelectedCaseForDrawer] = useState(null);
+  const [selectedCase, setSelectedCase] = useState(null);
   const [selectedHotspotForInspector, setSelectedHotspotForInspector] = useState(null);
   const [isOfflineModalOpen, setIsOfflineModalOpen] = useState(false);
   const [isRegisterAnimalOpen, setIsRegisterAnimalOpen] = useState(false);
@@ -78,6 +82,10 @@ export function AppProvider({ children }) {
 
   const t = translations[language] || translations.en;
 
+  const toggleOffline = () => {
+    setIsOffline(prev => !prev);
+  };
+
   // Add Notification helper
   const addNotification = (title, message, type = "info") => {
     const newNotif = {
@@ -89,6 +97,22 @@ export function AppProvider({ children }) {
       read: false
     };
     setNotifications(prev => [newNotif, ...prev]);
+  };
+
+  // Add Report alias
+  const addReport = (newCase) => {
+    setCases(prev => [newCase, ...prev]);
+    setHotspots(prev => prev.map(h => {
+      if (h.block === "Baramati") {
+        return {
+          ...h,
+          activeCases: h.activeCases + 1,
+          riskLevel: "CRITICAL",
+          lastReported: "Just now"
+        };
+      }
+      return h;
+    }));
   };
 
   // Submit New Sick Animal Report
@@ -384,6 +408,7 @@ export function AppProvider({ children }) {
       t,
       isOffline,
       setIsOffline,
+      toggleOffline,
       offlineQueue,
       lastSyncedTime,
       activeTab,
@@ -392,12 +417,20 @@ export function AppProvider({ children }) {
       // Modals
       isIVROpen,
       setIsIVROpen,
+      isNotificationsOpen,
+      setIsNotificationsOpen,
       isNotificationOpen,
       setIsNotificationOpen,
+      isReportModalOpen,
+      setIsReportModalOpen,
       selectedAnimalForProfile,
       setSelectedAnimalForProfile,
-      selectedCaseForDrawer,
-      setSelectedCaseForDrawer,
+      selectedAnimalForModal,
+      setSelectedAnimalForModal,
+      selectedCaseForDrawer: selectedCase || selectedCaseForDrawer,
+      setSelectedCaseForDrawer: setSelectedCase,
+      selectedCase,
+      setSelectedCase,
       selectedHotspotForInspector,
       setSelectedHotspotForInspector,
       isOfflineModalOpen,
@@ -414,11 +447,14 @@ export function AppProvider({ children }) {
       cases,
       hotspots,
       labSamples,
+      advisories: advisoryList,
       advisoryList,
+      fieldSchedule: fieldVisits,
       fieldVisits,
       stateDistricts,
       notifications,
       addNotification,
+      addReport,
       submitSickAnimalReport,
       updateCaseAction,
       createAdvisory,

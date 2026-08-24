@@ -23,13 +23,26 @@ import RiskBadge from '../common/RiskBadge';
 export default function FieldWorkerDashboard() {
   const { 
     fieldSchedule, 
+    fieldVisits,
     isOffline, 
     offlineQueue, 
     addNotification 
   } = useApp();
 
+  const visits = fieldSchedule || fieldVisits || [];
   const [activeTab, setActiveTab] = useState('schedule');
-  const [selectedVisit, setSelectedVisit] = useState(fieldSchedule[0]);
+  const [selectedVisit, setSelectedVisit] = useState(visits[0] || {
+    id: "VISIT-01",
+    farmer: "Ramesh Patil",
+    village: "Khedgaon",
+    distance: "1.2 km",
+    animal: "Gir Cow (Ganga)",
+    purpose: "Clinical Verification (Fever + Skin Nodules)",
+    urgency: "HIGH",
+    time: "09:30 AM",
+    status: "In Progress",
+    coords: { lat: 18.1524, lng: 74.5768 }
+  });
   const [showToolModal, setShowToolModal] = useState(null);
 
   const handleExecuteAction = (toolName) => {
@@ -58,7 +71,7 @@ export default function FieldWorkerDashboard() {
             <Clock className="w-4 h-4 text-teal-400" />
             <div>
               <span className="text-slate-400 block text-[10px]">Today's Target</span>
-              <span className="font-black text-white">4 Visits • 18 Cattle</span>
+              <span className="font-black text-white">{visits.length} Visits • 18 Cattle</span>
             </div>
           </div>
         </div>
@@ -119,16 +132,16 @@ export default function FieldWorkerDashboard() {
         <div className="lg:col-span-6 bg-white p-5 rounded-3xl border border-[#ECE6D6] shadow-xs space-y-3">
           <h3 className="font-extrabold text-sm text-[#0A1020] flex items-center justify-between border-b border-[#ECE6D6] pb-2.5">
             <span>TODAY'S VISIT SCHEDULE</span>
-            <span className="text-xs text-slate-500 font-mono">4 Assigned Tasks</span>
+            <span className="text-xs text-slate-500 font-mono">{visits.length} Assigned Tasks</span>
           </h3>
 
           <div className="space-y-2.5">
-            {fieldSchedule.map((visit) => (
+            {visits.map((visit) => (
               <div 
                 key={visit.id}
                 onClick={() => setSelectedVisit(visit)}
                 className={`p-3.5 rounded-2xl border transition cursor-pointer ${
-                  selectedVisit.id === visit.id 
+                  selectedVisit?.id === visit.id 
                     ? "border-[#073B32] bg-[#D9F1E8]/30 shadow-xs" 
                     : "border-[#ECE6D6] bg-[#F6F3EA] hover:border-slate-300"
                 }`}
@@ -218,7 +231,7 @@ export default function FieldWorkerDashboard() {
             <WifiOff className="w-5 h-5 text-blue-700 group-hover:scale-110 transition-transform" />
             <div>
               <h4 className="font-extrabold text-xs text-[#0A1020]">Offline Queue</h4>
-              <p className="text-[10px] text-slate-500">{offlineQueue.length} Records Pending</p>
+              <p className="text-[10px] text-slate-500">{offlineQueue?.length || 0} Records Pending</p>
             </div>
           </button>
         </div>
