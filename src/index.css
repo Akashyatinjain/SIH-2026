@@ -1,0 +1,81 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #F7F5EF;
+    color: #0B1220;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #EAE4D7;
+}
+::-webkit-scrollbar-thumb {
+  background: #4C745F;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #063B2E;
+}
+
+.bg-warm-ivory {
+  background-color: #F7F5EF;
+}
+
+.bg-sand {
+  background-color: #EAE4D7;
+}
+
+.bg-deep-forest {
+  background-color: #063B2E;
+}
+
+.bg-midnight {
+  background-color: #0B1220;
+}
+
+.bg-teal-brand {
+  background-color: #0F8B7A;
+}
+
+.border-sand {
+  border-color: #EAE4D7;
+}
+
+.border-forest {
+  border-color: #063B2E;
+}
+
+/* Pulsing radar effect for active disease outbreaks */
+@keyframes radar-pulse {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.9;
+  }
+  70% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+}
+
+.pulse-ring-active {
+  animation: radar-pulse 2.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+}
+
+/* Touch feedback for rural users */
+.touch-active:active {
+  transform: scale(0.98);
+}
