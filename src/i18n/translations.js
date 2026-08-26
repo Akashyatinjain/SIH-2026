@@ -2,15 +2,18 @@ export const translations = {
   en: {
     // App Header & Brand
     appName: "PashuSuraksha",
-    tagline: "Early Detection. Timely Care. Healthier Livestock.",
+    tagline: "Detect Early. Respond Faster. Protect Every Herd.",
+    secondaryPositioning: "From first symptom to coordinated response.",
+    officialDescriptor: "Livestock Health Intelligence & Early Warning Network",
     subTitle: "Digital Livestock Disease Surveillance & Response Platform",
-    govtDept: "Department of Animal Husbandry & Dairying • Government of Maharashtra",
+    govtDept: "Government of Maharashtra • Department of Animal Husbandry",
     
     // Roles
     farmer: "Farmer / Livestock Owner",
-    fieldWorker: "Field Worker (Pashu Sakhi / Para-Vet)",
-    vet: "Veterinary Officer / Doctor",
-    admin: "District Animal Health Officer",
+    fieldWorker: "Field Sentinel (Pashu Sakhi / Para-Vet)",
+    vet: "Clinical Intelligence (Veterinarian)",
+    admin: "District Animal Health Command",
+    stateAdmin: "Maharashtra Animal Health Intelligence",
     
     // Common Navigation & Actions
     dashboard: "Dashboard",

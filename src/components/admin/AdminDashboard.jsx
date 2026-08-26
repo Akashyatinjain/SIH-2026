@@ -127,36 +127,36 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          {/* Section 29: DISTRICT INTELLIGENCE SIGNALS */}
+          {/* Section 50: DISTRICT DECISION SUPPORT (Decision-Oriented Cards) */}
           <div className="bg-white rounded-3xl border border-[#ECE6D6] p-5 shadow-xs space-y-3 text-xs">
             <h4 className="font-black text-sm text-[#0A1020] flex items-center gap-2 border-b border-[#ECE6D6] pb-2">
               <Sparkles className="w-4 h-4 text-indigo-700" />
-              <span>DISTRICT SURVEILLANCE SIGNALS</span>
+              <span>DISTRICT DECISION SUPPORT (ACTIONABLE SIGNALS)</span>
             </h4>
 
-            <div className="space-y-2.5">
-              <div className="p-3 bg-red-50 rounded-2xl border border-red-200 flex items-center justify-between">
-                <div>
-                  <span className="font-bold text-red-950">Cases Rising: Baramati Block</span>
-                  <p className="text-[11px] text-red-800">+4 new symptom reports in last 24h</p>
-                </div>
-                <span className="font-bold text-red-800 text-[11px]">Priority 1</span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <div className="p-3 bg-red-50 rounded-2xl border border-red-200">
+                <span className="font-mono text-[10px] text-red-700 font-extrabold uppercase block">WHERE IS RISK RISING?</span>
+                <span className="font-extrabold text-sm text-red-950">Baramati Block</span>
+                <p className="text-[11px] text-red-800 mt-0.5">+4 cases in 24h • Vector Index 8.2</p>
               </div>
 
-              <div className="p-3 bg-amber-50 rounded-2xl border border-amber-200 flex items-center justify-between">
-                <div>
-                  <span className="font-bold text-amber-950">Vaccination Below Target: Daund</span>
-                  <p className="text-[11px] text-amber-800">68% coverage vs 85% district target</p>
-                </div>
-                <span className="font-bold text-amber-800 text-[11px]">Deficit</span>
+              <div className="p-3 bg-amber-50 rounded-2xl border border-amber-200">
+                <span className="font-mono text-[10px] text-amber-700 font-extrabold uppercase block">WHERE IS VACCINE BELOW TARGET?</span>
+                <span className="font-extrabold text-sm text-amber-950">3 Blocks (Daund, Indapur)</span>
+                <p className="text-[11px] text-amber-800 mt-0.5">69.8% vs 85% target threshold</p>
               </div>
 
-              <div className="p-3 bg-emerald-50 rounded-2xl border border-emerald-200 flex items-center justify-between">
-                <div>
-                  <span className="font-bold text-emerald-950">Response Velocity</span>
-                  <p className="text-[11px] text-emerald-800">2h 14m average field team dispatch</p>
-                </div>
-                <span className="font-bold text-emerald-800 text-[11px]">Optimal</span>
+              <div className="p-3 bg-teal-50 rounded-2xl border border-teal-200">
+                <span className="font-mono text-[10px] text-teal-700 font-extrabold uppercase block">WHERE SHOULD FIELD TEAMS GO?</span>
+                <span className="font-extrabold text-sm text-teal-950">4 Priority Villages</span>
+                <p className="text-[11px] text-teal-800 mt-0.5">Khedgaon, Malegaon, Gunawadi, Patas</p>
+              </div>
+
+              <div className="p-3 bg-purple-50 rounded-2xl border border-purple-200">
+                <span className="font-mono text-[10px] text-purple-700 font-extrabold uppercase block">WHERE IS MORTALITY ABNORMAL?</span>
+                <span className="font-extrabold text-sm text-purple-950">2 Spatial Clusters</span>
+                <p className="text-[11px] text-purple-800 mt-0.5">Kurkumbh (Poultry) & Baramati</p>
               </div>
             </div>
           </div>

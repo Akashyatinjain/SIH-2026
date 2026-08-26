@@ -19,7 +19,7 @@ import {
 import { useApp } from '../../context/AppContext';
 
 export default function ReportSickAnimalWizard({ onClose }) {
-  const { animals, addReport, addNotification } = useApp();
+  const { animals, addReport, submitSickAnimalReport, addNotification } = useApp();
 
   const [step, setStep] = useState(1); // 1: Animal, 2: Symptoms, 3: Evidence, 4: Location, 5: Assessment
   const [selectedAnimal, setSelectedAnimal] = useState(animals[0]);
@@ -38,7 +38,7 @@ export default function ReportSickAnimalWizard({ onClose }) {
     { id: "fever", label: "High Fever (ताप)", severity: "high" },
     { id: "nodules", label: "Nodular Skin Lumps (त्वचेवर गाठी)", severity: "high" },
     { id: "salivation", label: "Excessive Salivation (लाळ गळणे)", severity: "high" },
-    { id: "blisters", label: "Mouth / Foot Blisters (तोंडावर/खुरावर फोड)", severity: "critical" },
+    { id: "blisters", label: "Mouth / Foot Blisters ( तोंडावर/खुरावर फोड)", severity: "critical" },
     { id: "milk_drop", label: "Milk Yield Drop (दूध घट)", severity: "medium" },
     { id: "respiratory", label: "Labored Breathing (श्वास घेण्यास त्रास)", severity: "high" },
     { id: "diarrhea", label: "Severe Diarrhea (हगवण)", severity: "medium" },
@@ -68,9 +68,9 @@ export default function ReportSickAnimalWizard({ onClose }) {
         village: "Khedgaon",
         block: "Baramati",
         district: "Pune",
-        animalId: selectedAnimal.id,
-        species: selectedAnimal.species,
-        breed: selectedAnimal.breed,
+        animalId: selectedAnimal?.id || "MH-PUN-0241",
+        species: selectedAnimal?.species || "Cattle (Cow)",
+        breed: selectedAnimal?.breed || "Gir Indigenous",
         symptoms: selectedSymptoms,
         duration: duration,
         stoppedEating: stoppedEating,
@@ -83,13 +83,20 @@ export default function ReportSickAnimalWizard({ onClose }) {
         status: "under_review",
         assignedVet: "Dr. Anand Deshmukh",
         locationCoord: { lat: 18.1524, lng: 74.5768 },
-        photoUrl: selectedAnimal.imageUrl
+        photoUrl: selectedAnimal?.imageUrl || "/images/animals/gir_cow_gauri.jpg"
       };
 
-      addReport(newCase);
-      addNotification("🚨 Preliminary Risk Assessment: High (86/100)", "Your case #PS-2026-004281 has been routed to Dr. Anand Deshmukh at Baramati Taluka Hospital.", "alert");
+      if (typeof submitSickAnimalReport === 'function') {
+        submitSickAnimalReport(newCase);
+      } else if (typeof addReport === 'function') {
+        addReport(newCase);
+      }
+
+      if (typeof addNotification === 'function') {
+        addNotification("🚨 Preliminary Risk Assessment: High (86/100)", "Your case #PS-2026-004281 has been routed to Dr. Anand Deshmukh at Baramati Taluka Hospital.", "alert");
+      }
       setStep(5); // Show Intelligence Assessment Screen
-    }, 600);
+    }, 400);
   };
 
   return (

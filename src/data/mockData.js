@@ -1,3 +1,14 @@
+// ============================================================================
+// PASHUSURAKSHA — COMPREHENSIVE REPOSITORY MOCK DATA LAYER
+// Smart India Hackathon 2026 | Problem Statement 26128
+// Government of Maharashtra — Animal Health Intelligence Network
+// ============================================================================
+
+export const MASTER_CASE_ID = "PS-2026-004281";
+export const MASTER_SAMPLE_ID = "PS-SMP-0198";
+
+// 24 Monitored Herd Animals for Farmer Ramesh Patil (Khedgaon, Baramati)
+// 21 Healthy, 2 Under Treatment, 1 Needs Attention (Ganga)
 export const initialAnimals = [
   {
     id: "MH-PUN-0241",
@@ -12,22 +23,21 @@ export const initialAnimals = [
     location: "Khedgaon, Baramati, Pune",
     lat: 18.1524,
     lng: 74.5768,
-    healthStatus: "healthy", // "healthy" | "under_treatment" | "needs_attention"
-    milkYield: "12.5 Liters/day",
+    healthStatus: "needs_attention", // Master Demo Animal
+    milkYield: "12.5 Liters/day (Dropped to 4L)",
     calvings: 2,
     rfidTag: "89040182740921",
     imageUrl: "/images/animals/gir_cow_gauri.jpg",
     vaccinations: [
       { name: "FMD (Foot & Mouth)", date: "2025-11-10", nextDue: "2026-05-10", status: "Due in 12 days", batch: "FMD-PUN-849" },
-      { name: "LSD (Lumpy Skin Disease)", date: "2025-08-14", nextDue: "2026-08-14", status: "Protected", batch: "LSD-GOV-102" },
+      { name: "LSD (Lumpy Skin)", date: "2025-02-14", nextDue: "2026-02-14", status: "Overdue (Gap Detected)", batch: "LSD-GOV-098" },
       { name: "HS (Hemorrhagic Septicemia)", date: "2025-09-02", nextDue: "2026-09-02", status: "Protected", batch: "HS-MHA-441" },
-      { name: "Brucellosis S19", date: "2023-04-12", nextDue: "Lifetime (Single Dose)", status: "Protected", batch: "BRU-0912" }
+      { name: "Brucellosis S19", date: "2023-04-12", nextDue: "Lifetime", status: "Protected", batch: "BRU-0912" }
     ],
     treatments: [
-      { date: "2026-01-14", condition: "Mild Dehydration", doctor: "Dr. Amit Patil", drug: "Electrolyte Infusion + Vit B-Complex", outcome: "Recovered in 2 days" },
-      { date: "2025-06-20", condition: "Tick Infestation", doctor: "Sunita Pawar (Field Worker)", drug: "Flumethrin Pour-On", outcome: "Controlled" }
+      { date: "2026-02-24", condition: "High Pyrexia & Nodular Eruptions", doctor: "Dr. Anand Deshmukh", drug: "Meloxicam + Paracetamol + Enrofloxacin", outcome: "Clinical triage active" }
     ],
-    diseaseReports: []
+    diseaseReports: ["PS-2026-004281"]
   },
   {
     id: "MH-PUN-0109",
@@ -52,7 +62,34 @@ export const initialAnimals = [
       { name: "HS (Hemorrhagic Septicemia)", date: "2025-09-02", nextDue: "2026-09-02", status: "Protected", batch: "HS-MHA-441" }
     ],
     treatments: [
-      { date: "2026-02-18", condition: "Sub-clinical Mastitis (Left Hind Quarter)", doctor: "Dr. Amit Patil", drug: "Intramammary Ceftiofur + Anti-inflammatory", outcome: "Improving (Day 3/5)" }
+      { date: "2026-02-18", condition: "Sub-clinical Mastitis (Left Hind Quarter)", doctor: "Dr. Anand Deshmukh", drug: "Intramammary Ceftiofur + Anti-inflammatory", outcome: "Improving (Day 4/5)" }
+    ],
+    diseaseReports: []
+  },
+  {
+    id: "MH-PUN-0110",
+    name: "Radha (राधा)",
+    species: "Cattle (गाय)",
+    breed: "Gir Indigenous (गीर)",
+    age: "3.5 Years",
+    sex: "Female",
+    weight: "370 kg",
+    owner: "Ramesh Patil",
+    phone: "+91 98224 51092",
+    location: "Khedgaon, Baramati, Pune",
+    lat: 18.1524,
+    lng: 74.5768,
+    healthStatus: "under_treatment",
+    milkYield: "11.0 Liters/day",
+    calvings: 1,
+    rfidTag: "89040182740110",
+    imageUrl: "/images/animals/gir_cow_gauri.jpg",
+    vaccinations: [
+      { name: "FMD (Foot & Mouth)", date: "2025-11-10", nextDue: "2026-05-10", status: "Due in 12 days", batch: "FMD-PUN-849" },
+      { name: "HS", date: "2025-09-02", nextDue: "2026-09-02", status: "Protected", batch: "HS-MHA-441" }
+    ],
+    treatments: [
+      { date: "2026-02-22", condition: "Post-partum Hypocalcemia (Milk Fever)", doctor: "Dr. Anand Deshmukh", drug: "Calcium Borogluconate IV", outcome: "Vitals normal" }
     ],
     diseaseReports: []
   },
@@ -100,7 +137,7 @@ export const initialAnimals = [
     rfidTag: "89040182741044",
     imageUrl: "/images/animals/osmanabadi_goat_sultan.jpg",
     vaccinations: [
-      { name: "PPR (Goat Plague)", date: "2025-07-10", nextDue: "2028-07-10", status: "Protected (3 Yr Valid)", batch: "PPR-IVRI-21" },
+      { name: "PPR (Goat Plague)", date: "2025-07-10", nextDue: "2028-07-10", status: "Protected", batch: "PPR-IVRI-21" },
       { name: "ET (Enterotoxaemia)", date: "2025-10-05", nextDue: "2026-10-05", status: "Protected", batch: "ET-PUN-12" }
     ],
     treatments: [],
@@ -154,7 +191,44 @@ export const initialAnimals = [
     ],
     treatments: [],
     diseaseReports: []
-  }
+  },
+  // Additional healthy herd members to total 24
+  ...Array.from({ length: 17 }).map((_, idx) => {
+    const num = idx + 8;
+    const names = ["Kamdhenu", "Surabhi", "Bhavani", "Godavari", "Shyama", "Bhim", "Arjun", "Rani", "Tulsi", "Yamuna", "Kavya", "Menaka", "Tara", "Usha", "Roopa", "Keshvi", "Devi"];
+    const breeds = ["Gir Indigenous", "Sahiwal", "Dangi", "Murrah Buffalo", "Osmanabadi Goat", "Deccani Sheep"];
+    const speciesList = ["Cattle (गाय)", "Cattle (गाय)", "Cattle (बैल)", "Buffalo (म्हेस)", "Goat (शेळी)", "Sheep (मेंढी)"];
+    const tagNum = String(1090 + idx).padStart(4, '0');
+    return {
+      id: `MH-PUN-${tagNum}`,
+      name: `${names[idx % names.length]} (${idx + 8})`,
+      species: speciesList[idx % speciesList.length],
+      breed: breeds[idx % breeds.length],
+      age: `${(2 + (idx % 4) * 0.8).toFixed(1)} Years`,
+      sex: idx % 4 === 0 ? "Male" : "Female",
+      weight: `${320 + (idx * 14) % 180} kg`,
+      owner: "Ramesh Patil",
+      phone: "+91 98224 51092",
+      location: "Khedgaon, Baramati, Pune",
+      lat: 18.1524 + (idx * 0.0004),
+      lng: 74.5768 + (idx * 0.0003),
+      healthStatus: "healthy",
+      milkYield: idx % 4 === 0 ? "N/A" : `${(8 + (idx % 7) * 1.2).toFixed(1)} L/day`,
+      calvings: idx % 4 === 0 ? 0 : (1 + idx % 3),
+      rfidTag: `8904018274${tagNum}`,
+      imageUrl: idx % 3 === 0
+        ? "/images/animals/gir_cow_gauri.jpg"
+        : idx % 3 === 1
+          ? "/images/animals/murrah_buffalo_kalyani.jpg"
+          : "/images/animals/sahiwal_cow_laxmi.jpg",
+      vaccinations: [
+        { name: "FMD (Foot & Mouth)", date: "2025-11-10", nextDue: "2026-05-10", status: "Due in 12 days", batch: "FMD-PUN-849" },
+        { name: "HS", date: "2025-09-02", nextDue: "2026-09-02", status: "Protected", batch: "HS-MHA-441" }
+      ],
+      treatments: [],
+      diseaseReports: []
+    };
+  })
 ];
 
 export const initialCases = [
@@ -692,6 +766,57 @@ export const advisories = [
       "Keep animal's front feet elevated to ease pressure on lungs.",
       "Do not make the animal lie down; call veterinary doctor immediately if gas is not passed."
     ]
+  }
+];
+
+export const weatherSurveillanceContext = {
+  station: "Baramati IMD Agro-Meteorological Observatory",
+  district: "Pune",
+  temperature: "31.4°C",
+  humidity: "78%",
+  rainfall48h: "12.4 mm",
+  vectorDensityIndex: "8.2 / 10",
+  riskLevel: "ELEVATED",
+  dominantVector: "Stomoxys calcitrans (Stable Fly) & Culicoides midges",
+  insight: "Environmental humidity surge in Baramati canal belt strongly correlates with higher Capripoxvirus mechanical transmission. Preemptive shed spraying recommended."
+};
+
+export const PROTOTYPE_DECISION_RULES = [
+  {
+    id: "RULE-SPATIAL-01",
+    name: "5km Spatial Cluster Aggregation",
+    category: "Epidemiological Early Warning",
+    condition: "≥ 3 similar syndrome reports within 5.0 km radius within rolling 7-day window",
+    action: "Promote block signal to 'ELEVATED CLUSTER' and alert Taluka Veterinary Hospital + District Command",
+    status: "ACTIVE",
+    triggeredCount: 7
+  },
+  {
+    id: "RULE-TRIAGE-02",
+    name: "Multivariate Clinical Risk Scoring",
+    category: "Decision Support Algorithm",
+    condition: "High Fever (104°F+) [25pts] + Nodular Skin Lumps [30pts] + Milk Drop [15pts] + Neighboring Cluster [16pts]",
+    action: "Calculate risk index 86/100 (HIGH RISK), recommend isolation & generate laboratory swab order",
+    status: "ACTIVE",
+    triggeredCount: 14
+  },
+  {
+    id: "RULE-VACCINE-03",
+    name: "Vaccination Coverage Gap Alarm",
+    category: "Preventive Logistics",
+    condition: "Block vaccine booster coverage < 80% during active vector breeding season (Aug-Feb)",
+    action: "Schedule automated NADCP mobile vaccination camp and dispatch ring vaccine buffer",
+    status: "ACTIVE",
+    triggeredCount: 3
+  },
+  {
+    id: "RULE-MORTALITY-04",
+    name: "Sudden Multi-Mortality Surge",
+    category: "Emergency Biosafety",
+    condition: "≥ 2 sudden unexplained deaths in ruminants or ≥ 20 poultry deaths in single village within 24h",
+    action: "Trigger Tier-1 Immediate District Rapid Response Team dispatch & biological quarantine",
+    status: "ACTIVE",
+    triggeredCount: 1
   }
 ];
 

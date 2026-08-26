@@ -11,7 +11,9 @@ import {
   ChevronDown, 
   X,
   Play,
-  ArrowRight
+  ArrowRight,
+  Shield,
+  Gavel
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
@@ -35,55 +37,57 @@ export default function DemoBar() {
   };
 
   return (
-    <div className="bg-[#0A1020] text-white text-[11px] py-1.5 px-3 border-b border-slate-800 flex items-center justify-between gap-3 shadow-md relative z-40">
-      {/* Left: Judge Demo Indicator */}
+    <div className="bg-[#09101E] text-white text-[11px] py-1.5 px-3 sm:px-4 border-b border-slate-800 flex items-center justify-between gap-3 shadow-md relative z-40">
+      
+      {/* Left: Judge Demo Indicator & Persona State */}
       <div className="flex items-center gap-2">
         <button
           onClick={() => setIsPopoverOpen(!isPopoverOpen)}
-          className="inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-purple-950 hover:bg-purple-900 border border-purple-800 text-purple-300 rounded-full font-bold text-[10px] transition"
+          className="inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-purple-950/80 hover:bg-purple-900 border border-purple-700/80 text-purple-200 rounded-full font-bold text-[10px] transition"
         >
           <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-ping" />
-          <span>DEMO MODE ACTIVE</span>
+          <span>DEMO MODE</span>
           <ChevronDown className="w-3 h-3 ml-0.5" />
         </button>
 
-        <span className="text-slate-500 font-mono text-[10px] hidden md:inline">
-          Case: <strong className="text-slate-300">#PS-2026-004281 (Gauri / Cow)</strong>
+        <span className="text-slate-400 font-mono text-[10px] hidden md:inline">
+          Demo Case: <strong className="text-teal-300">#PS-2026-004281 (Ganga / Cow)</strong>
         </span>
       </div>
 
-      {/* Right: Quick Jump Buttons */}
+      {/* Center/Right: Role Switcher & Judge Mode Action */}
       <div className="flex items-center gap-2 sm:gap-3">
+        
         {/* Quick Persona Jump Bar */}
-        <div className="flex items-center gap-1 bg-slate-900 px-2 py-0.5 rounded-lg border border-slate-800 text-[10px]">
-          <span className="text-slate-400 font-bold mr-1 hidden sm:inline">Persona Jump:</span>
+        <div className="hidden lg:flex items-center gap-1 bg-slate-900/90 px-2 py-0.5 rounded-lg border border-slate-800 text-[10px]">
+          <span className="text-slate-400 font-bold mr-1">Persona Jump:</span>
           <button 
             onClick={() => switchDemoPersona('farmer')} 
-            className={`px-1.5 py-0.5 rounded font-bold transition ${role === 'farmer' && currentScreen === 'workspace' ? 'bg-[#149A84] text-white' : 'text-slate-300 hover:text-white'}`}
+            className={`px-2 py-0.5 rounded font-bold transition ${role === 'farmer' && currentScreen === 'workspace' ? 'bg-[#149A84] text-white' : 'text-slate-300 hover:text-white'}`}
           >
             🌾 Farmer
           </button>
           <button 
             onClick={() => switchDemoPersona('fieldWorker')} 
-            className={`px-1.5 py-0.5 rounded font-bold transition ${role === 'fieldWorker' && currentScreen === 'workspace' ? 'bg-teal-600 text-white' : 'text-slate-300 hover:text-white'}`}
+            className={`px-2 py-0.5 rounded font-bold transition ${role === 'fieldWorker' && currentScreen === 'workspace' ? 'bg-teal-600 text-white' : 'text-slate-300 hover:text-white'}`}
           >
             🩺 Field
           </button>
           <button 
             onClick={() => switchDemoPersona('vet')} 
-            className={`px-1.5 py-0.5 rounded font-bold transition ${role === 'vet' && currentScreen === 'workspace' ? 'bg-blue-600 text-white' : 'text-slate-300 hover:text-white'}`}
+            className={`px-2 py-0.5 rounded font-bold transition ${role === 'vet' && currentScreen === 'workspace' ? 'bg-blue-600 text-white' : 'text-slate-300 hover:text-white'}`}
           >
             👨‍⚕️ Vet
           </button>
           <button 
             onClick={() => switchDemoPersona('admin')} 
-            className={`px-1.5 py-0.5 rounded font-bold transition ${role === 'admin' && currentScreen === 'workspace' ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:text-white'}`}
+            className={`px-2 py-0.5 rounded font-bold transition ${role === 'admin' && currentScreen === 'workspace' ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:text-white'}`}
           >
             🏛️ District
           </button>
           <button 
             onClick={() => switchDemoPersona('stateAdmin')} 
-            className={`px-1.5 py-0.5 rounded font-bold transition ${role === 'stateAdmin' && currentScreen === 'workspace' ? 'bg-purple-600 text-white' : 'text-slate-300 hover:text-white'}`}
+            className={`px-2 py-0.5 rounded font-bold transition ${role === 'stateAdmin' && currentScreen === 'workspace' ? 'bg-purple-600 text-white' : 'text-slate-300 hover:text-white'}`}
           >
             🗺️ State
           </button>
@@ -92,16 +96,25 @@ export default function DemoBar() {
         {/* Demo Center Shortcut */}
         <button
           onClick={() => setCurrentScreen('demoCenter')}
-          className="px-2 py-0.5 bg-purple-900/80 hover:bg-purple-800 text-purple-200 rounded border border-purple-700 text-[10px] font-bold transition flex items-center gap-1"
+          className="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 text-slate-200 rounded-lg border border-slate-700 text-[10px] font-bold transition flex items-center gap-1.5"
         >
-          <Sparkles className="w-3 h-3 text-purple-400" />
-          <span className="hidden md:inline">Demo Center (Story)</span>
+          <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-spin-slow" />
+          <span className="hidden sm:inline">9-Phase Story</span>
+        </button>
+
+        {/* Dedicated Judge Mode Button (Section 72) */}
+        <button
+          onClick={() => setCurrentScreen('judgeMode')}
+          className="px-3 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/50 rounded-lg text-[10px] font-extrabold transition flex items-center gap-1.5 shadow-sm"
+        >
+          <Gavel className="w-3.5 h-3.5 text-amber-400" />
+          <span>Judge Mode</span>
         </button>
 
         {currentScreen !== 'home' && (
           <button
             onClick={() => setCurrentScreen('home')}
-            className="text-slate-400 hover:text-white transition text-[10px] font-bold underline"
+            className="text-slate-400 hover:text-white transition text-[10px] font-bold underline pl-1"
           >
             Home
           </button>
@@ -110,7 +123,7 @@ export default function DemoBar() {
 
       {/* Evaluator Popover Drawer */}
       {isPopoverOpen && (
-        <div className="absolute top-8 left-3 z-50 bg-[#0A1020] border-2 border-purple-700 p-4 rounded-2xl shadow-2xl w-80 text-white space-y-3 animate-in fade-in zoom-in-95">
+        <div className="absolute top-8 left-3 z-50 bg-[#09101E] border-2 border-purple-700 p-4 rounded-2xl shadow-2xl w-80 text-white space-y-3 animate-in fade-in zoom-in-95">
           <div className="flex items-center justify-between border-b border-slate-800 pb-2">
             <div className="flex items-center gap-1.5 text-purple-300 font-bold">
               <Sparkles className="w-4 h-4 text-purple-400" />
@@ -123,13 +136,13 @@ export default function DemoBar() {
 
           <div className="space-y-1.5 text-xs">
             <div className="p-2.5 bg-slate-900 rounded-xl border border-slate-800">
-              <span className="text-[10px] text-slate-400 font-mono block">Persistent Demo Case</span>
-              <strong className="text-white">#PS-2026-004281 (Gauri / Cow)</strong>
+              <span className="text-[10px] text-slate-400 font-mono block">Persistent Master Case</span>
+              <strong className="text-teal-300">#PS-2026-004281 (Ganga / Cow)</strong>
               <p className="text-[10px] text-emerald-300">Owner: Ramesh Patil (Khedgaon, Baramati)</p>
             </div>
 
             <div className="p-2.5 bg-slate-900 rounded-xl border border-slate-800">
-              <span className="text-[10px] text-slate-400 font-mono block">Current Active Persona</span>
+              <span className="text-[10px] text-slate-400 font-mono block">Active Persona</span>
               <strong className="text-purple-300">{getPersonaName(role)}</strong>
             </div>
 

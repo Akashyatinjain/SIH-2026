@@ -16,7 +16,10 @@ import {
   ArrowRight,
   TrendingUp,
   Activity,
-  Heart
+  Heart,
+  Syringe,
+  Info,
+  ExternalLink
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import ReportSickAnimalWizard from './ReportSickAnimalWizard';
@@ -35,288 +38,376 @@ export default function FarmerDashboard() {
     setIsIVROpen,
     language,
     t,
-    hotspots
+    hotspots,
+    setActiveTab
   } = useApp();
 
-  const [activeTab, setActiveTab] = useState('overview');
+  const [selectedAnimalFilter, setSelectedAnimalFilter] = useState('all');
 
-  const myAnimals = animals.filter(a => a.owner.includes("Ramesh Patil") || true).slice(0, 5);
-  const myReports = cases.filter(c => c.farmerName.includes("Ramesh") || true).slice(0, 3);
+  // Filter 24 animals of Ramesh Patil
+  const farmerAnimals = animals.slice(0, 24);
+  const healthyAnimals = farmerAnimals.filter(a => a.healthStatus === 'healthy');
+  const underTreatmentAnimals = farmerAnimals.filter(a => a.healthStatus === 'under_treatment');
+  const attentionAnimals = farmerAnimals.filter(a => a.healthStatus === 'needs_attention');
+
+  const filteredAnimals = selectedAnimalFilter === 'healthy' 
+    ? healthyAnimals 
+    : selectedAnimalFilter === 'under_treatment' 
+    ? underTreatmentAnimals 
+    : selectedAnimalFilter === 'needs_attention'
+    ? attentionAnimals
+    : farmerAnimals;
+
+  const masterCase = cases.find(c => c.caseId === "PS-2026-004281") || cases[0];
   const activeHotspot = hotspots[0];
 
   return (
-    <div className="space-y-6 text-[#0A1020]">
-      {/* 1. Large Personalized Hero */}
-      <div className="p-6 bg-gradient-to-r from-[#073B32] via-[#095B4E] to-[#0A1020] text-white rounded-3xl shadow-sm border border-[#073B32] flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="space-y-1">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/10 rounded-full text-xs text-emerald-200 border border-white/10">
+    <div className="space-y-6 text-[#0A1020] font-sans">
+      
+      {/* ========================================================================= */}
+      {/* SECTION 22: FARMER HOME HERO & GREETING */}
+      {/* ========================================================================= */}
+      <div className="p-6 sm:p-7 bg-gradient-to-r from-[#073B32] via-[#095B4E] to-[#0A1020] text-white rounded-3xl shadow-sm border border-[#073B32] flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="space-y-1.5">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/10 rounded-full text-xs text-emerald-200 border border-white/10 font-semibold">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-            <span>{t.farmerLocation || "Khedgaon • Baramati • Pune"}</span>
+            <span>Khedgaon • Baramati • Pune</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-black tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight font-display text-white">
             {t.namaste || "Namaste"}, {language === 'mr' ? 'रमेश पाटील' : language === 'hi' ? 'रमेश पाटिल' : 'Ramesh Patil'}
-          </h2>
-          <p className="text-xs text-emerald-200">
-            PashuSuraksha ID: <span className="font-mono font-bold text-white">MH-FAR-88219</span> • {language === 'mr' ? 'गाव युनिट ४' : language === 'hi' ? 'ग्राम यूनिट ४' : 'Village Unit 4'}
+          </h1>
+          <p className="text-xs text-emerald-200/90 font-medium">
+            PashuSuraksha ID: <span className="font-mono font-bold text-white">MH-FAR-88219</span> • Registered Livestock Owner
           </p>
         </div>
 
         <div className="flex items-center gap-2.5 shrink-0">
           <button
             onClick={() => setIsIVROpen(true)}
-            className="px-4 py-2.5 bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl text-xs font-bold transition flex items-center gap-2"
+            className="px-4 py-2.5 bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl text-xs font-bold transition flex items-center gap-2 text-white"
           >
-            <PhoneCall className="w-3.5 h-3.5 text-emerald-300" />
-            <span>{t.ivrHelpline || "Voice Helpline (1800-180-1551)"}</span>
+            <PhoneCall className="w-4 h-4 text-emerald-300" />
+            <span>Voice Helpline: 1800-180-1551</span>
           </button>
         </div>
       </div>
 
-      {/* 2. Rich Herd Health Composition */}
-      <div className="bg-white rounded-3xl border border-[#ECE6D6] p-6 shadow-xs space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#ECE6D6] pb-3">
+      {/* ========================================================================= */}
+      {/* SECTION 22: SINGLE HERD-HEALTH VISUALIZATION (24 Animal Indicators) */}
+      {/* ========================================================================= */}
+      <div className="bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-7 shadow-xs space-y-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
           <div>
-            <h3 className="font-black text-base text-[#0A1020] flex items-center gap-2">
-              <span>{language === 'mr' ? 'माझ्या जनावरांचे आरोग्य' : language === 'hi' ? 'मेरे पशुओं का स्वास्थ्य' : 'HERD HEALTH MONITORED'}</span>
-              <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
-                24 {t.myAnimalsCount || "Total Animals"}
+            <div className="flex items-center gap-2">
+              <h2 className="font-extrabold text-lg text-[#073B32] font-display">
+                Your herd is being monitored.
+              </h2>
+              <span className="text-xs font-bold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                24 Total Animals
               </span>
-            </h3>
-            <p className="text-xs text-slate-500">
-              {language === 'mr' ? 'तुमच्या जनावरांची थेट आरोग्य माहिती' : language === 'hi' ? 'पशुओं का सीधा स्वास्थ्य विवरण' : 'Live health telemetry across your livestock'}
+            </div>
+            <p className="text-xs text-slate-500 font-medium mt-0.5">
+              Click any animal indicator below to inspect its individual health timeline & vaccination passport.
             </p>
           </div>
 
-          <div className="flex items-center gap-4 text-xs font-bold">
-            <span className="flex items-center gap-1.5 text-emerald-700">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" /> 21 {t.healthy || "Healthy"}
-            </span>
-            <span className="flex items-center gap-1.5 text-amber-700">
-              <span className="w-2.5 h-2.5 rounded-full bg-amber-500" /> 2 {t.underTreatment || "Under Treatment"}
-            </span>
-            <span className="flex items-center gap-1.5 text-red-700">
-              <span className="w-2.5 h-2.5 rounded-full bg-red-500" /> 1 {t.needsAttention || "Attention Due"}
-            </span>
+          {/* Herd Distribution Filters */}
+          <div className="flex items-center gap-2 text-xs font-bold flex-wrap">
+            <button
+              onClick={() => setSelectedAnimalFilter('all')}
+              className={`px-3 py-1 rounded-lg border transition ${selectedAnimalFilter === 'all' ? 'bg-[#073B32] text-white border-[#073B32]' : 'bg-slate-50 text-slate-700 border-slate-200'}`}
+            >
+              All (24)
+            </button>
+            <button
+              onClick={() => setSelectedAnimalFilter('healthy')}
+              className={`px-3 py-1 rounded-lg border transition flex items-center gap-1.5 ${selectedAnimalFilter === 'healthy' ? 'bg-emerald-700 text-white border-emerald-700' : 'bg-emerald-50 text-emerald-800 border-emerald-200'}`}
+            >
+              <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span>21 Healthy</span>
+            </button>
+            <button
+              onClick={() => setSelectedAnimalFilter('under_treatment')}
+              className={`px-3 py-1 rounded-lg border transition flex items-center gap-1.5 ${selectedAnimalFilter === 'under_treatment' ? 'bg-amber-600 text-white border-amber-600' : 'bg-amber-50 text-amber-900 border-amber-200'}`}
+            >
+              <span className="w-2 h-2 rounded-full bg-amber-500"></span>
+              <span>2 In Treatment</span>
+            </button>
+            <button
+              onClick={() => setSelectedAnimalFilter('needs_attention')}
+              className={`px-3 py-1 rounded-lg border transition flex items-center gap-1.5 ${selectedAnimalFilter === 'needs_attention' ? 'bg-rose-600 text-white border-rose-600' : 'bg-rose-50 text-rose-900 border-rose-300 animate-pulse'}`}
+            >
+              <span className="w-2 h-2 rounded-full bg-rose-500"></span>
+              <span>1 Attention (Ganga)</span>
+            </button>
           </div>
         </div>
 
-        {/* Visual Herd Distribution Status Bar */}
-        <div className="space-y-2">
-          <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden flex">
-            <div className="bg-emerald-600 h-full transition-all" style={{ width: '87.5%' }} title="21 Healthy" />
-            <div className="bg-amber-500 h-full transition-all" style={{ width: '8.3%' }} title="2 Under Treatment" />
-            <div className="bg-red-500 h-full transition-all" style={{ width: '4.2%' }} title="1 Attention Required" />
-          </div>
+        {/* 24-Animal Interactive Visual Grid */}
+        <div className="grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-8 gap-2.5">
+          {filteredAnimals.map((animal) => {
+            const isAttention = animal.healthStatus === 'needs_attention';
+            const isTreatment = animal.healthStatus === 'under_treatment';
 
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 pt-2">
-            {myAnimals.map((animal) => (
-              <div 
+            return (
+              <div
                 key={animal.id}
                 onClick={() => setSelectedAnimalForModal(animal)}
-                className="p-3 bg-[#F6F3EA] rounded-2xl border border-[#ECE6D6] hover:border-[#149A84] cursor-pointer transition shadow-xs flex flex-col justify-between space-y-2"
+                className={`p-3 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between text-left group hover:scale-[1.03] ${
+                  isAttention 
+                    ? 'bg-rose-50/90 border-rose-400 shadow-md ring-2 ring-rose-400/50' 
+                    : isTreatment 
+                    ? 'bg-amber-50/80 border-amber-300 shadow-xs' 
+                    : 'bg-[#FCFBF8] border-slate-200 hover:border-teal-500 shadow-xs'
+                }`}
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-mono font-bold text-slate-500">{animal.id.split('-').pop()}</span>
-                  <span className={`w-2 h-2 rounded-full ${
-                    animal.healthStatus === 'healthy' ? 'bg-emerald-500' : 'bg-amber-500'
+                  <span className="text-[10px] font-mono font-bold text-slate-500">
+                    #{animal.id.slice(-4)}
+                  </span>
+                  <span className={`w-2.5 h-2.5 rounded-full ${
+                    isAttention ? 'bg-rose-500 animate-ping' : isTreatment ? 'bg-amber-500' : 'bg-emerald-500'
                   }`} />
                 </div>
-                <div>
-                  <h4 className="font-extrabold text-sm text-[#0A1020] truncate">{animal.name}</h4>
-                  <p className="text-[11px] text-slate-500 truncate">{animal.species}</p>
+
+                <div className="my-1.5">
+                  <p className="font-black text-xs text-slate-900 truncate">{animal.name}</p>
+                  <p className="text-[10px] text-slate-500 truncate font-medium">{animal.breed.split(' ')[0]}</p>
                 </div>
-                <div className="text-[10px] font-bold text-[#073B32]">
-                  {language === 'mr' ? 'पासपोर्ट पहा →' : language === 'hi' ? 'पासपोर्ट देखें →' : 'View Passport →'}
+
+                <div className="text-[9px] font-bold tracking-tight uppercase">
+                  {isAttention ? (
+                    <span className="text-rose-700 font-extrabold">🚨 High Risk</span>
+                  ) : isTreatment ? (
+                    <span className="text-amber-800">💊 Rx Active</span>
+                  ) : (
+                    <span className="text-emerald-700">✓ Healthy</span>
+                  )}
                 </div>
               </div>
-            ))}
-          </div>
+            );
+          })}
         </div>
       </div>
 
-      {/* 3. PRIMARY ACTION — Bold Coral/Red Surface */}
+      {/* ========================================================================= */}
+      {/* SECTION 23: LARGE PRIMARY ACTION BUTTON — REPORT SICK ANIMAL */}
+      {/* ========================================================================= */}
       <div 
         onClick={() => setIsReportModalOpen(true)}
-        className="p-6 bg-gradient-to-br from-[#D84F45] via-red-600 to-[#0A1020] rounded-3xl text-white shadow-lg cursor-pointer hover:shadow-2xl transition transform hover:-translate-y-0.5 border border-red-400 relative overflow-hidden"
+        className="p-6 sm:p-7 bg-gradient-to-br from-[#D85449] via-red-600 to-[#073B32] rounded-3xl text-white shadow-xl cursor-pointer hover:shadow-2xl transition transform hover:-translate-y-0.5 border-2 border-red-300 relative overflow-hidden"
       >
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center relative z-10">
-          <div className="md:col-span-8 space-y-1">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/20 rounded-full text-xs font-bold text-white border border-white/20">
+          <div className="md:col-span-8 space-y-2">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/20 rounded-full text-xs font-bold text-white border border-white/20 uppercase tracking-wider">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>{language === 'mr' ? 'तातडीने रोग नोंदणी' : language === 'hi' ? 'आपातकालीन रोग सूचना' : 'EMERGENCY OR SICKNESS REPORTING'}</span>
+              <span>Priority Health Action</span>
             </div>
-            <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-              {t.reportSick || "Report Sick Animal"}
-            </h3>
-            <p className="text-xs sm:text-sm text-red-100 max-w-xl">
-              {language === 'mr' 
-                ? '६० सेकंदांत आजारी जनावराची नोंद करा. त्वरित प्राथमिक धोका अंदाज व डॉक्टरांना सूचना.'
-                : language === 'hi'
-                  ? '६० सेकंड में बीमार पशु की रिपोर्ट करें। तुरंत एआई जोखिम मूल्यांकन और डॉक्टर को सूचना।'
-                  : 'Report symptoms in under 60 seconds. Instant AI risk assessment and automatic notification to Dr. Anand Deshmukh.'}
+            
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight font-display">
+              Report Sick Animal
+            </h2>
+            
+            <p className="text-xs sm:text-sm text-red-100 max-w-xl leading-relaxed font-medium">
+              Symptoms, photo or voice — under 60 seconds. Instant decision-support screening and direct notification to Dr. Anand Deshmukh.
             </p>
 
             <div className="flex items-center gap-4 pt-2 text-xs font-bold text-white">
-              <span className="flex items-center gap-1"><Camera className="w-3.5 h-3.5" /> {language === 'mr' ? 'फोटो' : language === 'hi' ? 'फोटो' : 'Photo Upload'}</span>
-              <span className="flex items-center gap-1"><Mic className="w-3.5 h-3.5" /> {language === 'mr' ? 'आवाज' : language === 'hi' ? 'वॉयस' : 'Voice Memo'}</span>
-              <span className="flex items-center gap-1"><MapPin className="w-3.5 h-3.5" /> Auto-GPS</span>
+              <span className="flex items-center gap-1.5 bg-black/20 px-2.5 py-1 rounded-lg">
+                <Camera className="w-3.5 h-3.5" /> Photo
+              </span>
+              <span className="flex items-center gap-1.5 bg-black/20 px-2.5 py-1 rounded-lg">
+                <Mic className="w-3.5 h-3.5" /> Voice Memo
+              </span>
+              <span className="flex items-center gap-1.5 bg-black/20 px-2.5 py-1 rounded-lg">
+                <MapPin className="w-3.5 h-3.5" /> Auto-GPS Village Tag
+              </span>
             </div>
           </div>
 
-          <div className="md:col-span-4 flex justify-end">
-            <button className="px-6 py-3.5 bg-white text-red-700 font-black rounded-2xl text-xs sm:text-sm shadow-md flex items-center gap-2 hover:bg-red-50 transition">
-              <span>{language === 'mr' ? 'नोंदणी सुरू करा' : language === 'hi' ? 'रिपोर्ट शुरू करें' : 'Start Report Wizard'}</span>
+          <div className="md:col-span-4 flex justify-start md:justify-end">
+            <button className="px-7 py-4 bg-white text-red-700 font-extrabold rounded-2xl text-sm shadow-xl flex items-center gap-2 hover:bg-red-50 transition active:scale-95">
+              <span>Start Sickness Report</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
         </div>
 
         {/* Glow decoration */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-0 right-0 w-72 h-72 bg-white/10 rounded-full blur-3xl pointer-events-none" />
       </div>
 
-      {/* 4. Farmer Live Information (4 Contextual Blocks) */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Block A: Local Health Signal */}
-        <div className="bg-white p-5 rounded-3xl border border-[#ECE6D6] shadow-xs space-y-2">
-          <div className="flex items-center justify-between text-xs text-slate-500 font-bold">
-            <span className="flex items-center gap-1 text-red-600">
-              <AlertTriangle className="w-3.5 h-3.5" />
-              <span>{t.nearbyAlertTitle ? t.nearbyAlertTitle.split('(')[0] : "LOCAL HEALTH SIGNAL"}</span>
-            </span>
-            <span className="font-mono">8 km away</span>
-          </div>
-          <h4 className="font-black text-sm text-[#0A1020]">
-            {language === 'mr' ? 'लंपी संसर्ग चेतावणी' : language === 'hi' ? 'लम्पी संक्रमण चेतावनी' : 'LSD Suspect Activity'}
-          </h4>
-          <p className="text-xs text-slate-600">
-            {t.lsdAlertText || "3 cases reported in nearby Malegaon village. Precautionary ring advisory active."}
-          </p>
-          <div className="pt-1 text-[11px] font-bold text-[#073B32]">
-            {language === 'mr' ? 'नियम पहा →' : language === 'hi' ? 'नियम देखें →' : 'View Biosecurity Rules →'}
-          </div>
-        </div>
-
-        {/* Block B: Next Vaccination */}
-        <div className="bg-white p-5 rounded-3xl border border-[#ECE6D6] shadow-xs space-y-2">
-          <div className="flex items-center justify-between text-xs text-slate-500 font-bold">
-            <span className="flex items-center gap-1 text-[#149A84]">
-              <Calendar className="w-3.5 h-3.5" />
-              <span>{t.vaccination || "NEXT VACCINATION"}</span>
-            </span>
-            <span className="font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded">
-              {language === 'mr' ? '१२ दिवसांत' : language === 'hi' ? '१२ दिनों में' : 'Due in 12 Days'}
-            </span>
-          </div>
-          <h4 className="font-black text-sm text-[#0A1020]">
-            {t.fmdCampTitle || "FMD Biannual Booster"}
-          </h4>
-          <p className="text-xs text-slate-600">
-            {t.fmdCampDesc || "Khedgaon Gram Panchayat Camp this Saturday. 100% free under NADCP."}
-          </p>
-          <div className="pt-1 text-[11px] font-bold text-[#073B32]">
-            {language === 'mr' ? 'कॅम्प माहिती →' : language === 'hi' ? 'शिविर जानकारी →' : 'Camp Details →'}
-          </div>
-        </div>
-
-        {/* Block C: Your Veterinarian */}
-        <div className="bg-white p-5 rounded-3xl border border-[#ECE6D6] shadow-xs space-y-2">
-          <div className="flex items-center justify-between text-xs text-slate-500 font-bold">
-            <span className="flex items-center gap-1 text-blue-700">
-              <Stethoscope className="w-3.5 h-3.5" />
-              <span>{t.contactVet || "YOUR VETERINARIAN"}</span>
-            </span>
-            <span className="text-emerald-700 font-bold">
-              {language === 'mr' ? 'उपलब्ध' : language === 'hi' ? 'उपलब्ध' : 'Available Today'}
-            </span>
-          </div>
-          <h4 className="font-black text-sm text-[#0A1020]">
-            {language === 'mr' ? 'डॉ. आनंद देशमुख' : language === 'hi' ? 'डॉ. आनंद देशमुख' : 'Dr. Anand Deshmukh'}
-          </h4>
-          <p className="text-xs text-slate-600">
-            {language === 'mr' ? 'बारामती तालुका रुग्णालय • १५ किमी कार्यक्षेत्र' : language === 'hi' ? 'बारामती तालुका अस्पताल • १५ किमी दायरा' : 'Baramati Taluka Hospital • Response radius 15 km'}
-          </p>
-          <div className="pt-1 text-[11px] font-bold text-[#073B32]">+91 94220 12345</div>
-        </div>
-
-        {/* Block D: Assigned Field Worker */}
-        <div className="bg-white p-5 rounded-3xl border border-[#ECE6D6] shadow-xs space-y-2">
-          <div className="flex items-center justify-between text-xs text-slate-500 font-bold">
-            <span className="flex items-center gap-1 text-teal-700">
-              <Activity className="w-3.5 h-3.5" />
-              <span>{language === 'mr' ? 'क्षेत्रीय सहाय्यक' : language === 'hi' ? 'फील्ड वर्कर' : 'FIELD SENTINEL'}</span>
-            </span>
-            <span className="text-slate-500 font-mono">In Khedgaon</span>
-          </div>
-          <h4 className="font-black text-sm text-[#0A1020]">
-            {language === 'mr' ? 'सुनिता पवार (पशु सखी)' : language === 'hi' ? 'सुनीता पवार (पशु सखी)' : 'Sunita Pawar (Pashu Sakhi)'}
-          </h4>
-          <p className="text-xs text-slate-600">
-            {language === 'mr' ? 'आज सकाळी ०९:३० वाजता खेडगाव भेट' : language === 'hi' ? 'आज सुबह ०९:३० बजे खेडगांव दौरा' : 'Visiting Khedgaon Sector today at 09:30 AM'}
-          </p>
-          <div className="pt-1 text-[11px] font-bold text-[#073B32]">
-            {language === 'mr' ? 'भेट विनंती →' : language === 'hi' ? 'दौरे का अनुरोध →' : 'Request Visit →'}
-          </div>
-        </div>
-      </div>
-
-      {/* 5. Recent Activity & Case Timeline */}
-      <div className="bg-white rounded-3xl border border-[#ECE6D6] p-6 shadow-xs space-y-4">
-        <h3 className="font-black text-base text-[#0A1020] flex items-center justify-between border-b border-[#ECE6D6] pb-3">
-          <span>{language === 'mr' ? 'तुमच्या अलीकडील तक्रारी व प्रगती' : language === 'hi' ? 'आपकी हालिया रिपोर्ट व स्थिति' : 'YOUR RECENT REPORTS & CASE TIMELINE'}</span>
-          <span className="text-xs text-slate-500 font-normal">Active Surveillance Log</span>
-        </h3>
-
-        <div className="space-y-3">
-          {myReports.map((c) => (
-            <div 
-              key={c.caseId}
-              className="p-4 bg-[#F6F3EA] rounded-2xl border border-[#ECE6D6] flex flex-col sm:flex-row sm:items-center justify-between gap-3"
-            >
-              <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-mono font-black text-[#073B32]">{c.caseId}</span>
-                  <RiskBadge level={c.riskLevel} size="sm" />
-                </div>
-                <h4 className="font-extrabold text-sm text-[#0A1020]">
-                  {c.species} ({c.animalId}) — {c.suspectedDisease}
-                </h4>
-                <p className="text-xs text-slate-600">
-                  Signs: {c.symptoms.join(', ')}
-                </p>
+      {/* ========================================================================= */}
+      {/* SECTION 24: FARMER LOCAL RISK (Nearby Health Signal - 8km Radius) */}
+      {/* ========================================================================= */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        {/* Left: Nearby Health Signal (8km Radius) */}
+        <div className="lg:col-span-7 bg-white p-6 sm:p-7 rounded-3xl border border-amber-200/90 shadow-sm space-y-4 relative overflow-hidden">
+          <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600">
+                <AlertTriangle className="w-4 h-4" />
               </div>
-
-              <div className="flex items-center gap-3">
-                <div className="text-right text-xs">
-                  <span className="font-bold text-slate-700 block">
-                    {t.underReview || "Status: Under Review"}
-                  </span>
-                  <span className="text-slate-400">{c.reportedAt}</span>
-                </div>
-                <button
-                  onClick={() => setIsReportModalOpen(true)}
-                  className="px-3 py-1.5 bg-[#073B32] text-white rounded-xl text-xs font-bold shadow-xs hover:bg-[#052923] transition"
-                >
-                  {t.trackCaseBtn || "Track Case"}
-                </button>
+              <div>
+                <h3 className="font-extrabold text-base text-slate-900">Nearby Health Signal</h3>
+                <p className="text-[11px] text-slate-500">Surveillance Radius: 8 km</p>
               </div>
             </div>
-          ))}
+
+            <span className="px-3 py-1 bg-amber-100 text-amber-900 border border-amber-300 rounded-full text-xs font-black uppercase tracking-wider font-mono">
+              Status: Elevated
+            </span>
+          </div>
+
+          <div className="grid grid-cols-3 gap-3 text-center">
+            <div className="bg-amber-50/60 p-3 rounded-2xl border border-amber-100">
+              <div className="text-lg font-black text-amber-900 font-mono">7 Reports</div>
+              <div className="text-[10px] text-amber-800 font-medium">In Past 48 Hours</div>
+            </div>
+
+            <div className="bg-amber-50/60 p-3 rounded-2xl border border-amber-100">
+              <div className="text-lg font-black text-amber-900 font-mono">3 Villages</div>
+              <div className="text-[10px] text-amber-800 font-medium">Khedgaon / Malegaon</div>
+            </div>
+
+            <div className="bg-amber-50/60 p-3 rounded-2xl border border-amber-100">
+              <div className="text-lg font-black text-rose-700 font-mono">LSD Booster</div>
+              <div className="text-[10px] text-rose-800 font-medium">Vaccination Gap</div>
+            </div>
+          </div>
+
+          {/* Recommended Action Checklist */}
+          <div className="bg-slate-900 text-white p-4 rounded-2xl space-y-2">
+            <div className="text-xs font-bold text-teal-400 uppercase tracking-wider font-mono flex items-center gap-1.5">
+              <CheckCircle2 className="w-4 h-4 text-teal-400" />
+              <span>Recommended Precautionary Steps</span>
+            </div>
+            <ul className="text-xs text-slate-300 space-y-1 leading-relaxed">
+              <li>• Separate sick cattle showing nodular skin lesions or fever.</li>
+              <li>• Avoid moving animals to Baramati animal market this week.</li>
+              <li>• Spray shed perimeter with neem extract or deltamethrin to control biting flies.</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Right: Next Vaccination Camp & Direct Veterinarian Line */}
+        <div className="lg:col-span-5 space-y-4 flex flex-col justify-between">
+          
+          {/* Next Vaccine Due */}
+          <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-xs space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="flex items-center gap-1.5 text-xs font-bold text-[#073B32]">
+                <Syringe className="w-4 h-4 text-teal-600" />
+                <span>VACCINATION DUE</span>
+              </span>
+              <span className="text-xs font-bold text-amber-800 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+                FMD Due in 12 Days
+              </span>
+            </div>
+            <h4 className="font-extrabold text-sm text-slate-900">
+              Free NADCP Vaccination Camp at Khedgaon Gram Panchayat
+            </h4>
+            <p className="text-xs text-slate-500 leading-relaxed font-medium">
+              Saturday 28 Feb • 08:30 AM – 04:30 PM • 100% Free Government Service
+            </p>
+            <button 
+              onClick={() => setActiveTab('vaccines')}
+              className="w-full py-2 bg-emerald-50 hover:bg-emerald-100 text-[#073B32] text-xs font-bold rounded-xl border border-emerald-200 transition text-center block"
+            >
+              Find Nearby Vaccination Camps →
+            </button>
+          </div>
+
+          {/* Assigned Taluka Doctor */}
+          <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-xs flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-700">
+                <Stethoscope className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="text-[10px] text-slate-400 font-bold uppercase">Assigned Veterinarian</p>
+                <h4 className="font-bold text-sm text-slate-900">Dr. Anand Deshmukh</h4>
+                <p className="text-[11px] text-slate-500">Baramati Taluka Hospital • Available</p>
+              </div>
+            </div>
+
+            <button
+              onClick={() => setIsIVROpen(true)}
+              className="p-3 rounded-xl bg-teal-600 hover:bg-teal-700 text-white shadow-md transition"
+              title="Call Veterinarian"
+            >
+              <PhoneCall className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      {/* ========================================================================= */}
+      {/* SECTION 27: FARMER CASE TRACKING (Active Timeline for Ganga PS-2026-004281) */}
+      {/* ========================================================================= */}
+      <div className="bg-white p-6 sm:p-7 rounded-3xl border border-slate-200 shadow-xs space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
+          <div>
+            <div className="flex items-center gap-2">
+              <h3 className="font-extrabold text-base text-[#073B32]">
+                Active Case Tracking: Case #{masterCase.caseId}
+              </h3>
+              <span className="text-[10px] font-bold uppercase bg-rose-100 text-rose-800 border border-rose-300 px-2 py-0.5 rounded-full">
+                HIGH RISK (86/100)
+              </span>
+            </div>
+            <p className="text-xs text-slate-500 font-medium">
+              Animal: <strong className="text-slate-900">{masterCase.animalName || "Ganga"}</strong> ({masterCase.breed}) • Reported {masterCase.reportedAt}
+            </p>
+          </div>
+
+          <div className="text-xs text-slate-500 font-mono">
+            Assigned: <span className="text-[#073B32] font-bold">Dr. Anand Deshmukh</span>
+          </div>
+        </div>
+
+        {/* Visual Timeline (Report -> Screen -> Vet -> Field Visit -> Sample -> Lab -> Outcome) */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2 pt-2">
+          {[
+            { step: "01", label: "Report Received", status: "completed", date: "Today 19:45" },
+            { step: "02", label: "AI Risk Screen", status: "completed", date: "Score 86/100" },
+            { step: "03", label: "Vet Notified", status: "completed", date: "Dr. Anand" },
+            { step: "04", label: "Field Visit Assigned", status: "completed", date: "Sunita Pawar" },
+            { step: "05", label: "Sample Collected", status: "current", date: "PS-SMP-0198" },
+            { step: "06", label: "Laboratory PCR", status: "pending", date: "Aundh Lab" },
+            { step: "07", label: "Outcome / Cleared", status: "pending", date: "Pending" }
+          ].map((item, idx) => {
+            const isDone = item.status === 'completed';
+            const isCurrent = item.status === 'current';
+            return (
+              <div 
+                key={idx}
+                className={`p-3 rounded-2xl border text-center space-y-1 ${
+                  isDone 
+                    ? 'bg-emerald-50/80 border-emerald-200 text-emerald-900' 
+                    : isCurrent 
+                    ? 'bg-teal-50 border-teal-500 ring-2 ring-teal-400/40 text-teal-900 font-bold' 
+                    : 'bg-slate-50 border-slate-200 text-slate-400 opacity-60'
+                }`}
+              >
+                <div className="text-[10px] font-mono font-bold">
+                  {isDone ? '✓ ' + item.step : item.step}
+                </div>
+                <div className="text-xs font-black truncate">{item.label}</div>
+                <div className="text-[10px] text-slate-500 truncate">{item.date}</div>
+              </div>
+            );
+          })}
         </div>
       </div>
 
-      {/* Report Wizard Modal */}
+      {/* Global Modals */}
       {isReportModalOpen && (
         <ReportSickAnimalWizard onClose={() => setIsReportModalOpen(false)} />
       )}
-
-      {/* Animal Profile Passport Modal */}
-      {selectedAnimalForModal && (
-        <AnimalProfileModal 
-          animal={selectedAnimalForModal} 
-          onClose={() => setSelectedAnimalForModal(null)} 
-        />
-      )}
+      <AnimalProfileModal />
     </div>
   );
 }

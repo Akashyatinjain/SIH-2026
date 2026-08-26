@@ -9,20 +9,15 @@ import {
   MapPin, 
   ChevronRight, 
   Activity,
-  Users,
-  Building2,
-  Stethoscope,
   Radio,
-  Layers,
-  Map,
   Globe,
   Check,
-  Play
+  WifiOff
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
 export default function LoginPage({ onLoginSuccess, onOpenDemoModal, onOpenDemoCenter }) {
-  const { enterWorkspace, language, setLanguage } = useApp();
+  const { setCurrentScreen, language, setLanguage, setIsDemoModalOpen } = useApp();
   
   const [authStep, setAuthStep] = useState('phone'); // 'phone' | 'otp'
   const [phone, setPhone] = useState('9822451092');
@@ -35,7 +30,7 @@ export default function LoginPage({ onLoginSuccess, onOpenDemoModal, onOpenDemoC
     setTimeout(() => {
       setLoading(false);
       setAuthStep('otp');
-    }, 450);
+    }, 350);
   };
 
   const handleVerifyOtp = (e) => {
@@ -43,215 +38,242 @@ export default function LoginPage({ onLoginSuccess, onOpenDemoModal, onOpenDemoC
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-      if (onLoginSuccess) onLoginSuccess();
-    }, 450);
+      if (onLoginSuccess) {
+        onLoginSuccess();
+      } else {
+        setCurrentScreen('workspaceSelect');
+      }
+    }, 350);
   };
 
   return (
-    <div className="min-h-screen bg-[#F6F3EA] flex items-center justify-center p-3 sm:p-6 selection:bg-[#149A84] selection:text-white">
-      <div className="bg-white rounded-3xl shadow-2xl border border-[#ECE6D6] overflow-hidden max-w-5xl w-full grid grid-cols-1 lg:grid-cols-12 min-h-[640px]">
-        {/* LEFT SIDE: Dark Cinematic Visual Panel (5 cols) */}
-        <div className="lg:col-span-5 bg-gradient-to-br from-[#073B32] via-[#0A1020] to-[#050811] text-white p-6 sm:p-8 flex flex-col justify-between relative overflow-hidden border-b lg:border-b-0 lg:border-r border-slate-800">
-          <div className="space-y-4 relative z-10">
+    <div className="min-h-screen bg-[#F6F3EA] flex items-center justify-center p-3 sm:p-6 selection:bg-[#149A84] selection:text-white font-sans">
+      <div className="bg-white rounded-3xl shadow-2xl border border-slate-200/80 overflow-hidden max-w-5xl w-full grid grid-cols-1 lg:grid-cols-12 min-h-[620px]">
+        
+        {/* ========================================================================= */}
+        {/* LEFT PANEL: DARK MIDNIGHT / FOREST SECTION */}
+        {/* ========================================================================= */}
+        <div className="lg:col-span-6 bg-gradient-to-br from-[#073B32] via-[#09101E] to-[#050811] text-white p-7 sm:p-10 flex flex-col justify-between relative overflow-hidden border-b lg:border-b-0 lg:border-r border-slate-800">
+          
+          {/* Subtle animated network background */}
+          <div className="absolute inset-0 bg-dot-pattern-dark opacity-30 pointer-events-none"></div>
+
+          <div className="space-y-6 relative z-10">
+            {/* Top Brand Header */}
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-[#149A84]/20 border border-[#149A84]/40 flex items-center justify-center text-white shadow-sm">
-                <Shield className="w-6 h-6 text-emerald-300" />
+              <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#149A84] to-[#073B32] p-0.5 shadow-lg flex items-center justify-center border border-teal-400/30">
+                <div className="w-full h-full bg-[#09101E] rounded-[14px] flex items-center justify-center">
+                  <Shield className="w-6 h-6 text-[#149A84]" />
+                </div>
               </div>
               <div>
-                <h2 className="font-black text-base tracking-tight text-white">PASHUSURAKSHA</h2>
-                <p className="text-[11px] text-emerald-300 font-mono">Government of Maharashtra</p>
+                <h2 className="font-extrabold text-lg tracking-tight text-white font-display">PASHUSURAKSHA</h2>
+                <p className="text-[11px] text-teal-300 font-medium">Government of Maharashtra</p>
               </div>
             </div>
 
-            <div className="pt-4 space-y-2">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-[#149A84] bg-emerald-950/60 px-2.5 py-1 rounded-full border border-emerald-800">
-                Animal Health Intelligence Network
+            {/* Headline & Descriptor */}
+            <div className="space-y-2 pt-2">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-teal-400 bg-teal-950/60 px-3 py-1 rounded-full border border-teal-800/80 font-mono">
+                SIH 2026 • Problem Statement 26128
               </span>
-              <h3 className="text-xl sm:text-3xl font-black text-white leading-tight">
+              <h1 className="text-2xl sm:text-4xl font-extrabold text-white leading-tight font-display">
                 One network. Every herd. Earlier warning.
-              </h3>
-              <p className="text-xs text-slate-400 leading-relaxed pt-1">
-                Connecting 36 districts of Maharashtra into a unified epidemiological surveillance and rapid containment grid.
+              </h1>
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-medium">
+                Unified digital livestock health intelligence connecting 36 districts from village symptom to state response.
               </p>
             </div>
           </div>
 
-          {/* Background Map & Live Status Telemetry Box */}
-          <div className="my-4 relative z-10 bg-[#0A1020]/90 p-4 rounded-2xl border border-slate-800 text-xs space-y-2.5 shadow-md">
-            <div className="flex items-center justify-between text-slate-300 font-bold border-b border-slate-800 pb-2">
-              <span className="flex items-center gap-1.5 text-[#149A84]">
-                <Radio className="w-3.5 h-3.5 animate-pulse" />
-                <span>Maharashtra Grid Telemetry</span>
-              </span>
-              <span className="text-[10px] font-mono text-emerald-400">ONLINE</span>
+          {/* System Status Indicators (Exact Section 13 Requirement) */}
+          <div className="my-6 relative z-10 bg-[#09101E]/95 p-4 rounded-2xl border border-slate-800 text-xs space-y-2.5 shadow-xl">
+            <div className="text-[11px] font-mono text-slate-400 font-bold uppercase border-b border-slate-800 pb-1.5 flex items-center justify-between">
+              <span>SYSTEM STATUS</span>
+              <span className="text-emerald-400">PUNE DISTRICT SERVER</span>
             </div>
 
-            <div className="grid grid-cols-2 gap-2 text-[11px] pt-1">
-              <div className="bg-slate-950 p-2 rounded-lg border border-slate-800">
-                <span className="text-slate-400">Coverage:</span>
-                <p className="font-bold text-white">36 Districts</p>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between bg-slate-900/80 p-2 rounded-xl border border-slate-800">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                  <span className="text-slate-300 font-medium text-xs">SURVEILLANCE NETWORK</span>
+                </div>
+                <span className="text-[11px] font-mono font-bold text-emerald-400">Operational</span>
               </div>
-              <div className="bg-slate-950 p-2 rounded-lg border border-slate-800">
-                <span className="text-slate-400">Reports Logged:</span>
-                <p className="font-bold text-white">13,842 Reports</p>
+
+              <div className="flex items-center justify-between bg-slate-900/80 p-2 rounded-xl border border-slate-800">
+                <div className="flex items-center gap-2">
+                  <WifiOff className="w-3.5 h-3.5 text-teal-400" />
+                  <span className="text-slate-300 font-medium text-xs">LOW-CONNECTIVITY MODE</span>
+                </div>
+                <span className="text-[11px] font-mono font-bold text-teal-300">Supported</span>
               </div>
-              <div className="bg-slate-950 p-2 rounded-lg border border-slate-800">
-                <span className="text-slate-400">System Availability:</span>
-                <p className="font-bold text-[#149A84]">98.2% Active</p>
-              </div>
-              <div className="bg-slate-950 p-2 rounded-lg border border-slate-800">
-                <span className="text-slate-400">Detection Velocity:</span>
-                <p className="font-bold text-blue-400">1h 45m Avg</p>
+
+              <div className="flex items-center justify-between bg-slate-900/80 p-2 rounded-xl border border-slate-800">
+                <div className="flex items-center gap-2">
+                  <Globe className="w-3.5 h-3.5 text-indigo-400" />
+                  <span className="text-slate-300 font-medium text-xs">MULTILINGUAL</span>
+                </div>
+                <span className="text-[11px] font-mono font-bold text-indigo-300">Available (EN/MR/HI)</span>
               </div>
             </div>
           </div>
 
-          <div className="text-[10px] text-slate-400 relative z-10 border-t border-slate-800/80 pt-3">
-            Department of Animal Husbandry & Dairying • SIH 2026 Problem Statement 26128
+          <div className="relative z-10 text-[11px] text-slate-400 flex items-center justify-between border-t border-slate-800/80 pt-3">
+            <span>Commissionerate of Animal Husbandry</span>
+            <span className="font-mono text-teal-400">v2.6.1 Live Build</span>
           </div>
-
-          {/* Subtle glow */}
-          <div className="absolute -bottom-16 -left-16 w-56 h-56 bg-[#149A84]/20 rounded-full blur-3xl pointer-events-none" />
         </div>
 
-        {/* RIGHT SIDE: Warm Ivory Authentication Panel (7 cols) */}
-        <div className="lg:col-span-7 p-6 sm:p-10 flex flex-col justify-center bg-[#F6F3EA] relative">
-          {/* Top Right Language Selector */}
-          <div className="absolute top-5 right-5 flex items-center bg-white border border-[#ECE6D6] rounded-full p-0.5 shadow-xs text-xs font-black">
-            {['en', 'mr', 'hi'].map((l) => (
+        {/* ========================================================================= */}
+        {/* RIGHT PANEL: WARM IVORY / AUTHENTICATION AREA */}
+        {/* ========================================================================= */}
+        <div className="lg:col-span-6 bg-[#FDFBF7] p-7 sm:p-10 flex flex-col justify-between">
+          <div className="space-y-6">
+            
+            {/* Top Navigation Row */}
+            <div className="flex items-center justify-between">
               <button
-                key={l}
-                onClick={() => setLanguage(l)}
-                className={`px-2.5 py-0.5 rounded-full transition ${
-                  language === l 
-                    ? 'bg-[#073B32] text-white shadow-xs' 
-                    : 'text-slate-600 hover:text-[#0A1020]'
-                }`}
+                onClick={() => setCurrentScreen('home')}
+                className="text-xs font-bold text-slate-500 hover:text-slate-900 flex items-center gap-1 transition-colors"
               >
-                {l === 'en' ? 'ENG' : l === 'mr' ? 'मराठी' : 'हिंदी'}
+                ← Back to Home
               </button>
-            ))}
-          </div>
 
-          {/* STEP 1: Phone Number Input */}
-          {authStep === 'phone' && (
-            <div className="max-w-md mx-auto w-full space-y-6 animate-fadeIn">
-              <div>
-                <span className="text-xs font-extrabold text-[#073B32] uppercase tracking-wider bg-[#D9F1E8] px-3 py-1 rounded-full border border-[#B3E2D2]">
-                  {language === 'mr' ? 'सुरक्षित प्रवेश' : language === 'hi' ? 'सुरक्षित प्रमाणीकरण' : 'SECURE AUTHENTICATION'}
-                </span>
-                <h3 className="text-2xl sm:text-3xl font-black text-[#0A1020] mt-2">
-                  {language === 'mr' ? 'आपल्या खात्यात प्रवेश करा' : language === 'hi' ? 'अपने खाते में लॉगिन करें' : 'Access your workspace'}
-                </h3>
-                <p className="text-xs text-slate-600 mt-1">
-                  {language === 'mr' ? 'आपल्या नोंदणीकृत मोबाईल नंबरने लॉगिन करा' : language === 'hi' ? 'अपने पंजीकृत मोबाइल नंबर से लॉगिन करें' : 'Sign in with your registered mobile number'}
-                </p>
+              {/* Language Switcher */}
+              <div className="flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-xs">
+                <button
+                  onClick={() => setLanguage('en')}
+                  className={`px-2 py-0.5 rounded font-bold transition-colors ${language === 'en' ? 'bg-[#073B32] text-white' : 'text-slate-600'}`}
+                >
+                  EN
+                </button>
+                <button
+                  onClick={() => setLanguage('mr')}
+                  className={`px-2 py-0.5 rounded font-bold transition-colors ${language === 'mr' ? 'bg-[#073B32] text-white' : 'text-slate-600'}`}
+                >
+                  मराठी
+                </button>
+                <button
+                  onClick={() => setLanguage('hi')}
+                  className={`px-2 py-0.5 rounded font-bold transition-colors ${language === 'hi' ? 'bg-[#073B32] text-white' : 'text-slate-600'}`}
+                >
+                  हिंदी
+                </button>
               </div>
+            </div>
 
+            {/* Title Block */}
+            <div className="space-y-1">
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#073B32] font-display">
+                Access your workspace
+              </h2>
+              <p className="text-xs text-slate-500 font-medium">
+                Enter your registered mobile number to receive an OTP verification code.
+              </p>
+            </div>
+
+            {/* Form */}
+            {authStep === 'phone' ? (
               <form onSubmit={handleSendOtp} className="space-y-4">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Mobile Number</label>
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-slate-700 block">
+                    Registered Mobile Number
+                  </label>
                   <div className="relative">
-                    <span className="absolute left-3.5 top-3 text-xs font-bold text-slate-400">+91</span>
-                    <input 
-                      type="tel" 
+                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500 text-xs font-bold">
+                      +91
+                    </div>
+                    <input
+                      type="tel"
                       value={phone}
-                      onChange={e => setPhone(e.target.value)}
-                      placeholder="Enter 10 digit number"
-                      className="w-full pl-12 pr-4 py-3 bg-white border border-[#ECE6D6] rounded-xl text-sm font-bold text-[#0A1020] focus:outline-none focus:border-[#149A84] shadow-xs"
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="98224 51092"
                       required
+                      className="w-full pl-12 pr-4 py-3 bg-white rounded-xl border border-slate-300 text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#149A84] focus:border-transparent transition-all shadow-sm"
                     />
                   </div>
-                  <p className="text-[11px] text-slate-500 mt-1">Registered Maharashtra Livestock Sentinel phone number</p>
+                  <p className="text-[11px] text-slate-500 font-medium">
+                    Demo Preset: <span className="font-mono text-teal-800 font-bold">+91 98224 51092</span> (Ramesh Patil / Dr. Anand)
+                  </p>
                 </div>
 
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-3.5 bg-[#073B32] hover:bg-[#052923] text-white rounded-xl font-bold text-xs shadow-md transition flex items-center justify-center gap-2"
+                  className="w-full py-3.5 rounded-xl bg-[#073B32] hover:bg-[#095B4E] text-white font-extrabold text-sm shadow-md transition-all flex items-center justify-center gap-2"
                 >
                   <span>{loading ? 'Sending OTP...' : 'Continue with OTP'}</span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
               </form>
+            ) : (
+              <form onSubmit={handleVerifyOtp} className="space-y-4">
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-bold text-slate-700">
+                      Enter 6-Digit Verification Code
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => setAuthStep('phone')}
+                      className="text-[11px] font-bold text-teal-700 hover:underline"
+                    >
+                      Change Number
+                    </button>
+                  </div>
 
-              {/* Fast Evaluation Options */}
-              <div className="space-y-2 pt-2">
-                <button
-                  type="button"
-                  onClick={onLoginSuccess}
-                  className="w-full p-3 bg-white hover:bg-slate-50 border border-[#ECE6D6] rounded-xl text-xs text-slate-700 font-bold flex items-center justify-between shadow-xs transition"
-                >
-                  <span>Fast Pass for Evaluators:</span>
-                  <span className="text-[#073B32] font-black">Choose Workspace →</span>
-                </button>
+                  <div className="flex gap-2 justify-between">
+                    {otp.map((digit, i) => (
+                      <input
+                        key={i}
+                        type="text"
+                        maxLength="1"
+                        value={digit}
+                        onChange={(e) => {
+                          const newOtp = [...otp];
+                          newOtp[i] = e.target.value;
+                          setOtp(newOtp);
+                        }}
+                        className="w-11 h-12 text-center text-lg font-black bg-white rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-[#149A84] text-slate-900 shadow-sm"
+                      />
+                    ))}
+                  </div>
 
-                <button
-                  type="button"
-                  onClick={onOpenDemoModal}
-                  className="w-full p-3 bg-gradient-to-r from-purple-900 to-indigo-900 text-white rounded-xl text-xs font-black flex items-center justify-between shadow-sm hover:shadow-md transition"
-                >
-                  <span className="flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5 text-purple-300" />
-                    <span>TRY DEMO MODE (SIH JUDGES)</span>
-                  </span>
-                  <span>Instant Access →</span>
-                </button>
-              </div>
-
-              <div className="text-[11px] text-slate-500 text-center">
-                🔒 Authorized Government & Field Network Access Only
-              </div>
-            </div>
-          )}
-
-          {/* STEP 2: OTP Verification */}
-          {authStep === 'otp' && (
-            <div className="max-w-md mx-auto w-full space-y-6 animate-fadeIn">
-              <div>
-                <span className="text-xs font-extrabold text-[#073B32] uppercase tracking-wider bg-[#D9F1E8] px-3 py-1 rounded-full border border-[#B3E2D2]">
-                  TWO-FACTOR VERIFICATION
-                </span>
-                <h3 className="text-2xl sm:text-3xl font-black text-[#0A1020] mt-2">Enter Verification Code</h3>
-                <p className="text-xs text-slate-600 mt-1">Verification code sent to +91 {phone}</p>
-              </div>
-
-              <form onSubmit={handleVerifyOtp} className="space-y-5">
-                <div className="flex justify-between gap-2">
-                  {otp.map((digit, idx) => (
-                    <input
-                      key={idx}
-                      type="text"
-                      maxLength={1}
-                      value={digit}
-                      readOnly
-                      className="w-11 h-12 text-center text-lg font-black font-mono border-2 border-[#149A84] rounded-xl bg-white text-[#073B32] shadow-xs"
-                    />
-                  ))}
+                  <p className="text-[11px] text-emerald-800 font-medium">
+                    ✓ Pre-filled for instant SIH evaluation. Click Verify & Continue.
+                  </p>
                 </div>
 
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-3.5 bg-[#073B32] hover:bg-[#052923] text-white rounded-xl font-bold text-xs shadow-md transition flex items-center justify-center gap-2"
+                  className="w-full py-3.5 rounded-xl bg-[#149A84] hover:bg-[#0C7A68] text-white font-extrabold text-sm shadow-md transition-all flex items-center justify-center gap-2"
                 >
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                  <span>{loading ? 'Verifying...' : 'Verify OTP & Select Workspace →'}</span>
+                  <span>{loading ? 'Verifying...' : 'Verify & Open Workspace'}</span>
+                  <CheckCircle2 className="w-4 h-4" />
                 </button>
               </form>
+            )}
+          </div>
 
-              <div className="flex justify-between text-xs text-slate-600">
-                <span>Didn't receive code?</span>
-                <button 
-                  onClick={() => alert("Resent OTP to +91 " + phone)}
-                  className="font-bold text-[#073B32] hover:underline"
-                >
-                  Resend Code
-                </button>
-              </div>
+          {/* Bottom First-Class Try Demo Section (Section 13 requirement) */}
+          <div className="pt-6 border-t border-slate-200/80 mt-6 space-y-2.5">
+            <div className="text-center text-xs text-slate-500 font-medium">
+              Prefer to explore first?
             </div>
-          )}
+
+            <button
+              onClick={() => setCurrentScreen('demoCenter')}
+              className="w-full py-3 px-4 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/40 text-amber-900 font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-sm"
+            >
+              <Sparkles className="w-4 h-4 text-amber-600 animate-spin-slow" />
+              <span>Try Demo (No Login Required)</span>
+            </button>
+          </div>
         </div>
+
       </div>
     </div>
   );

@@ -179,7 +179,12 @@ export default function CaseDetailDrawer({ caseData, onClose }) {
 
               {/* Suggested Protocol */}
               <div className="bg-emerald-950/70 p-2.5 rounded-xl border border-emerald-800 text-[11px] text-emerald-200">
-                <strong>Suggested Protocol:</strong> 1. Field verification by Para-Vet 2. Sample collection for RT-PCR 3. Immediate shed liming 4. Nearby herd screening.
+                <strong>Suggested Protocol:</strong> 1. Clinical field verification 2. Sample collection for RT-PCR (N-gene) 3. Immediate shed isolation 4. Screen nearby herds.
+              </div>
+
+              {/* Mandatory Disclaimer (Section 43) */}
+              <div className="text-[10px] text-amber-300/90 font-semibold bg-amber-950/40 px-2.5 py-1 rounded-lg border border-amber-800/60 text-center font-mono">
+                ⚠️ Decision support only — veterinary confirmation required.
               </div>
             </div>
 

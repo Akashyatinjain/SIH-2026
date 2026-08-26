@@ -14,6 +14,12 @@ import WorkspaceSelectPage from './components/layout/WorkspaceSelectPage';
 import WorkspaceDetailsPage from './components/layout/WorkspaceDetailsPage';
 import DemoCenter from './components/demo/DemoCenter';
 import TryDemoModal from './components/demo/TryDemoModal';
+import JudgeMode from './components/demo/JudgeMode';
+
+// Public Pages
+import AboutPage from './components/public/AboutPage';
+import HowItWorksPage from './components/public/HowItWorksPage';
+import ImpactPage from './components/public/ImpactPage';
 
 // 1. Farmer Pages
 import FarmerDashboard from './components/farmer/FarmerDashboard';
@@ -77,7 +83,7 @@ function MainAppContent() {
   // SCREEN 1: Public Editorial Landing Page
   if (currentScreen === 'home') {
     return (
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen flex flex-col font-sans">
         <DemoBar />
         <LandingPage 
           onAccessPlatform={() => setCurrentScreen('login')}
@@ -101,10 +107,58 @@ function MainAppContent() {
     );
   }
 
+  // SCREEN: Public About Page
+  if (currentScreen === 'about') {
+    return (
+      <div className="min-h-screen flex flex-col font-sans">
+        <DemoBar />
+        <AboutPage />
+        <IVRModal />
+        <NotificationCenter />
+      </div>
+    );
+  }
+
+  // SCREEN: Public How It Works Page
+  if (currentScreen === 'howItWorks') {
+    return (
+      <div className="min-h-screen flex flex-col font-sans">
+        <DemoBar />
+        <HowItWorksPage />
+        <IVRModal />
+        <NotificationCenter />
+      </div>
+    );
+  }
+
+  // SCREEN: Public Impact Page
+  if (currentScreen === 'impact') {
+    return (
+      <div className="min-h-screen flex flex-col font-sans">
+        <DemoBar />
+        <ImpactPage />
+        <IVRModal />
+        <NotificationCenter />
+      </div>
+    );
+  }
+
+  // SCREEN: Dedicated Judge Mode Portal (Section 72)
+  if (currentScreen === 'judgeMode') {
+    return (
+      <div className="min-h-screen flex flex-col font-sans">
+        <DemoBar />
+        <JudgeMode />
+        <IVRModal />
+        <NotificationCenter />
+      </div>
+    );
+  }
+
   // SCREEN 2: Split-Screen Authentication (Phone + OTP)
   if (currentScreen === 'login') {
     return (
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen flex flex-col font-sans">
         <DemoBar />
         <LoginPage 
           onLoginSuccess={() => setCurrentScreen('workspaceSelect')}
@@ -129,7 +183,7 @@ function MainAppContent() {
   // SCREEN 3: Workspace Selection Page (Left List + Right Live Preview)
   if (currentScreen === 'workspaceSelect') {
     return (
-      <div className="min-h-screen flex flex-col bg-[#F6F3EA]">
+      <div className="min-h-screen flex flex-col bg-[#F6F3EA] font-sans">
         <DemoBar />
         <WorkspaceSelectPage 
           onInspectDetails={() => setCurrentScreen('workspaceDetails')}
@@ -155,7 +209,7 @@ function MainAppContent() {
   // SCREEN 4: Dedicated Workspace Details Briefing (Pre-Dashboard)
   if (currentScreen === 'workspaceDetails') {
     return (
-      <div className="min-h-screen flex flex-col bg-[#F6F3EA]">
+      <div className="min-h-screen flex flex-col bg-[#F6F3EA] font-sans">
         <DemoBar />
         <WorkspaceDetailsPage 
           onBack={() => setCurrentScreen('workspaceSelect')}
@@ -180,7 +234,7 @@ function MainAppContent() {
   // SCREEN 5: Dedicated 9-Phase Story Mode Demo Center
   if (currentScreen === 'demoCenter') {
     return (
-      <div className="min-h-screen flex flex-col bg-[#F6F3EA]">
+      <div className="min-h-screen flex flex-col bg-[#F6F3EA] font-sans">
         <DemoBar />
         <DemoCenter 
           onExit={() => setCurrentScreen('workspaceSelect')}
@@ -203,7 +257,7 @@ function MainAppContent() {
 
   // SCREEN 6: Role-Specific Authenticated Workspace & Routed Sub-Pages
   return (
-    <div className="min-h-screen bg-[#F6F3EA] flex flex-col selection:bg-[#149A84] selection:text-white">
+    <div className="min-h-screen bg-[#F6F3EA] flex flex-col selection:bg-[#149A84] selection:text-white font-sans">
       {/* Top Evaluator Helper Bar */}
       <DemoBar />
 
