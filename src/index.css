@@ -5,12 +5,28 @@
 @tailwind utilities;
 
 @layer base {
+  html, body {
+    overflow-x: hidden;
+    max-width: 100vw;
+    width: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
   body {
     background-color: #F6F3EA;
     color: #0A1020;
     font-family: 'Plus Jakarta Sans', 'Manrope', 'Inter', system-ui, -apple-system, sans-serif;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
+}
+
+/* Hide scrollbar for clean horizontal mobile pill scroll */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 /* Custom Scrollbars */

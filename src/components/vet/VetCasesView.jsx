@@ -104,7 +104,57 @@ export default function VetCasesView() {
           <span className="text-xs text-slate-500 font-mono">{filteredCases.length} Matching Cases</span>
         </div>
 
-        <div className="overflow-x-auto">
+        {/* Mobile Cards View (Visible on < md) */}
+        <div className="block md:hidden space-y-3">
+          {filteredCases.map((c) => (
+            <div
+              key={c.caseId}
+              onClick={() => setSelectedCase(c)}
+              className="p-4 bg-[#F6F3EA] rounded-2xl border border-[#ECE6D6] hover:border-[#073B32] transition space-y-2.5 cursor-pointer"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <RiskBadge level={c.riskLevel} size="sm" />
+                  <span className="font-mono font-bold text-xs text-[#073B32]">{c.caseId}</span>
+                </div>
+                <span className="px-2 py-0.5 bg-white border border-slate-200 rounded text-[10px] font-bold text-slate-700 uppercase">
+                  {c.status.replace('_', ' ')}
+                </span>
+              </div>
+
+              <div>
+                <h4 className="font-bold text-sm text-[#0A1020]">
+                  {c.species} <span className="text-slate-500 font-normal text-xs">({c.animalId})</span>
+                </h4>
+                <p className="text-xs text-red-800 font-semibold mt-0.5">{c.suspectedDisease}</p>
+                <p className="text-[11px] text-slate-600 mt-1">
+                  <strong>Farmer:</strong> {c.farmerName} • {c.village}, {c.block}
+                </p>
+              </div>
+
+              <div className="pt-2 border-t border-[#ECE6D6] flex items-center justify-between">
+                <div className="text-xs">
+                  <span className="text-slate-500 text-[10px] block">Risk Score:</span>
+                  <span className="font-mono font-black text-red-700 text-sm">{c.riskScore} / 100</span>
+                </div>
+
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedCase(c);
+                  }}
+                  className="px-3 py-1.5 bg-[#073B32] text-white rounded-xl text-xs font-bold shadow-xs flex items-center gap-1"
+                >
+                  <span>Open Dossier</span>
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop Table View (Visible on >= md) */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
               <tr className="bg-[#F6F3EA] text-slate-700 font-bold border-b border-[#ECE6D6]">

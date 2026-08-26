@@ -73,7 +73,7 @@ export default function AdminDashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Large GIS Map Occupying ~60% (7 cols) */}
         <div className="lg:col-span-7">
-          <GISDiseaseMap />
+          <GISDiseaseMap showInspector={false} />
         </div>
 
         {/* Right Side: ACTIVE RESPONSE EVENT PANEL (5 cols) */}

@@ -3,13 +3,26 @@ import { Bell, X, AlertTriangle, CheckCircle, Info, ShieldAlert, Clock } from 'l
 import { useApp } from '../../context/AppContext';
 
 export default function NotificationCenter() {
-  const { notifications, isNotificationOpen, setIsNotificationOpen } = useApp();
+  const { 
+    notifications, 
+    isNotificationOpen, 
+    setIsNotificationOpen,
+    isNotificationsOpen,
+    setIsNotificationsOpen
+  } = useApp();
 
-  if (!isNotificationOpen) return null;
+  const isOpen = isNotificationOpen || isNotificationsOpen;
+
+  const handleClose = () => {
+    if (setIsNotificationOpen) setIsNotificationOpen(false);
+    if (setIsNotificationsOpen) setIsNotificationsOpen(false);
+  };
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden bg-slate-900/40 backdrop-blur-xs animate-fadeIn">
-      <div className="absolute inset-y-0 right-0 max-w-full flex pl-10">
+      <div className="absolute inset-y-0 right-0 max-w-full flex pl-0 sm:pl-10">
         <div className="w-screen max-w-md bg-white shadow-2xl border-l border-slate-200 flex flex-col">
           {/* Header */}
           <div className="p-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
@@ -23,7 +36,7 @@ export default function NotificationCenter() {
               </div>
             </div>
             <button 
-              onClick={() => setIsNotificationOpen(false)}
+              onClick={handleClose}
               className="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-200/60 transition"
             >
               <X className="w-5 h-5" />

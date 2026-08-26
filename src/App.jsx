@@ -364,7 +364,7 @@ function MainAppContent() {
                   <BlockAnalyticsCharts />
                 </div>
               )}
-              {activeTab === 'vaccinationGaps' && <StateVaccinationGapsView />}
+              {(activeTab === 'vaccinationGaps' || activeTab === 'vaccines') && <StateVaccinationGapsView />}
               {activeTab === 'resources' && <StateResourcesView />}
               {activeTab === 'advisories' && <AdvisoryCenter />}
             </>

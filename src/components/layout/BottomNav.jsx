@@ -56,7 +56,7 @@ export default function BottomNav() {
         { id: 'dashboard', label: language === 'mr' ? 'राज्य' : language === 'hi' ? 'राज्य' : 'State', icon: Home },
         { id: 'districtRankings', label: language === 'mr' ? 'धोका' : language === 'hi' ? 'जोखिम' : 'District Risk', icon: Layers, isMain: true },
         { id: 'analytics', label: language === 'mr' ? 'विश्लेषण' : language === 'hi' ? 'विश्लेषण' : 'Intelligence', icon: TrendingUp },
-        { id: 'vaccines', label: language === 'mr' ? 'अंतर' : language === 'hi' ? 'गैप' : 'Gaps', icon: Syringe }
+        { id: 'vaccinationGaps', label: language === 'mr' ? 'अंतर' : language === 'hi' ? 'गैप' : 'Gaps', icon: Syringe }
       ];
     }
   };
@@ -72,20 +72,21 @@ export default function BottomNav() {
   };
 
   return (
-    <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 z-40 px-2 py-1 shadow-lg">
-      <div className="flex items-center justify-around">
+    <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 z-40 px-1 sm:px-2 py-1 shadow-lg pb-[max(env(safe-area-inset-bottom),6px)]">
+      <div className="flex items-center justify-around max-w-md mx-auto">
         {tabs.map((tab) => {
           const Icon = tab.icon;
-          const isActive = activeTab === tab.id || (tab.id === 'dashboard' && activeTab === 'home');
+          const isActive = activeTab === tab.id || (tab.id === 'dashboard' && activeTab === 'home') || (tab.id === 'vaccinationGaps' && activeTab === 'vaccines');
 
           if (tab.isMain) {
             return (
               <button
                 key={tab.id}
                 onClick={() => handleTabClick(tab)}
-                className="flex flex-col items-center justify-center -mt-5 bg-gradient-to-tr from-emerald-800 to-[#073B32] text-white rounded-full w-12 h-12 shadow-lg border-2 border-white transform active:scale-95 transition"
+                className="flex flex-col items-center justify-center -mt-5 bg-gradient-to-tr from-[#149A84] to-[#073B32] text-white rounded-full w-12 h-12 shadow-xl border-2 border-white transform active:scale-95 transition"
+                aria-label={tab.label}
               >
-                <Icon className="w-6 h-6 text-emerald-300" />
+                <Icon className="w-5 h-5 text-emerald-300" />
               </button>
             );
           }
@@ -94,12 +95,12 @@ export default function BottomNav() {
             <button
               key={tab.id}
               onClick={() => handleTabClick(tab)}
-              className={`flex flex-col items-center py-1 px-3 text-[10px] font-bold transition ${
-                isActive ? 'text-emerald-800' : 'text-slate-500 hover:text-slate-800'
+              className={`flex flex-col items-center py-1 px-2 text-[10px] font-bold transition min-w-[50px] ${
+                isActive ? 'text-[#073B32]' : 'text-slate-500 hover:text-slate-800'
               }`}
             >
-              <Icon className="w-5 h-5 mb-0.5" />
-              <span>{tab.label}</span>
+              <Icon className={`w-4 h-4 mb-0.5 ${isActive ? 'text-[#149A84]' : 'text-slate-400'}`} />
+              <span className="truncate max-w-[64px]">{tab.label}</span>
             </button>
           );
         })}

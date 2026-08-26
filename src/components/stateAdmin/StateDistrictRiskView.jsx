@@ -91,44 +91,86 @@ export default function StateDistrictRiskView() {
           <span className="text-xs text-slate-500 font-mono">{filtered.length} Districts Displayed</span>
         </div>
 
-        <div className="overflow-x-auto">
+        {/* Mobile & Tablet Cards View (Visible on < xl) */}
+        <div className="block xl:hidden space-y-3">
+          {filtered.map((d) => (
+            <div
+              key={d.district}
+              className="p-4 bg-[#F6F3EA] rounded-2xl border border-[#ECE6D6] space-y-2.5"
+            >
+              <div className="flex items-center justify-between">
+                <h4 className="font-black text-sm text-[#0A1020]">{d.district} District</h4>
+                <RiskBadge level={d.risk} size="sm" />
+              </div>
+
+              <div className="grid grid-cols-2 gap-2 text-xs bg-white p-3 rounded-xl border border-[#ECE6D6]">
+                <div>
+                  <span className="text-slate-400 text-[10px] block">Monitored Livestock:</span>
+                  <span className="font-bold text-[#0A1020]">{d.livestock}</span>
+                </div>
+                <div>
+                  <span className="text-slate-400 text-[10px] block">Vaccine Coverage:</span>
+                  <span className="font-bold text-emerald-800">{d.vacCoverage}%</span>
+                </div>
+                <div>
+                  <span className="text-slate-400 text-[10px] block">Active Outbreaks:</span>
+                  <span className="font-bold text-red-700">{d.activeClusters} Clusters ({d.activeCases} Cases)</span>
+                </div>
+                <div>
+                  <span className="text-slate-400 text-[10px] block">Response Velocity:</span>
+                  <span className="font-bold text-slate-700">{d.avgResponse}</span>
+                </div>
+              </div>
+
+              <button
+                onClick={() => handleDispatchFunds(d)}
+                className="w-full py-2 bg-purple-700 hover:bg-purple-800 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-xs"
+              >
+                <span>Release ₹25 Lakhs Contingency Buffer</span>
+              </button>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop Table View (Visible on >= xl) */}
+        <div className="hidden xl:block overflow-x-auto">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
               <tr className="bg-[#F6F3EA] text-slate-700 font-bold border-b border-[#ECE6D6]">
-                <th className="py-3 px-3">District</th>
-                <th className="py-3 px-3">Risk Tier</th>
-                <th className="py-3 px-3">Monitored Livestock</th>
-                <th className="py-3 px-3">Active Clusters</th>
-                <th className="py-3 px-3">Vaccine Coverage</th>
-                <th className="py-3 px-3">7-Day Mortality</th>
-                <th className="py-3 px-3">Avg Response Velocity</th>
-                <th className="py-3 px-3 text-right">Emergency Action</th>
+                <th className="py-2.5 px-3">District</th>
+                <th className="py-2.5 px-3">Risk Tier</th>
+                <th className="py-2.5 px-3">Livestock</th>
+                <th className="py-2.5 px-3">Active Clusters</th>
+                <th className="py-2.5 px-3">Coverage</th>
+                <th className="py-2.5 px-3">7-Day Deaths</th>
+                <th className="py-2.5 px-3">Response Velocity</th>
+                <th className="py-2.5 px-3 text-right">Emergency Action</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#ECE6D6]">
               {filtered.map((d) => (
                 <tr key={d.district} className="hover:bg-purple-50/30 transition">
-                  <td className="py-3 px-3 font-black text-[#0A1020]">{d.district}</td>
-                  <td className="py-3 px-3"><RiskBadge level={d.risk} size="sm" /></td>
-                  <td className="py-3 px-3 font-semibold text-slate-800">{d.livestock}</td>
-                  <td className="py-3 px-3">
+                  <td className="py-2.5 px-3 font-black text-[#0A1020] whitespace-nowrap">{d.district}</td>
+                  <td className="py-2.5 px-3"><RiskBadge level={d.risk} size="sm" /></td>
+                  <td className="py-2.5 px-3 font-semibold text-slate-800 whitespace-nowrap">{d.livestock}</td>
+                  <td className="py-2.5 px-3 whitespace-nowrap">
                     {d.activeClusters > 0 ? (
-                      <span className="text-red-700 bg-red-50 px-2 py-0.5 rounded font-bold">
-                        {d.activeClusters} Clusters ({d.activeCases} Cases)
+                      <span className="text-red-700 bg-red-50 border border-red-200 px-2 py-0.5 rounded-full font-bold text-[11px]">
+                        {d.activeClusters} Clusters ({d.activeCases})
                       </span>
                     ) : (
-                      <span className="text-slate-500 font-normal">0 Clusters</span>
+                      <span className="text-slate-500 font-normal text-[11px]">0 Clusters</span>
                     )}
                   </td>
-                  <td className="py-3 px-3 font-semibold text-slate-800">{d.vacCoverage}%</td>
-                  <td className="py-3 px-3 font-mono font-bold text-slate-700">{d.mortality7d} Deaths</td>
-                  <td className="py-3 px-3 font-mono text-slate-600">{d.avgResponse}</td>
-                  <td className="py-3 px-3 text-right">
+                  <td className="py-2.5 px-3 font-semibold text-slate-800 whitespace-nowrap">{d.vacCoverage}%</td>
+                  <td className="py-2.5 px-3 font-mono font-bold text-slate-700 whitespace-nowrap">{d.mortality7d}</td>
+                  <td className="py-2.5 px-3 font-mono text-slate-600 whitespace-nowrap">{d.avgResponse}</td>
+                  <td className="py-2.5 px-3 text-right whitespace-nowrap">
                     <button
                       onClick={() => handleDispatchFunds(d)}
-                      className="px-3 py-1 bg-purple-700 hover:bg-purple-800 text-white rounded-lg text-[11px] font-bold transition"
+                      className="px-3 py-1 bg-purple-700 hover:bg-purple-800 text-white rounded-lg text-[11px] font-bold transition shadow-xs"
                     >
-                      Release ₹25L Funds
+                      Release ₹25L
                     </button>
                   </td>
                 </tr>

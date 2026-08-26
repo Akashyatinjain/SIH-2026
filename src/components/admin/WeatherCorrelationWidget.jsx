@@ -35,18 +35,18 @@ export default function WeatherCorrelationWidget() {
         </div>
 
         {/* Live Weather Badges for Pune / Baramati */}
-        <div className="flex items-center gap-2 text-xs">
-          <span className="flex items-center gap-1 bg-amber-50 text-amber-900 px-2.5 py-1 rounded-lg border border-amber-200 font-bold">
+        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs">
+          <span className="flex items-center gap-1 bg-amber-50 text-amber-900 px-2 sm:px-2.5 py-1 rounded-lg border border-amber-200 font-bold text-[11px] sm:text-xs">
             <Thermometer className="w-3.5 h-3.5 text-amber-600" />
             <span>31°C</span>
           </span>
-          <span className="flex items-center gap-1 bg-blue-50 text-blue-900 px-2.5 py-1 rounded-lg border border-blue-200 font-bold">
+          <span className="flex items-center gap-1 bg-blue-50 text-blue-900 px-2 sm:px-2.5 py-1 rounded-lg border border-blue-200 font-bold text-[11px] sm:text-xs">
             <Droplets className="w-3.5 h-3.5 text-blue-600" />
             <span>78% Humidity</span>
           </span>
-          <span className="flex items-center gap-1 bg-red-50 text-red-900 px-2.5 py-1 rounded-lg border border-red-200 font-bold">
+          <span className="flex items-center gap-1 bg-red-50 text-red-900 px-2 sm:px-2.5 py-1 rounded-lg border border-red-200 font-bold text-[11px] sm:text-xs">
             <Bug className="w-3.5 h-3.5 text-red-600" />
-            <span>Vector Index: 8.2 (High)</span>
+            <span>Vector Index: 8.2</span>
           </span>
         </div>
       </div>

@@ -224,7 +224,7 @@ export default function LoginPage({ onLoginSuccess, onOpenDemoModal, onOpenDemoC
                     </button>
                   </div>
 
-                  <div className="flex gap-2 justify-between">
+                  <div className="flex gap-1.5 sm:gap-2 justify-between">
                     {otp.map((digit, i) => (
                       <input
                         key={i}
@@ -236,7 +236,7 @@ export default function LoginPage({ onLoginSuccess, onOpenDemoModal, onOpenDemoC
                           newOtp[i] = e.target.value;
                           setOtp(newOtp);
                         }}
-                        className="w-11 h-12 text-center text-lg font-black bg-white rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-[#149A84] text-slate-900 shadow-sm"
+                        className="w-8 sm:w-11 h-10 sm:h-12 text-center text-base sm:text-lg font-black bg-white rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-[#149A84] text-slate-900 shadow-sm"
                       />
                     ))}
                   </div>

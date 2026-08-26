@@ -126,21 +126,21 @@ export default function WorkspaceSelectPage({ onInspectDetails, onEnterWorkspace
           </div>
 
           {/* Quick Demo Mode Actions */}
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3 shrink-0">
             <button
               onClick={onOpenDemoCenter}
-              className="px-4 py-2.5 bg-white hover:bg-slate-50 border border-[#ECE6D6] hover:border-[#073B32] text-[#073B32] font-black rounded-2xl text-xs transition shadow-xs flex items-center gap-2"
+              className="flex-1 sm:flex-none px-3.5 sm:px-4 py-2 sm:py-2.5 bg-white hover:bg-slate-50 border border-[#ECE6D6] hover:border-[#073B32] text-[#073B32] font-black rounded-2xl text-xs transition shadow-xs flex items-center justify-center gap-1.5 sm:gap-2"
             >
-              <Sparkles className="w-4 h-4 text-emerald-600" />
-              <span>Explore Demo Story Mode</span>
+              <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-600" />
+              <span>Demo Story</span>
             </button>
 
             <button
               onClick={onOpenDemoModal}
-              className="px-5 py-2.5 bg-[#073B32] hover:bg-[#052923] text-white font-black rounded-2xl text-xs transition shadow-md flex items-center gap-2 border border-emerald-400"
+              className="flex-1 sm:flex-none px-4 sm:px-5 py-2 sm:py-2.5 bg-[#073B32] hover:bg-[#052923] text-white font-black rounded-2xl text-xs transition shadow-md flex items-center justify-center gap-1.5 sm:gap-2 border border-emerald-400"
             >
-              <Play className="w-3.5 h-3.5 fill-current text-emerald-400" />
-              <span>TRY DEMO (JUDGES)</span>
+              <Play className="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-current text-emerald-400" />
+              <span>TRY DEMO</span>
             </button>
           </div>
         </div>
