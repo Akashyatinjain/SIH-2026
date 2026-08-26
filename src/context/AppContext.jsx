@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { 
   initialAnimals, 
   initialCases, 
@@ -14,24 +14,84 @@ import { translations } from '../i18n/translations';
 
 const AppContext = createContext();
 
+const STORAGE_KEY_NAV = 'pashu_suraksha_nav_state';
+const STORAGE_KEY_DATA = 'pashu_suraksha_data_state';
+
+const getInitialNav = () => {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY_NAV);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      return {
+        currentScreen: parsed.currentScreen || 'home',
+        selectedWorkspace: parsed.selectedWorkspace || 'farmer',
+        role: parsed.role || 'farmer',
+        activeTab: parsed.activeTab || 'dashboard',
+        language: parsed.language || 'en',
+        demoStoryStage: typeof parsed.demoStoryStage === 'number' ? parsed.demoStoryStage : 1,
+        isDemoMode: parsed.isDemoMode !== undefined ? parsed.isDemoMode : true
+      };
+    }
+  } catch (err) {
+    console.error("Error loading persisted nav state:", err);
+  }
+  return {
+    currentScreen: 'home',
+    selectedWorkspace: 'farmer',
+    role: 'farmer',
+    activeTab: 'dashboard',
+    language: 'en',
+    demoStoryStage: 1,
+    isDemoMode: true
+  };
+};
+
+const getInitialAnimals = () => {
+  try {
+    const saved = localStorage.getItem(`${STORAGE_KEY_DATA}_animals`);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (Array.isArray(parsed) && parsed.length > 0 && parsed[0].imageUrl && parsed[0].imageUrl.startsWith('/images/animals/')) {
+        return parsed;
+      }
+    }
+  } catch (e) {}
+  return initialAnimals;
+};
+
+const getInitialCases = () => {
+  try {
+    const saved = localStorage.getItem(`${STORAGE_KEY_DATA}_cases`);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed;
+      }
+    }
+  } catch (e) {}
+  return initialCases;
+};
+
 export function AppProvider({ children }) {
+  const initialNav = getInitialNav();
+
   // Screen State: 'home' | 'login' | 'workspaceSelect' | 'workspaceDetails' | 'demoCenter' | 'workspace'
-  const [currentScreen, setCurrentScreen] = useState('home');
+  const [currentScreen, setCurrentScreen] = useState(initialNav.currentScreen);
   
   // Selected Workspace for Preview & Details: 'farmer' | 'fieldWorker' | 'vet' | 'admin' | 'stateAdmin'
-  const [selectedWorkspace, setSelectedWorkspace] = useState('farmer');
+  const [selectedWorkspace, setSelectedWorkspace] = useState(initialNav.selectedWorkspace);
 
   // Authenticated Role: 'farmer' | 'fieldWorker' | 'vet' | 'admin' | 'stateAdmin'
-  const [role, setRole] = useState('farmer'); 
-  const [language, setLanguage] = useState('en'); // 'en' | 'mr' | 'hi'
+  const [role, setRole] = useState(initialNav.role); 
+  const [language, setLanguage] = useState(initialNav.language); // 'en' | 'mr' | 'hi'
   const [isOffline, setIsOffline] = useState(false);
   const [offlineQueue, setOfflineQueue] = useState(initialOfflineQueue);
   const [lastSyncedTime, setLastSyncedTime] = useState('12 min ago');
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState(initialNav.activeTab);
   
   // Demo Mode & Story State (For SIH Judges)
-  const [isDemoMode, setIsDemoMode] = useState(true);
-  const [demoStoryStage, setDemoStoryStage] = useState(1); // 1 to 9
+  const [isDemoMode, setIsDemoMode] = useState(initialNav.isDemoMode);
+  const [demoStoryStage, setDemoStoryStage] = useState(initialNav.demoStoryStage); // 1 to 9
   const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
 
   // Modals & Drawers
@@ -50,13 +110,43 @@ export function AppProvider({ children }) {
   const [isAdvisoryStudioOpen, setIsAdvisoryStudioOpen] = useState(false);
   
   // Data State
-  const [animals, setAnimals] = useState(initialAnimals);
-  const [cases, setCases] = useState(initialCases);
+  const [animals, setAnimals] = useState(getInitialAnimals);
+  const [cases, setCases] = useState(getInitialCases);
   const [hotspots, setHotspots] = useState(geographicHotspots);
   const [labSamples, setLabSamples] = useState(diagnosticLabSamples);
   const [advisoryList, setAdvisoryList] = useState(advisories);
   const [fieldVisits, setFieldVisits] = useState(fieldWorkerSchedule);
   const [stateDistricts, setStateDistricts] = useState(maharashtraDistrictsData);
+
+  // Persist Navigation & Session State to LocalStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY_NAV, JSON.stringify({
+        currentScreen,
+        selectedWorkspace,
+        role,
+        activeTab,
+        language,
+        demoStoryStage,
+        isDemoMode
+      }));
+    } catch (err) {
+      console.error("Error persisting navigation state:", err);
+    }
+  }, [currentScreen, selectedWorkspace, role, activeTab, language, demoStoryStage, isDemoMode]);
+
+  // Persist dynamic user changes
+  useEffect(() => {
+    try {
+      localStorage.setItem(`${STORAGE_KEY_DATA}_animals`, JSON.stringify(animals));
+    } catch (e) {}
+  }, [animals]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(`${STORAGE_KEY_DATA}_cases`, JSON.stringify(cases));
+    } catch (e) {}
+  }, [cases]);
 
   const [notifications, setNotifications] = useState([
     {
