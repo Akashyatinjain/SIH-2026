@@ -115,7 +115,7 @@ export default function WorkspaceSelectPage({ onInspectDetails, onEnterWorkspace
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#D9F1E8] text-[#073B32] border border-[#B3E2D2] rounded-full text-xs font-black uppercase tracking-wider mb-2">
               <ShieldCheck className="w-3.5 h-3.5 text-[#149A84]" />
-              <span>AUTHORIZED WORKSPACES • PASHUSURAKSHA</span>
+              <span>AUTHORIZED WORKSPACES • JIVSANKET</span>
             </div>
             <h1 className="text-3xl sm:text-4xl font-black text-[#0A1020] tracking-tight">
               Choose your workspace

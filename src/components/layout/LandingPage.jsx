@@ -159,7 +159,7 @@ export default function LandingPage({ onAccessPlatform, onReportIssue }) {
             </h1>
 
             <p className="text-base sm:text-lg text-slate-700 leading-relaxed font-normal">
-              PashuSuraksha connects farmers, field workers, veterinarians, laboratories, and government teams to detect animal-health risks before they become outbreaks.
+              JIVSANKET connects farmers, field workers, veterinarians, laboratories, and government teams to detect animal-health risks before they become outbreaks.
             </p>
 
             {/* CTAs */}
@@ -406,7 +406,7 @@ export default function LandingPage({ onAccessPlatform, onReportIssue }) {
               Ganga (Cow) in Khedgaon displays pyrexia (&gt;104°F) and 2cm skin nodules. The farmer is unaware whether neighboring herds are suffering the same symptoms.
             </p>
             <div className="bg-rose-50/70 p-3 rounded-xl border border-rose-100 text-[11px] text-rose-800 font-medium">
-              Without PashuSuraksha: 4-7 days reporting delay.
+              Without JIVSANKET: 4-7 days reporting delay.
             </div>
           </div>
 
@@ -618,7 +618,7 @@ export default function LandingPage({ onAccessPlatform, onReportIssue }) {
               onClick={() => setCurrentScreen('login')}
               className="w-full sm:w-auto px-8 py-4 rounded-xl bg-[#149A84] hover:bg-[#0C7A68] text-white font-extrabold text-sm shadow-xl shadow-teal-950/40 transition-all flex items-center justify-center gap-2"
             >
-              <span>Enter PashuSuraksha</span>
+              <span>Enter JIVSANKET</span>
               <ArrowRight className="w-4 h-4" />
             </button>
 

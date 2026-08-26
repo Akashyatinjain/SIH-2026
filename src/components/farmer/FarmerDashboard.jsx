@@ -77,7 +77,7 @@ export default function FarmerDashboard() {
             {t.namaste || "Namaste"}, {language === 'mr' ? 'रमेश पाटील' : language === 'hi' ? 'रमेश पाटिल' : 'Ramesh Patil'}
           </h1>
           <p className="text-xs text-emerald-200/90 font-medium">
-            PashuSuraksha ID: <span className="font-mono font-bold text-white">MH-FAR-88219</span> • Registered Livestock Owner
+            JIVSANKET ID: <span className="font-mono font-bold text-white">MH-FAR-88219</span> • Registered Livestock Owner
           </p>
         </div>
 

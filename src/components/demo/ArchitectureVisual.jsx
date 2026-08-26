@@ -46,7 +46,7 @@ export default function ArchitectureVisual() {
               Enterprise System Engineering Spec
             </span>
             <h3 className="text-xl sm:text-2xl font-extrabold text-[#073B32] font-display mt-1">
-              PashuSuraksha Technical Architecture &amp; Closed-Loop Surveillance
+              JIVSANKET Technical Architecture &amp; Closed-Loop Surveillance
             </h3>
             <p className="text-xs text-slate-500 font-medium">
               Dual-view engineering specification: Scalable 6-layer platform infrastructure &amp; 8-stage operational journey.

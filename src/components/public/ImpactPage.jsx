@@ -21,7 +21,7 @@ export default function ImpactPage() {
       title: "Earlier Reporting",
       goal: "Reduce delay from symptom onset to official awareness",
       current: "Traditional: 4 to 7 Days",
-      target: "With PashuSuraksha: < 2 Hours",
+      target: "With JIVSANKET: < 2 Hours",
       desc: "Farmers report in under 60 seconds via native mobile UI or regional IVR, bypassing paperwork latency.",
       icon: Clock,
       color: "emerald"
@@ -30,7 +30,7 @@ export default function ImpactPage() {
       title: "Faster Field Response",
       goal: "Prioritize clinical investigations based on automated triage",
       current: "Traditional: 48 to 72 Hours",
-      target: "With PashuSuraksha: < 4 Hours",
+      target: "With JIVSANKET: < 4 Hours",
       desc: "Spatial clustering algorithms auto-flag high-risk zones, routing Pashu Sakhis directly to index cases.",
       icon: TrendingDown,
       color: "teal"
@@ -39,7 +39,7 @@ export default function ImpactPage() {
       title: "Targeted Ring Vaccination",
       goal: "Eliminate coverage gaps and cold-chain losses",
       current: "Traditional: 65–70% Blanket Coverage",
-      target: "With PashuSuraksha: > 90% Ring Coverage",
+      target: "With JIVSANKET: > 90% Ring Coverage",
       desc: "GIS maps dynamically identify vulnerable herds within 5km radius of positive PCR confirmations.",
       icon: Syringe,
       color: "blue"
@@ -48,7 +48,7 @@ export default function ImpactPage() {
       title: "Lower Livestock Mortality",
       goal: "Prevent secondary spread and production loss",
       current: "Traditional: High Case Fatality in Outbreaks",
-      target: "With PashuSuraksha: Up to 60% Reduction in Fatalities",
+      target: "With JIVSANKET: Up to 60% Reduction in Fatalities",
       desc: "Early supportive therapy and bio-containment prevent devastating losses in high-yielding dairy breeds.",
       icon: ShieldCheck,
       color: "purple"
@@ -57,7 +57,7 @@ export default function ImpactPage() {
       title: "Evidence-Based State Planning",
       goal: "Shift from reactive crisis management to predictive logistics",
       current: "Traditional: Post-facto Annual Reports",
-      target: "With PashuSuraksha: Real-Time Statewide Telemetry",
+      target: "With JIVSANKET: Real-Time Statewide Telemetry",
       desc: "Animal Husbandry Directorate reallocates vaccine buffers, diagnostic kits, and Mobile Vet Units proactively.",
       icon: BarChart3,
       color: "amber"

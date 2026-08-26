@@ -56,7 +56,7 @@ export default function DemoCenter({ onExit, onOpenRoleDashboard }) {
       role: "farmer",
       persona: "Ramesh Patil (Farmer)",
       location: "Khedgaon • Baramati • Pune",
-      narrative: "Ramesh notices sudden high fever (104.8°F) and 2-5cm circumscribed skin lumps on his prized Gir cow, Gauri. He opens PashuSuraksha and completes the 5-step guided reporting flow in Marathi.",
+      narrative: "Ramesh notices sudden high fever (104.8°F) and 2-5cm circumscribed skin lumps on his prized Gir cow, Gauri. He opens JIVSANKET and completes the 5-step guided reporting flow in Marathi.",
       signal: "Report Received via Mobile App",
       cta: "Submit & Trigger Assessment →",
       actionRole: "farmer",
@@ -66,9 +66,9 @@ export default function DemoCenter({ onExit, onOpenRoleDashboard }) {
     {
       step: 2,
       tag: "02 — AI PRELIMINARY RISK ASSESSMENT",
-      title: "PashuSuraksha Intelligence calculates 86 / 100 Risk",
+      title: "JIVSANKET Intelligence calculates 86 / 100 Risk",
       role: "vet",
-      persona: "PashuSuraksha Intelligence Engine",
+      persona: "JIVSANKET Intelligence Engine",
       location: "Algorithmic Surveillance Node",
       narrative: "The system cross-references Ramesh's report with recent local cases in Malegaon Budruk and sugarcane harvest fly density. It flags an 86/100 High Risk probability for Capripoxvirus (Lumpy Skin Disease).",
       signal: "Preliminary Risk Score: 86 / 100 (HIGH)",
@@ -205,7 +205,7 @@ export default function DemoCenter({ onExit, onOpenRoleDashboard }) {
               <span>SIH 2026 EVALUATOR DEMO CENTER</span>
             </div>
             <h1 className="text-3xl sm:text-4xl font-black text-[#0A1020] tracking-tight">
-              PashuSuraksha Demo Center
+              JIVSANKET Demo Center
             </h1>
             <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-2xl">
               Explore how one animal-health event (Gauri / Cow / Khedgaon) moves through the entire surveillance and response ecosystem.

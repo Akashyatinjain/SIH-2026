@@ -143,13 +143,13 @@ export default function CaseDetailDrawer({ caseData, onClose }) {
           {/* COLUMN 2: CLINICAL OBSERVATIONS & DECISION SUPPORT (Center - 5 cols) */}
           {/* ========================================================= */}
           <div className="lg:col-span-5 space-y-3">
-            {/* Section 25: PASHUSURAKSHA DECISION SUPPORT PANEL */}
+            {/* Section 25: JIVSANKET DECISION SUPPORT PANEL */}
             <div className="bg-gradient-to-br from-[#073B32] via-[#0A1020] to-[#050811] text-white p-4 rounded-2xl border border-slate-800 shadow-md space-y-3">
               <div className="flex items-center justify-between border-b border-slate-800 pb-2">
                 <div className="flex items-center gap-2">
                   <Sparkles className="w-4 h-4 text-emerald-400" />
                   <h3 className="font-black text-xs uppercase tracking-wider text-slate-100">
-                    PASHUSURAKSHA DECISION SUPPORT
+                    JIVSANKET DECISION SUPPORT
                   </h3>
                 </div>
                 <span className="text-[10px] font-mono text-red-400 font-bold bg-red-950 px-2 py-0.5 rounded border border-red-800">

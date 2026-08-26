@@ -30,7 +30,7 @@ export default function WorkspaceDetailsPage({ onBack, onEnterDashboard, onOpenD
     switch (selectedWorkspace) {
       case 'farmer':
         return {
-          title: "PashuSuraksha Farmer Workspace",
+          title: "JIVSANKET Farmer Workspace",
           user: "Ramesh Patil",
           role: "Livestock Owner",
           location: "Khedgaon • Baramati • Pune",

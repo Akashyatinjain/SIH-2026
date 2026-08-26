@@ -92,7 +92,7 @@ export default function TryDemoModal({ onClose, onOpenDemoCenter }) {
           </div>
           <h2 className="text-2xl font-black text-[#0A1020]">Select a Preconfigured Demo Account</h2>
           <p className="text-xs text-slate-600">
-            Explore PashuSuraksha using realistic live data without requiring SMS/OTP authentication.
+            Explore JIVSANKET using realistic live data without requiring SMS/OTP authentication.
           </p>
         </div>
 

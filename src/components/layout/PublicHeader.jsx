@@ -65,7 +65,7 @@ export default function PublicHeader({ activeNav = "home", onNavigate }) {
           </div>
           <div className="min-w-0">
             <div className="flex items-center gap-1.5 sm:gap-2">
-              <span className="font-extrabold text-base sm:text-xl tracking-tight text-white font-display truncate">PASHUSURAKSHA</span>
+              <span className="font-extrabold text-base sm:text-xl tracking-tight text-white font-display truncate">JIVSANKET</span>
               <span className="text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider bg-teal-500/10 text-teal-400 border border-teal-500/30 px-1 sm:px-1.5 py-0.5 rounded shrink-0">MH</span>
             </div>
             <p className="text-[10px] sm:text-[11px] text-slate-400 tracking-tight font-medium hidden md:block truncate">

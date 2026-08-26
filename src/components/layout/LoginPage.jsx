@@ -67,7 +67,7 @@ export default function LoginPage({ onLoginSuccess, onOpenDemoModal, onOpenDemoC
                 </div>
               </div>
               <div>
-                <h2 className="font-extrabold text-lg tracking-tight text-white font-display">PASHUSURAKSHA</h2>
+                <h2 className="font-extrabold text-lg tracking-tight text-white font-display">JIVSANKET</h2>
                 <p className="text-[11px] text-teal-300 font-medium">Government of Maharashtra</p>
               </div>
             </div>

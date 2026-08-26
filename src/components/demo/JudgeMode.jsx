@@ -234,7 +234,7 @@ export default function JudgeMode() {
               <span>SIH 2026 Judge & Evaluator Center</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-black font-display tracking-tight text-white">
-              PashuSuraksha Evaluation Console
+              JIVSANKET Evaluation Console
             </h1>
             <p className="text-xs text-slate-300">
               Smart India Hackathon 2026 • Problem Statement 26128 • Government of Maharashtra

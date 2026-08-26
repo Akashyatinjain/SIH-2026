@@ -30,7 +30,7 @@ export default function HowItWorksPage() {
       icon: FileText,
       color: "emerald",
       details: [
-        "Farmer opens PashuSuraksha App or dials toll-free 1800-180-1551 IVR in Marathi/Hindi.",
+        "Farmer opens JIVSANKET App or dials toll-free 1800-180-1551 IVR in Marathi/Hindi.",
         "Selects tagged animal (RFID: MH-PUN-0241 Ganga) and checks visual symptoms (High fever, 2-5cm skin nodules, lactation drop).",
         "Records 15-second voice note or attaches photo of skin lesions.",
         "System creates immutable case ledger PS-2026-004281."
@@ -150,7 +150,7 @@ export default function HowItWorksPage() {
             From First Symptom to Coordinated Response
           </h1>
           <p className="text-base text-slate-300 max-w-2xl mx-auto leading-relaxed">
-            How PashuSuraksha unites 5 key stakeholders through an 8-stage early warning and containment cycle.
+            How JIVSANKET unites 5 key stakeholders through an 8-stage early warning and containment cycle.
           </p>
         </div>
       </section>

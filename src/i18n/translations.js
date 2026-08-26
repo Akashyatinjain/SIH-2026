@@ -1,7 +1,7 @@
 export const translations = {
   en: {
     // App Header & Brand
-    appName: "PashuSuraksha",
+    appName: "JIVSANKET",
     tagline: "Detect Early. Respond Faster. Protect Every Herd.",
     secondaryPositioning: "From first symptom to coordinated response.",
     officialDescriptor: "Livestock Health Intelligence & Early Warning Network",

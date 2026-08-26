@@ -27,7 +27,7 @@ export default function VetTriageView() {
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/10 rounded-full text-xs text-emerald-200 border border-white/10 mb-2">
             <Sparkles className="w-4 h-4 text-emerald-400" />
-            <span>PashuSuraksha Intelligence • Preliminary Risk Engine</span>
+            <span>JIVSANKET Intelligence • Preliminary Risk Engine</span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-black">AI Clinical Decision Support & Triage</h2>
           <p className="text-xs text-emerald-200 mt-0.5">
@@ -87,13 +87,13 @@ export default function VetTriageView() {
                 <RiskBadge level={selectedTriageCase.riskLevel} size="md" />
               </div>
 
-              {/* PashuSuraksha Decision Support Panel Box */}
+              {/* JIVSANKET Decision Support Panel Box */}
               <div className="bg-gradient-to-br from-[#073B32] via-[#0A1020] to-[#050811] text-white p-5 rounded-2xl border border-slate-800 space-y-4 shadow-md">
                 <div className="flex items-center justify-between border-b border-slate-800 pb-2">
                   <div className="flex items-center gap-2">
                     <Sparkles className="w-4 h-4 text-emerald-400" />
                     <span className="font-black text-xs uppercase tracking-wider text-slate-200">
-                      PashuSuraksha Intelligence Analysis
+                      JIVSANKET Intelligence Analysis
                     </span>
                   </div>
                   <span className="text-xs font-mono font-bold text-red-400 bg-red-950 px-2 py-0.5 rounded border border-red-800">

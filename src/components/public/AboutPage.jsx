@@ -38,7 +38,7 @@ export default function AboutPage() {
             Livestock Health Intelligence & Early Disease Surveillance
           </h1>
           <p className="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto leading-relaxed">
-            PashuSuraksha is a state digital infrastructure engineered for the Department of Animal Husbandry, Government of Maharashtra, connecting 36 districts from village symptom to state response.
+            JIVSANKET is a state digital infrastructure engineered for the Department of Animal Husbandry, Government of Maharashtra, connecting 36 districts from village symptom to state response.
           </p>
         </div>
       </section>
