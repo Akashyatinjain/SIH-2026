@@ -48,7 +48,7 @@ export default function DemoBar() {
         </button>
 
         <span className="text-slate-500 font-mono text-[10px] hidden md:inline">
-          Case: <strong className="text-slate-300">#PS-2026-004281 (Ganga / Cow)</strong>
+          Case: <strong className="text-slate-300">#PS-2026-004281 (Gauri / Cow)</strong>
         </span>
       </div>
 
@@ -124,7 +124,7 @@ export default function DemoBar() {
           <div className="space-y-1.5 text-xs">
             <div className="p-2.5 bg-slate-900 rounded-xl border border-slate-800">
               <span className="text-[10px] text-slate-400 font-mono block">Persistent Demo Case</span>
-              <strong className="text-white">#PS-2026-004281 (Ganga / Cow)</strong>
+              <strong className="text-white">#PS-2026-004281 (Gauri / Cow)</strong>
               <p className="text-[10px] text-emerald-300">Owner: Ramesh Patil (Khedgaon, Baramati)</p>
             </div>
 

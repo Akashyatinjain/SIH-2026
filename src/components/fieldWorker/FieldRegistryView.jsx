@@ -199,7 +199,7 @@ export default function FieldRegistryView() {
                   <label className="font-bold text-slate-700 block mb-1">Animal Identifier</label>
                   <input
                     type="text"
-                    placeholder="e.g. Ganga, Laxmi"
+                    placeholder="e.g. Gauri, Laxmi, Kalyani"
                     value={animalName}
                     onChange={e => setAnimalName(e.target.value)}
                     className="w-full p-2.5 bg-[#F6F3EA] border border-[#ECE6D6] rounded-xl font-bold"

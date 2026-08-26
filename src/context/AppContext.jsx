@@ -139,7 +139,7 @@ export function AppProvider({ children }) {
       riskScore: 86,
       riskLevel: "HIGH",
       preliminaryAssessment: "High probability Capripoxvirus (Lumpy Skin Disease) nodular pyrexia with local spatial clustering.",
-      imageUrl: reportData.imageUrl || "https://images.unsplash.com/photo-1546445317-29f4545e9d53?auto=format&fit=crop&q=80&w=800",
+      imageUrl: reportData.imageUrl || "/images/animals/gir_cow_gauri.jpg",
       assignedVet: "Dr. Anand Deshmukh",
       lat: 18.1524,
       lng: 74.5768
@@ -166,9 +166,13 @@ export function AppProvider({ children }) {
       location: animalData.location || "Khedgaon, Baramati, Pune",
       rfidTag: animalData.rfidTag || `890401827${Math.floor(10000 + Math.random() * 90000)}`,
       milkYield: animalData.milkYield || "11 Liters/day",
-      imageUrl: animalData.species.includes("Buffalo") 
-        ? "https://images.unsplash.com/photo-1596733430284-f7437764b1a9?auto=format&fit=crop&q=80&w=800"
-        : "https://images.unsplash.com/photo-1546445317-29f4545e9d53?auto=format&fit=crop&q=80&w=800"
+      imageUrl: animalData.imageUrl || (animalData.species.includes("Buffalo") 
+        ? "/images/animals/murrah_buffalo_kalyani.jpg"
+        : animalData.species.includes("Goat")
+        ? "/images/animals/osmanabadi_goat_sultan.jpg"
+        : animalData.species.includes("बैल") || animalData.species.includes("Bull")
+        ? "/images/animals/khillari_bull_nandi.jpg"
+        : "/images/animals/gir_cow_gauri.jpg")
     };
 
     setAnimals(prev => [newAnimal, ...prev]);

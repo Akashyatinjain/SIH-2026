@@ -36,7 +36,7 @@ export default function FieldWorkerDashboard() {
     farmer: "Ramesh Patil",
     village: "Khedgaon",
     distance: "1.2 km",
-    animal: "Gir Cow (Ganga)",
+    animal: "Gir Cow (Gauri)",
     purpose: "Clinical Verification (Fever + Skin Nodules)",
     urgency: "HIGH",
     time: "09:30 AM",

@@ -3,12 +3,17 @@ import { X, QrCode, ShieldCheck, Syringe, FileText, Activity, Calendar, Download
 import { useApp } from '../../context/AppContext';
 import RiskBadge from './RiskBadge';
 
-export default function AnimalProfileModal() {
+export default function AnimalProfileModal({ animal: propAnimal, onClose: propOnClose } = {}) {
   const { selectedAnimalForProfile, setSelectedAnimalForProfile, t } = useApp();
 
-  if (!selectedAnimalForProfile) return null;
+  const animal = propAnimal || selectedAnimalForProfile;
 
-  const animal = selectedAnimalForProfile;
+  if (!animal) return null;
+
+  const handleClose = () => {
+    if (propOnClose) propOnClose();
+    setSelectedAnimalForProfile(null);
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
@@ -30,7 +35,7 @@ export default function AnimalProfileModal() {
             </div>
           </div>
           <button 
-            onClick={() => setSelectedAnimalForProfile(null)}
+            onClick={handleClose}
             className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition"
           >
             <X className="w-5 h-5" />

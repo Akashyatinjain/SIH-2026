@@ -306,7 +306,7 @@ export default function WorkspaceSelectPage({ onInspectDetails, onEnterWorkspace
                         <div className="bg-amber-400 h-full" style={{ width: '8.3%' }} />
                         <div className="bg-red-400 h-full" style={{ width: '4.2%' }} />
                       </div>
-                      <p className="text-[10px] text-emerald-200 text-right">87.5% Healthy • 1 Urgent Case (Ganga)</p>
+                      <p className="text-[10px] text-emerald-200 text-right">87.5% Healthy • 1 Urgent Case (Gauri)</p>
                     </div>
                   </div>
                 </div>

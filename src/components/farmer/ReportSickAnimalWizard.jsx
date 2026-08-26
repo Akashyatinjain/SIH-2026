@@ -137,8 +137,8 @@ export default function ReportSickAnimalWizard({ onClose }) {
                 <p className="text-xs text-slate-500">Select from your registered herd passport list</p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {animals.slice(0, 4).map((animal) => (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-72 overflow-y-auto pr-1">
+                {animals.map((animal) => (
                   <div
                     key={animal.id}
                     onClick={() => setSelectedAnimal(animal)}

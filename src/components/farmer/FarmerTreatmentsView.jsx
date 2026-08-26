@@ -19,7 +19,7 @@ export default function FarmerTreatmentsView() {
   const treatments = [
     {
       id: "RX-2026-091",
-      animal: "Ganga (Gir Cow - MH-PUN-0241)",
+      animal: "Gauri (Gir Cow - MH-PUN-0241)",
       condition: "Suspected Lumpy Skin Disease (Nodular Pyrexia)",
       prescribedBy: "Dr. Anand Deshmukh",
       hospital: "Baramati Taluka Hospital",
@@ -34,7 +34,7 @@ export default function FarmerTreatmentsView() {
     },
     {
       id: "RX-2026-074",
-      animal: "Kaveri (Murrah Buffalo - MH-PUN-0109)",
+      animal: "Kalyani (Murrah Buffalo - MH-PUN-0109)",
       condition: "Sub-clinical Mastitis (Left Hind Quarter)",
       prescribedBy: "Dr. Anand Deshmukh",
       hospital: "Baramati Taluka Hospital",

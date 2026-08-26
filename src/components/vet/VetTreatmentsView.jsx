@@ -16,7 +16,7 @@ export default function VetTreatmentsView() {
   const { addNotification } = useApp();
   const [showRxModal, setShowRxModal] = useState(false);
 
-  const [animalTag, setAnimalTag] = useState('MH-PUN-0241 (Ganga - Gir Cow)');
+  const [animalTag, setAnimalTag] = useState('MH-PUN-0241 (Gauri - Gir Cow)');
   const [farmerName, setFarmerName] = useState('Ramesh Patil (+91 98224 51092)');
   const [condition, setCondition] = useState('Lumpy Skin Disease (Nodular Pyrexia Protocol)');
   const [rxText, setRxText] = useState('Flunixin Meglumine 15ml IM OD x 3d + Enrofloxacin 10% 20ml IM OD x 5d + TopiCure spray BD.');
@@ -25,7 +25,7 @@ export default function VetTreatmentsView() {
     {
       id: "RX-2026-091",
       caseId: "PS-2026-004281",
-      animal: "MH-PUN-0241 (Ganga - Ramesh Patil)",
+      animal: "MH-PUN-0241 (Gauri - Ramesh Patil)",
       condition: "Suspected Lumpy Skin Disease (Capripoxvirus)",
       date: "24 Feb 2026",
       regimen: "Flunixin Meglumine (anti-inflammatory) + Enrofloxacin 10% + TopiCure spray on skin lumps. Strict barn isolation 21 days.",

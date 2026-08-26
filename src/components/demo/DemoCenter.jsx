@@ -52,11 +52,11 @@ export default function DemoCenter({ onExit, onOpenRoleDashboard }) {
     {
       step: 1,
       tag: "01 — FARMER REPORT",
-      title: "Ramesh reports Ganga with fever & skin nodules",
+      title: "Ramesh reports Gauri with fever & skin nodules",
       role: "farmer",
       persona: "Ramesh Patil (Farmer)",
       location: "Khedgaon • Baramati • Pune",
-      narrative: "Ramesh notices sudden high fever (104.8°F) and 2-5cm circumscribed skin lumps on his prized Gir cow, Ganga. He opens PashuSuraksha and completes the 5-step guided reporting flow in Marathi.",
+      narrative: "Ramesh notices sudden high fever (104.8°F) and 2-5cm circumscribed skin lumps on his prized Gir cow, Gauri. He opens PashuSuraksha and completes the 5-step guided reporting flow in Marathi.",
       signal: "Report Received via Mobile App",
       cta: "Submit & Trigger Assessment →",
       actionRole: "farmer",
@@ -208,7 +208,7 @@ export default function DemoCenter({ onExit, onOpenRoleDashboard }) {
               PashuSuraksha Demo Center
             </h1>
             <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-2xl">
-              Explore how one animal-health event (Ganga / Cow / Khedgaon) moves through the entire surveillance and response ecosystem.
+              Explore how one animal-health event (Gauri / Cow / Khedgaon) moves through the entire surveillance and response ecosystem.
             </p>
           </div>
 
@@ -245,7 +245,7 @@ export default function DemoCenter({ onExit, onOpenRoleDashboard }) {
                 </span>
               </div>
               <h3 className="font-black text-sm text-[#0A1020]">
-                {activeDemoCase.species} — Ganga (Owner: {activeDemoCase.farmerName}, {activeDemoCase.village}, {activeDemoCase.block})
+                {activeDemoCase.species} — Gauri (Owner: {activeDemoCase.farmerName}, {activeDemoCase.village}, {activeDemoCase.block})
               </h3>
             </div>
           </div>

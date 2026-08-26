@@ -24,7 +24,7 @@ export default function FieldSamplesView() {
 
   // Form State
   const [barcode, setBarcode] = useState(`LAB-PUN-${Math.floor(9822 + samples.length)}`);
-  const [animalTag, setAnimalTag] = useState('MH-PUN-0241 (Ganga)');
+  const [animalTag, setAnimalTag] = useState('MH-PUN-0241 (Gauri)');
   const [sampleType, setSampleType] = useState('Nasal Swab & Serum');
   const [testRequested, setTestRequested] = useState('Capripoxvirus (LSD) Real-time PCR');
   const [targetLab, setTargetLab] = useState('Regional Animal Health Diagnostic Lab, Aundh, Pune');

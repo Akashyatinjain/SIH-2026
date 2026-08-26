@@ -48,7 +48,7 @@ export default function WorkspaceDetailsPage({ onBack, onEnterDashboard, onOpenD
           ],
           signals: [
             { label: "Monitored Animals", val: "24 Cattle", note: "21 Healthy" },
-            { label: "Urgent Attention", val: "1 Cow (Ganga)", note: "Fever & Nodules" },
+            { label: "Urgent Attention", val: "1 Cow (Gauri)", note: "Fever & Nodules" },
             { label: "Next Vaccine Due", val: "FMD Booster", note: "In 12 Days" },
             { label: "Local Warnings", val: "1 Active Cluster", note: "Malegaon / 8km" }
           ],

@@ -35,7 +35,7 @@ export default function VetDashboard() {
   });
 
   const urgentCases = cases.filter(c => c.riskLevel === 'CRITICAL' || c.riskLevel === 'HIGH');
-  const primarySignalCase = cases[0]; // #PS-2026-004281 (Ganga / Ramesh Patil)
+  const primarySignalCase = cases[0]; // #PS-2026-004281 (Gauri / Ramesh Patil)
 
   return (
     <div className="space-y-6 text-[#0A1020]">
