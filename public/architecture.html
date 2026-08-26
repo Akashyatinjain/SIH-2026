@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PASHUSURAKSHA — Enterprise System Architecture &amp; Surveillance Flow (SIH 2026)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --border: #E2E8F0;
+      --border-dark: #CBD5E1;
+      --text-main: #0F172A;
+      --text-muted: #64748B;
+      --green: #047857;
+      --green-light: #ECFDF5;
+      --green-border: #A7F3D0;
+      --blue: #2563EB;
+      --blue-light: #EFF6FF;
+      --blue-border: #BFDBFE;
+      --amber: #D97706;
+      --amber-light: #FFFBEB;
+      --amber-border: #FDE68A;
+      --purple: #7C3AED;
+      --purple-light: #FAF5FF;
+      --purple-border: #E9D5FF;
+      --pink: #BE185D;
+      --pink-light: #FCE7F3;
+      --red: #DC2626;
+      --red-light: #FEF2F2;
+      --red-border: #FECACA;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 16px;
+    }
+    .container {
+      max-width: 1600px;
+      margin: 0 auto;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    
+    /* Header Bar */
+    .header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--card-bg);
+      padding: 14px 22px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 12px;
+      box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04);
+    }
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: #047857;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      color: white;
+      flex-shrink: 0;
+    }
+    .title {
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: -0.2px;
+      color: var(--text-main);
+    }
+    .subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+      font-weight: 500;
+    }
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.15s ease-in-out;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid transparent;
+    }
+    .btn-primary {
+      background: #047857;
+      color: #FFFFFF;
+      box-shadow: 0 2px 4px rgba(4, 120, 87, 0.2);
+    }
+    .btn-primary:hover {
+      background: #065F46;
+    }
+    .btn-secondary {
+      background: #FFFFFF;
+      color: #334155;
+      border-color: var(--border-dark);
+    }
+    .btn-secondary:hover {
+      background: #F1F5F9;
+      color: #0F172A;
+    }
+    .nav-tabs {
+      display: flex;
+      background: #E2E8F0;
+      border-radius: 10px;
+      padding: 3px;
+      gap: 3px;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      border: none;
+      background: transparent;
+      padding: 7px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      color: #475569;
+      transition: all 0.15s;
+    }
+    .tab-btn.active {
+      background: white;
+      color: #0F172A;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    /* Master Case Dossier Strip */
+    .dossier-bar {
+      background: #073B32;
+      color: white;
+      padding: 10px 18px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 12px;
+    }
+    .dossier-tag {
+      background: #047857;
+      color: #A7F3D0;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+    }
+
+    /* Tier Card Elements */
+    .tier-section {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(15, 23, 42, 0.03);
+    }
+    .tier-header {
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .tier-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tier-pill {
+      font-size: 10px;
+      font-weight: 900;
+      padding: 3px 8px;
+      border-radius: 5px;
+      color: white;
+      letter-spacing: 0.4px;
+    }
+    .tier-summary {
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .tier-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .tier-body {
+      padding: 14px;
+    }
+
+    /* Grid Layouts */
+    .grid-7 { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; }
+    .grid-6 { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+    .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+
+    @media (max-width: 1440px) {
+      .grid-7 { grid-template-columns: repeat(4, 1fr); }
+      .grid-6 { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 1280px) {
+      .grid-7, .grid-6, .grid-5 { grid-template-columns: repeat(3, 1fr); }
+      .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 1024px) {
+      .grid-7, .grid-6, .grid-5 { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .grid-7, .grid-6, .grid-5, .grid-4, .grid-2 { grid-template-columns: 1fr; }
+    }
+
+    .node-card {
+      background: #F8FAFC;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 0;
+      overflow: hidden;
+    }
+    .node-title {
+      font-size: 11.5px;
+      font-weight: 800;
+      color: var(--text-main);
+      word-break: break-word;
+      overflow-wrap: break-word;
+    }
+    .node-sub {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-weight: 600;
+      word-break: break-word;
+      overflow-wrap: break-word;
+    }
+    .node-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      margin-top: 3px;
+    }
+    .node-list li {
+      font-size: 10px;
+      color: #334155;
+      line-height: 1.4;
+      word-break: break-word;
+      overflow-wrap: break-word;
+    }
+    .node-proto {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8.5px;
+      font-weight: 700;
+      color: #64748B;
+      margin-top: 4px;
+      padding-top: 4px;
+      border-top: 1px dashed #E2E8F0;
+      word-break: break-all;
+      overflow-wrap: break-word;
+    }
+
+    .connector-line {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3px 0;
+      color: #94A3B8;
+      font-size: 10px;
+      font-weight: 800;
+      gap: 8px;
+      letter-spacing: 0.5px;
+    }
+    .connector-line::before, .connector-line::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #E2E8F0;
+    }
+
+    /* Step Card for Diagram 2 */
+    .step-card {
+      background: #FFFFFF;
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .step-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .step-badge {
+      font-size: 10px;
+      font-weight: 900;
+      padding: 3px 8px;
+      border-radius: 5px;
+      color: white;
+    }
+    .step-title {
+      font-size: 12px;
+      font-weight: 800;
+      color: #0F172A;
+    }
+    .step-box {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 10.5px;
+      line-height: 1.4;
+    }
+
+    /* Deep Dive Tables */
+    .rbac-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11.5px;
+      text-align: left;
+    }
+    .rbac-table th, .rbac-table td {
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+    }
+    .rbac-table th {
+      background: #F1F5F9;
+      font-weight: 800;
+      color: #0F172A;
+    }
+    .rbac-table tr:nth-child(even) {
+      background: #F8FAFC;
+    }
+
+    /* Flow Sequence Container */
+    .flow-sequence {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .flow-step {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 11.5px;
+    }
+    .flow-num {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 900;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    /* Raw SVG Container */
+    .svg-container {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      overflow: auto;
+    }
+    .svg-container img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    
+    <!-- Top Header Bar -->
+    <div class="header-bar">
+      <div class="brand-section">
+        <div class="brand-logo">🛡️</div>
+        <div>
+          <h1 class="title">PASHUSURAKSHA — ARCHITECTURE &amp; SURVEILLANCE STUDIO</h1>
+          <p class="subtitle">Smart India Hackathon 2026 (Problem Statement 26128) • Dual Technical Diagrams &amp; Closed-Loop Journey</p>
+        </div>
+      </div>
+
+      <div class="controls">
+        <div class="nav-tabs">
+          <button class="tab-btn active" onclick="switchView('diagram1')">🏗️ Diagram 1: System Architecture</button>
+          <button class="tab-btn" onclick="switchView('diagram2')">🔄 Diagram 2: Surveillance Closed Loop</button>
+          <button class="tab-btn" onclick="switchView('deepdives')">🔬 Technical Deep-Dives</button>
+          <button class="tab-btn" onclick="switchView('svg')">📐 Raw Vector SVGs</button>
+        </div>
+        <a href="/" class="btn btn-secondary">← Back to App</a>
+      </div>
+    </div>
+
+    <!-- Master Case Context Banner -->
+    <div class="dossier-bar">
+      <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+        <span class="dossier-tag">MASTER CASE TRACE</span>
+        <strong>Case #PS-2026-004281</strong>
+        <span>• Animal: Ganga (Gir Cow, Tag: MH-PUN-0241)</span>
+        <span>• Farmer: Ramesh Patil (Baramati, Pune)</span>
+      </div>
+      <div style="color: #A7F3D0; font-weight: 700;">
+        Vitals: Temp 104.8°F | Skin Nodules | Milk Drop -60% ➔ Resolution: &lt; 2 Hours
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- VIEW 1: DIAGRAM 1 (6-LAYER TECHNICAL SYSTEM ARCHITECTURE) -->
+    <!-- ========================================================================= -->
+    <div id="viewDiagram1" style="display: flex; flex-direction: column; gap: 10px;">
+      
+      <div style="display: flex; justify-content: space-between; align-items: center; background: #FFFFFF; padding: 10px 16px; border-radius: 10px; border: 1px solid var(--border);">
+        <div>
+          <strong style="color: #073B32; font-size: 13px;">DIAGRAM 1: TECHNICAL SYSTEM ARCHITECTURE</strong>
+          <span style="color: #64748B; font-size: 11.5px; margin-left: 8px;">Answers: <em>"How is the system built?"</em> (6 Platform Layers &amp; Central Data Infrastructure)</span>
+        </div>
+        <a href="/system_architecture_diagram.svg" download="pashusuraksha_system_architecture.svg" class="btn btn-primary" style="padding: 5px 10px; font-size: 11px;">⬇ Download System Architecture SVG</a>
+      </div>
+
+      <!-- LAYER 1: DATA SOURCES & MULTI-CHANNEL CLIENTS -->
+      <div class="tier-section">
+        <div class="tier-header" style="background: var(--green-light);">
+          <div class="tier-badge">
+            <span class="tier-pill" style="background: #047857;">LAYER 1</span>
+            <span class="tier-summary" style="color: #065F46;">DATA SOURCES &amp; CLIENT INGESTION</span>
+          </div>
+          <span class="tier-meta">Farmer PWA • 1800 IVR • Field Sentinel • Vet Console • Lab LIMS • Weather • Command HQ</span>
+        </div>
+        <div class="tier-body">
+          <div class="grid-7">
+            <div class="node-card">
+              <div class="node-title">🌾 Farmer PWA</div>
+              <div class="node-sub">React 18 / IndexedDB</div>
+              <ul class="node-list">
+                <li>• 60s Guided Wizard</li>
+                <li>• 24-Herd RFID Passport</li>
+                <li>• GPS &amp; Lesion Photo</li>
+              </ul>
+              <div class="node-proto">HTTPS / ServiceWorker</div>
+            </div>
+
+            <div class="node-card">
+              <div class="node-title" style="color: #7C3AED;">📞 Voice IVR</div>
+              <div class="node-sub">1800-180-1551 (Zero Net)</div>
+              <ul class="node-list">
+                <li>• Marathi/Hindi Audio</li>
+                <li>• Automated Speech-to-Text</li>
+                <li>• Village location resolve</li>
+              </ul>
+              <div class="node-proto">SIP / Twilio Webhooks</div>
+            </div>
+
+            <div class="node-card" style="background: #F0FDF4; border-color: #86EFAC;">
+              <div class="node-title" style="color: #059669;">🛵 Field Devices</div>
+              <div class="node-sub">Pashu Sakhi App</div>
+              <ul class="node-list">
+                <li>• 134.2kHz RFID Wand</li>
+                <li>• Barcode Swab Scanner</li>
+                <li>• Sudden Mortality Log</li>
+              </ul>
+              <div class="node-proto" style="color: #D97706; font-weight: 800;">Offline-First CRDT</div>
+            </div>
+
+            <div class="node-card">
+              <div class="node-title" style="color: #2563EB;">👨‍⚕️ Vet Console</div>
+              <div class="node-sub">Dr. Anand Portal</div>
+              <ul class="node-list">
+                <li>• Case Dossier &amp; Vitals</li>
+                <li>• Digital e-Prescription</li>
+                <li>• Mandatory Signoff</li>
+              </ul>
+              <div class="node-proto">JWT Auth Session</div>
+            </div>
+
+            <div class="node-card" style="background: #FAF5FF; border-color: #E9D5FF;">
+              <div class="node-title" style="color: #7C3AED;">🧪 Diagnostic Labs</div>
+              <div class="node-sub">Aundh LIMS Pune</div>
+              <ul class="node-list">
+                <li>• Barcode #PS-SMP-0198</li>
+                <li>• Cold-Chain IoT (4.2°C)</li>
+                <li>• RT-PCR Assay Result</li>
+              </ul>
+              <div class="node-proto">BSL-2/3 Lab Ingress</div>
+            </div>
+
+            <div class="node-card">
+              <div class="node-title" style="color: #0284C7;">🌦️ Environmental</div>
+              <div class="node-sub">IMD Open-Meteo</div>
+              <ul class="node-list">
+                <li>• Humidity (78%) &amp; Rain</li>
+                <li>• Temperature &amp; Season</li>
+                <li>• Vector Risk Context</li>
+              </ul>
+              <div class="node-proto">Context Prioritization</div>
+            </div>
+
+            <div class="node-card">
+              <div class="node-title" style="color: #BE185D;">🏛️ Command HQ</div>
+              <div class="node-sub">Pune &amp; State Directorate</div>
+              <ul class="node-list">
+                <li>• Leaflet.js GIS Radar</li>
+                <li>• 36-District Velocity</li>
+                <li>• Buffer Allocations</li>
+              </ul>
+              <div class="node-proto">WSS Telemetry Stream</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="connector-line">▼ HTTPS / WSS / SIP / OFFLINE CRDT BATCHES ▼</div>
+
+      <!-- LAYER 2: ACCESS, SECURITY & INGESTION -->
+      <div class="tier-section">
+        <div class="tier-header" style="background: var(--blue-light);">
+          <div class="tier-badge">
+            <span class="tier-pill" style="background: #0284C7;">LAYER 2</span>
+            <span class="tier-summary" style="color: #0369A1;">ACCESS, SECURITY &amp; INGESTION LAYER</span>
+          </div>
+          <span class="tier-meta">API Gateway • Identity &amp; RBAC Matrix • Offline Sync Manager • IVR Telephony Pipeline</span>
+        </div>
+        <div class="tier-body">
+          <div class="grid-4">
+            <div class="node-card">
+              <div class="node-title" style="color: #0284C7;">1. API Gateway &amp; Reverse Proxy</div>
+              <div class="node-sub">Nginx / Cloudflare Edge</div>
+              <ul class="node-list">
+                <li>• TLS 1.3 Termination &amp; DDoS Rate Limiting</li>
+                <li>• Strict Payload Validation &amp; Ingress Sanitization</li>
+              </ul>
+            </div>
+
+            <div class="node-card">
+              <div class="node-title" style="color: #0284C7;">2. Identity &amp; Access Layer (RBAC)</div>
+              <div class="node-sub">OTP &amp; JWT Token Enforcer</div>
+              <ul class="node-list">
+                <li>• 5-Role Access Isolation (Farmer, Field, Vet, District, State)</li>
+                <li>• Session Guard &amp; Immutable Audit Trail Logging</li>
+              </ul>
+            </div>
+
+            <div class="node-card" style="background: #F0FDF4; border-color: #86EFAC;">
+              <div class="node-title" style="color: #15803D;">3. Offline-First Sync Manager</div>
+              <div class="node-sub">Local IndexedDB ➔ Queue ➔ API</div>
+              <ul class="node-list">
+                <li>• Conflict-Free Replicated Data Type (CRDT)</li>
+                <li>• Timestamp Reconciliation &amp; Zero Ingestion Loss</li>
+              </ul>
+            </div>
+
+            <div class="node-card" style="background: #FAF5FF; border-color: #E9D5FF;">
+              <div class="node-title" style="color: #7C3AED;">4. IVR Ingestion Pipeline</div>
+              <div class="node-sub">Telephony Audio ➔ ASR ➔ Pipeline</div>
+              <ul class="node-list">
+                <li>• Voice Audio ➔ ASR ➔ Entity Extraction (Fever/Lumps)</li>
+                <li>• Feeds directly into Unified Central Report Pipeline</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="connector-line">▼ INTERNAL gRPC / SECURE REST CALLS ▼</div>
+
+      <!-- LAYER 3: CORE PLATFORM SERVICES -->
+      <div class="tier-section">
+        <div class="tier-header" style="background: #EFF6FF;">
+          <div class="tier-badge">
+            <span class="tier-pill" style="background: #2563EB;">LAYER 3</span>
+            <span class="tier-summary" style="color: #1E40AF;">CORE PLATFORM MICROSERVICES</span>
+          </div>
+          <span class="tier-meta">Animal Registry • Case Management • Vet Clinical Svc • Diagnostic LIMS • Vaccination • Advisory</span>
+        </div>
+        <div class="tier-body">
+          <div class="grid-6">
+            <div class="node-card">
+              <div class="node-title" style="color: #1D4ED8;">1. Animal Registry</div>
+              <div class="node-sub">RFID &amp; INAPH Sync</div>
+              <ul class="node-list">
+                <li>• 12-Digit Tag Lookup</li>
+                <li>• Bharat Pashudhan API</li>
+              </ul>
+            </div>
+
+            <div class="node-card">
+              <div class="node-title" style="color: #1D4ED8;">2. Health Reporting</div>
+              <div class="node-sub">Multi-Channel Ingest</div>
+              <ul class="node-list">
+                <li>• App, IVR &amp; Field forms</li>
+                <li>• Symptom normalization</li>
+              </ul>
+            </div>
+
+            <div class="node-card">
+              <div class="node-title" style="color: #1D4ED8;">3. Case Management</div>
+              <div class="node-sub">State Machine Ledger</div>
+              <ul class="node-list">
+                <li>• Case #PS-2026-004281</li>
+                <li>• Progression lifecycle</li>
+              </ul>
+            </div>
+
+            <div class="node-card" style="background: #FAF5FF; border-color: #E9D5FF;">
+              <div class="node-title" style="color: #7C3AED;">4. Diagnostic LIMS</div>
+              <div class="node-sub">8-Step Chain of Custody</div>
+              <ul class="node-list">
+                <li>• Swab #PS-SMP-0198</li>
+                <li>• Cold-Chain IoT (4.2°C)</li>
+              </ul>
+            </div>
+
+            <div class="node-card">
+              <div class="node-title" style="color: #1D4ED8;">5. Vaccination &amp; Response</div>
+              <div class="node-sub">Stock &amp; Buffer Control</div>
+              <ul class="node-list">
+                <li>• Demo Plan: 2k doses</li>
+                <li>• 50k Buffer reallocation</li>
+              </ul>
+            </div>
+
+            <div class="node-card">
+              <div class="node-title" style="color: #1D4ED8;">6. Advisory Dispatcher</div>
+              <div class="node-sub">Telecom Broadcast</div>
+              <ul class="node-list">
+                <li>• 5km Geo-Fenced SMS</li>
+                <li>• CDAC Meghdoot sync</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="connector-line">▼ DETERMINISTIC RULE EVALUATION &amp; SPATIAL QUERIES ▼</div>
+
+      <!-- LAYER 4: DECISION SUPPORT INTELLIGENCE -->
+      <div class="tier-section" style="border: 2px solid #D97706;">
+        <div class="tier-header" style="background: var(--amber-light);">
+          <div class="tier-badge">
+            <span class="tier-pill" style="background: #D97706;">LAYER 4</span>
+            <span class="tier-summary" style="color: #92400E;">DECISION SUPPORT INTELLIGENCE (7 MODULES)</span>
+          </div>
+          <span class="tier-meta" style="color: #B45309; font-weight: 700;">100% Auditable Rule Engine • PostGIS Spatial Analysis • Zero Black-Box Hallucination</span>
+        </div>
+        <div class="tier-body">
+          <div class="grid-7">
+            <div class="node-card" style="background: #FEF2F2; border-color: #FECACA;">
+              <div style="background: #DC2626; color: white; font-size: 9px; font-weight: 800; padding: 2px 4px; border-radius: 4px; text-align: center;">1. CLINICAL TRIAGE</div>
+              <div style="font-size: 10px; font-weight: 700; color: #991B1B; margin-top: 2px;">Symptom Weights</div>
+              <ul class="node-list">
+                <li>• Fever (104.8°F): +35</li>
+                <li>• Skin Nodules: +35</li>
+                <li>• Milk Drop: +16</li>
+              </ul>
+              <div style="font-size: 11px; font-weight: 900; color: #DC2626; margin-top: 4px;">Score: 86 / 100 (HIGH)</div>
+            </div>
+
+            <div class="node-card" style="background: #FFF7ED; border-color: #FED7AA;">
+              <div style="background: #EA580C; color: white; font-size: 9px; font-weight: 800; padding: 2px 4px; border-radius: 4px; text-align: center;">2. SPATIAL CLUSTER</div>
+              <div style="font-size: 10px; font-weight: 700; color: #9A3412; margin-top: 2px;">5km Proximity Radius</div>
+              <ul class="node-list">
+                <li>• Threshold: ≥5 in 8km</li>
+                <li>• 5km Dynamic Buffer</li>
+              </ul>
+              <div style="font-size: 11px; font-weight: 900; color: #C2410C; margin-top: 4px;">🚨 7 Cases Baramati</div>
+            </div>
+
+            <div class="node-card" style="background: #F8FAFC; border-color: #CBD5E1;">
+              <div style="background: #0284C7; color: white; font-size: 9px; font-weight: 800; padding: 2px 4px; border-radius: 4px; text-align: center;">3. TEMPORAL TRENDS</div>
+              <div style="font-size: 10px; font-weight: 700; color: #0369A1; margin-top: 2px;">Spread Velocity</div>
+              <ul class="node-list">
+                <li>• 7-Day Moving Avg</li>
+                <li>• Spread: +3.2x rate</li>
+              </ul>
+              <div style="font-size: 10.5px; font-weight: 800; color: #0284C7; margin-top: 4px;">+240% vs Baseline</div>
+            </div>
+
+            <div class="node-card" style="background: #FEFCE8; border-color: #FEF08A;">
+              <div style="background: #CA8A04; color: white; font-size: 9px; font-weight: 800; padding: 2px 4px; border-radius: 4px; text-align: center;">4. VACCINE DEFICIT</div>
+              <div style="font-size: 10px; font-weight: 700; color: #854D0E; margin-top: 2px;">Taluka Deficit Gap</div>
+              <ul class="node-list">
+                <li>• Coverage: 78.4% (&lt;80%)</li>
+                <li>• Due: 3,200 Cattle</li>
+              </ul>
+              <div style="font-size: 10.5px; font-weight: 800; color: #B45309; margin-top: 4px;">Demo: 2k Ring Doses</div>
+            </div>
+
+            <div class="node-card" style="background: #FFF1F2; border-color: #FECDD3;">
+              <div style="background: #E11D48; color: white; font-size: 9px; font-weight: 800; padding: 2px 4px; border-radius: 4px; text-align: center;">5. MORTALITY WATCH</div>
+              <div style="font-size: 10px; font-weight: 700; color: #881337; margin-top: 2px;">Sudden Death Spikes</div>
+              <ul class="node-list">
+                <li>• Trigger: ≥3/24h</li>
+                <li>• Passive Monitoring</li>
+              </ul>
+              <div style="font-size: 10.5px; font-weight: 800; color: #BE123C; margin-top: 4px;">RRT Auto-Mobilize</div>
+            </div>
+
+            <div class="node-card" style="background: #F0FDF4; border-color: #86EFAC;">
+              <div style="background: #047857; color: white; font-size: 9px; font-weight: 800; padding: 2px 4px; border-radius: 4px; text-align: center;">6. WEATHER CONTEXT</div>
+              <div style="font-size: 10px; font-weight: 700; color: #14532D; margin-top: 2px;">Environmental Risk</div>
+              <ul class="node-list">
+                <li>• Humidity: 78% | Rain</li>
+                <li>• Vector Fly Link (8.2)</li>
+              </ul>
+              <div style="font-size: 10.5px; font-weight: 800; color: #15803D; margin-top: 4px;">Context Prioritization</div>
+            </div>
+
+            <div class="node-card" style="background: #FAF5FF; border-color: #E9D5FF;">
+              <div style="background: #7C3AED; color: white; font-size: 9px; font-weight: 800; padding: 2px 4px; border-radius: 4px; text-align: center;">7. PRIORITIZATION</div>
+              <div style="font-size: 10px; font-weight: 700; color: #581C87; margin-top: 2px;">Dynamic Response SLA</div>
+              <ul class="node-list">
+                <li>• Target: &lt;2 Hours SLA</li>
+                <li>• Nearest Vet Unit</li>
+              </ul>
+              <div style="font-size: 10.5px; font-weight: 800; color: #7C3AED; margin-top: 4px;">Unit #04 Dispatched</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="connector-line">▼ PERSISTENCE, CACHE READS &amp; TELEMETRY INGESTION ▼</div>
+
+      <!-- LAYER 5: UNIFIED DATA PLATFORM & STORAGE -->
+      <div class="tier-section">
+        <div class="tier-header" style="background: var(--purple-light);">
+          <div class="tier-badge">
+            <span class="tier-pill" style="background: #7C3AED;">LAYER 5</span>
+            <span class="tier-summary" style="color: #6B21A8;">UNIFIED DATA PLATFORM &amp; STORAGE</span>
+          </div>
+          <span class="tier-meta">Relational &amp; Spatial Database • Object Storage • Async Event Bus • Time Series Telemetry • Audit Trail</span>
+        </div>
+        <div class="tier-body">
+          <div class="grid-6">
+            <div class="node-card">
+              <div class="node-title" style="color: #6B21A8;">🗄️ PostgreSQL 16 + PostGIS</div>
+              <div class="node-sub">Animal RFID Registry &amp; Herds</div>
+              <ul class="node-list">
+                <li>• Health Reports, Cases, Labs</li>
+                <li>• Maharashtra Village Polygons</li>
+              </ul>
+              <div class="node-proto">Spatial GiST R-Tree Indexing</div>
+            </div>
+
+            <div class="node-card">
+              <div class="node-title" style="color: #6B21A8;">⚡ Redis 7.2 In-Memory</div>
+              <div class="node-sub">Hot 5km Spatial Cluster Cache</div>
+              <ul class="node-list">
+                <li>• Active JWT Sessions &amp; Rate Limit</li>
+                <li>• Pub/Sub Live Alert Channels</li>
+              </ul>
+              <div class="node-proto">&lt;1ms Sub-millisecond Hits</div>
+            </div>
+
+            <div class="node-card">
+              <div class="node-title" style="color: #6B21A8;">📈 TimescaleDB (Time-Series)</div>
+              <div class="node-sub">Cold-Chain IoT (4.2°C) Logs</div>
+              <ul class="node-list">
+                <li>• IMD Weather Telemetry Stream</li>
+                <li>• 7-Day Moving Avg Aggregates</li>
+              </ul>
+              <div class="node-proto">Continuous Aggregates</div>
+            </div>
+
+            <div class="node-card">
+              <div class="node-title" style="color: #6B21A8;">📬 Async Message Broker</div>
+              <div class="node-sub">Kafka / BullMQ Event Queues</div>
+              <ul class="node-list">
+                <li>• New Report &amp; Lab Result Events</li>
+                <li>• Offline Synchronization Worker</li>
+              </ul>
+              <div class="node-proto">Zero Ingestion Loss</div>
+            </div>
+
+            <div class="node-card">
+              <div class="node-title" style="color: #6B21A8;">📦 MinIO / S3 Object Store</div>
+              <div class="node-sub">Cattle Lesion Photo Evidence</div>
+              <ul class="node-list">
+                <li>• Diagnostic RT-PCR PDF Reports</li>
+                <li>• Prescriptions &amp; Audit Archive</li>
+              </ul>
+              <div class="node-proto">AES-256 Server Encryption</div>
+            </div>
+
+            <div class="node-card" style="background: #F0FDF4; border-color: #86EFAC;">
+              <div class="node-title" style="color: #15803D;">🌐 External Govt &amp; Cloud</div>
+              <div class="node-sub">Bharat Pashudhan (DAHD API)</div>
+              <ul class="node-list">
+                <li>• IMD Weather &amp; CDAC Meghdoot</li>
+                <li>• Immutable &amp; Audit Trail Logs</li>
+              </ul>
+              <div class="node-proto">Gov Cloud (AWS / NIC)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="connector-line">▼ ROLE-BASED ACCESS CONTROL (RBAC) BOUNDARIES ▼</div>
+
+      <!-- LAYER 6: ROLE-SPECIFIC APPLICATIONS -->
+      <div class="tier-section">
+        <div class="tier-header" style="background: #ECFDF5;">
+          <div class="tier-badge">
+            <span class="tier-pill" style="background: #047857;">LAYER 6</span>
+            <span class="tier-summary" style="color: #065F46;">ROLE &amp; ACCESS-SPECIFIC APPLICATIONS</span>
+          </div>
+          <span class="tier-meta">Authenticated Role Views with Strict RBAC Permissions &amp; Data Visibility Boundaries</span>
+        </div>
+        <div class="tier-body">
+          <div class="grid-5">
+            <div class="node-card">
+              <strong style="color: #065F46; font-size: 11.5px;">1. FARMER VIEW</strong>
+              <ul class="node-list">
+                <li>• Access: Own herd &amp; submitted cases</li>
+                <li>• 60s wizard, e-Rx, SMS advisories</li>
+              </ul>
+              <div class="node-proto">RBAC: FARMER_ROLE</div>
+            </div>
+
+            <div class="node-card" style="background: #F0FDF4; border-color: #86EFAC;">
+              <strong style="color: #15803D; font-size: 11.5px;">2. FIELD WORKER VIEW</strong>
+              <ul class="node-list">
+                <li>• Access: Assigned village cluster</li>
+                <li>• RFID tagging, swab custody, sync</li>
+              </ul>
+              <div class="node-proto" style="color: #D97706;">RBAC: FIELD_SENTINEL_ROLE</div>
+            </div>
+
+            <div class="node-card">
+              <strong style="color: #1E40AF; font-size: 11.5px;">3. VETERINARIAN VIEW</strong>
+              <ul class="node-list">
+                <li>• Access: Taluka clinical caseload</li>
+                <li>• Diagnosis, e-Rx &amp; lab dispatch</li>
+              </ul>
+              <div class="node-proto">RBAC: REGISTERED_VET_ROLE</div>
+            </div>
+
+            <div class="node-card" style="background: #FCE7F3; border-color: #F9A8D4;">
+              <strong style="color: #BE185D; font-size: 11.5px;">4. DISTRICT OFFICER VIEW</strong>
+              <ul class="node-list">
+                <li>• Access: Pune District jurisdiction</li>
+                <li>• GIS outbreak map, deploy RRT, ring vax</li>
+              </ul>
+              <div class="node-proto">RBAC: DISTRICT_ADMIN_ROLE</div>
+            </div>
+
+            <div class="node-card">
+              <strong style="color: #6B21A8; font-size: 11.5px;">5. STATE DIRECTORATE VIEW</strong>
+              <ul class="node-list">
+                <li>• Access: Maharashtra 36 districts</li>
+                <li>• Buffer release, emergency funds, policy</li>
+              </ul>
+              <div class="node-proto">RBAC: STATE_DIRECTOR_ROLE</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- VIEW 2: DIAGRAM 2 (END-TO-END CLOSED-LOOP SURVEILLANCE FLOW) -->
+    <!-- ========================================================================= -->
+    <div id="viewDiagram2" style="display: none; flex-direction: column; gap: 10px;">
+      
+      <div style="display: flex; justify-content: space-between; align-items: center; background: #FFFFFF; padding: 10px 16px; border-radius: 10px; border: 1px solid var(--border);">
+        <div>
+          <strong style="color: #073B32; font-size: 13px;">DIAGRAM 2: END-TO-END CLOSED-LOOP SURVEILLANCE &amp; RESPONSE WORKFLOW</strong>
+          <span style="color: #64748B; font-size: 11.5px; margin-left: 8px;">Answers: <em>"How does the solution solve the problem?"</em> (Step-by-Step Data Journey)</span>
+        </div>
+        <a href="/surveillance_flow_diagram.svg" download="pashusuraksha_surveillance_flow.svg" class="btn btn-primary" style="padding: 5px 10px; font-size: 11px;">⬇ Download Surveillance Flow SVG</a>
+      </div>
+
+      <!-- 8 Operational Lifecycle Steps -->
+      <div class="grid-4">
+        <!-- Stage 1 -->
+        <div class="step-card" style="border-top: 4px solid #047857;">
+          <div class="step-header">
+            <span class="step-badge" style="background: #047857;">STAGE 1</span>
+            <span style="font-size: 10px; font-weight: 700; color: #047857;">Latency: 0-15 Min</span>
+          </div>
+          <div class="step-title">Rural Ingestion &amp; Triage Trigger</div>
+          <div class="step-box">
+            <strong>• Ramesh Patil reports Ganga</strong> via 60-second PWA wizard or Toll-Free 1800 IVR.
+            <div style="color: #64748B; margin-top: 4px;">Speech-to-Text normalizes symptoms &amp; attaches photo + GPS coordinates.</div>
+            <div style="color: #047857; font-weight: 700; margin-top: 4px;">➔ Created Case #PS-2026-004281</div>
+          </div>
+        </div>
+
+        <!-- Stage 2 -->
+        <div class="step-card" style="border-top: 4px solid #D97706;">
+          <div class="step-header">
+            <span class="step-badge" style="background: #D97706;">STAGE 2</span>
+            <span style="font-size: 10px; font-weight: 700; color: #D97706;">Latency: &lt;1 Sec</span>
+          </div>
+          <div class="step-title">Preliminary Risk Screening</div>
+          <div class="step-box">
+            <strong>• Symptom-weighted scoring (86/100 HIGH)</strong> calculated for fever 104.8°F + skin nodules + milk drop.
+            <div style="color: #64748B; margin-top: 4px;">IMD weather (78% humidity) correlates vector risk (8.2/10).</div>
+            <div style="color: #B45309; font-weight: 700; margin-top: 4px;">➔ Urgent &lt;2h SLA Assigned to Local Vet</div>
+          </div>
+        </div>
+
+        <!-- Stage 3 -->
+        <div class="step-card" style="border-top: 4px solid #2563EB;">
+          <div class="step-header">
+            <span class="step-badge" style="background: #2563EB;">STAGE 3</span>
+            <span style="font-size: 10px; font-weight: 700; color: #2563EB;">Latency: &lt;45 Min</span>
+          </div>
+          <div class="step-title">Veterinary Clinical Review</div>
+          <div class="step-box">
+            <strong>• Dr. Anand Deshmukh</strong> assesses case dossier and issues authorized digital e-Prescription (Flunixin).
+            <div style="color: #64748B; margin-top: 4px;">Signs 14-day shed quarantine order &amp; tasks field worker for swab pickup.</div>
+            <div style="color: #1D4ED8; font-weight: 700; margin-top: 4px;">➔ Sample Order Dispatched to Field Kit</div>
+          </div>
+        </div>
+
+        <!-- Stage 4 -->
+        <div class="step-card" style="border-top: 4px solid #7C3AED;">
+          <div class="step-header">
+            <span class="step-badge" style="background: #7C3AED;">STAGE 4</span>
+            <span style="font-size: 10px; font-weight: 700; color: #7C3AED;">Latency: 2-4 Hours</span>
+          </div>
+          <div class="step-title">Lab Testing &amp; Sample Custody</div>
+          <div class="step-box">
+            <strong>• Pashu Sakhi scans RFID</strong>, takes swab (#PS-SMP-0198) in 4.2°C cold chain to Aundh Pune Lab.
+            <div style="color: #64748B; margin-top: 4px;">Real-Time PCR assay confirms POSITIVE for LSDV (Capripox).</div>
+            <div style="color: #DC2626; font-weight: 800; margin-top: 4px;">🚨 Escalation Trigger Activated</div>
+          </div>
+        </div>
+
+        <!-- Stage 5 -->
+        <div class="step-card" style="border-top: 4px solid #EA580C;">
+          <div class="step-header">
+            <span class="step-badge" style="background: #EA580C;">STAGE 5</span>
+            <span style="font-size: 10px; font-weight: 700; color: #EA580C;">Latency: Real-Time</span>
+          </div>
+          <div class="step-title">Spatial Cluster Detection</div>
+          <div class="step-box">
+            <strong>• PostGIS executes 5km radius query</strong>, identifying 7 active cases in Baramati (+3.2x velocity).
+            <div style="color: #64748B; margin-top: 4px;">Calculates taluka vaccination gap (78.4% coverage &lt; 80% threshold).</div>
+            <div style="color: #C2410C; font-weight: 700; margin-top: 4px;">➔ Draws 5km Transmission Buffer Ring</div>
+          </div>
+        </div>
+
+        <!-- Stage 6 -->
+        <div class="step-card" style="border-top: 4px solid #BE185D;">
+          <div class="step-header">
+            <span class="step-badge" style="background: #BE185D;">STAGE 6</span>
+            <span style="font-size: 10px; font-weight: 700; color: #BE185D;">Latency: &lt;1 Hour</span>
+          </div>
+          <div class="step-title">Authorized District Containment</div>
+          <div class="step-box">
+            <strong>• Pune District Officer authorizes</strong> Recommended Response Plan: Demo 2,000 ring vaccine doses.
+            <div style="color: #64748B; margin-top: 4px;">Mobile Unit #04 deployed; State Directorate releases 50k buffer + ₹25L funds.</div>
+            <div style="color: #BE185D; font-weight: 700; margin-top: 4px;">➔ Tactical Containment Deployed</div>
+          </div>
+        </div>
+
+        <!-- Stage 7 -->
+        <div class="step-card" style="border-top: 4px solid #0284C7;">
+          <div class="step-header">
+            <span class="step-badge" style="background: #0284C7;">STAGE 7</span>
+            <span style="font-size: 10px; font-weight: 700; color: #0284C7;">Latency: &lt;2 Min</span>
+          </div>
+          <div class="step-title">Geo-Fenced Farmer Advisory</div>
+          <div class="step-box">
+            <strong>• CDAC Meghdoot Telecom Gateway</strong> sends 1,420 regional Marathi SMS &amp; WhatsApp alerts.
+            <div style="color: #64748B; margin-top: 4px;">Advises 5km ring farmers on cattle movement freeze and free vaccination camps.</div>
+            <div style="color: #0284C7; font-weight: 700; margin-top: 4px;">➔ Village Biosecurity Shield Active</div>
+          </div>
+        </div>
+
+        <!-- Stage 8 -->
+        <div class="step-card" style="border-top: 4px solid #047857; background: #F0FDF4;">
+          <div class="step-header">
+            <span class="step-badge" style="background: #047857;">STAGE 8</span>
+            <span style="font-size: 10px; font-weight: 700; color: #047857;">↺ Closed Loop</span>
+          </div>
+          <div class="step-title">Continuous Surveillance Loop ↺</div>
+          <div class="step-box">
+            <strong>• Ganga fully recovers</strong> in 10 days; Taluka coverage rises to 89.2% (&gt;80%).
+            <div style="color: #64748B; margin-top: 4px;">Reproduction rate R0 drops 3.2 ➔ 0.4. Zero secondary spillover detected.</div>
+            <div style="color: #047857; font-weight: 900; margin-top: 4px;">↺ Continuous Watchdog Monitoring</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- VIEW 3: TECHNICAL DEEP-DIVES -->
+    <!-- ========================================================================= -->
+    <div id="viewDeepDives" style="display: none; flex-direction: column; gap: 14px;">
+      
+      <!-- Grid of Deep-Dives -->
+      <div class="grid-2">
+        
+        <!-- Deep Dive A: Voice IVR Ingestion -->
+        <div class="tier-section">
+          <div class="tier-header" style="background: #FAF5FF;">
+            <span class="tier-summary" style="color: #6B21A8;">A. TOLL-FREE VOICE IVR INGESTION PIPELINE (1800-180-1551)</span>
+          </div>
+          <div class="tier-body">
+            <div class="flow-sequence">
+              <div class="flow-step">
+                <span class="flow-num" style="background: #7C3AED;">1</span>
+                <div><strong>Farmer Toll-Free Call:</strong> Farmer calls 1800-180-1551 from any basic feature phone (no internet required).</div>
+              </div>
+              <div class="flow-step">
+                <span class="flow-num" style="background: #7C3AED;">2</span>
+                <div><strong>Regional Language Prompt:</strong> Telecom gateway prompts language selection (Marathi / Hindi).</div>
+              </div>
+              <div class="flow-step">
+                <span class="flow-num" style="background: #7C3AED;">3</span>
+                <div><strong>Speech-to-Text (ASR):</strong> Audio stream converted into normalized text transcripts via speech recognition.</div>
+              </div>
+              <div class="flow-step">
+                <span class="flow-num" style="background: #7C3AED;">4</span>
+                <div><strong>Symptom &amp; Location Extraction:</strong> NLP model parses symptoms ("high fever", "lumps") and matches village geo-coordinates.</div>
+              </div>
+              <div class="flow-step">
+                <span class="flow-num" style="background: #047857;">5</span>
+                <div><strong>Unified Pipeline Ingestion:</strong> Creates Case #PS-2026-XXXX into the exact same PostgreSQL queue as the smartphone app.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Deep Dive B: Offline-First CRDT Sync -->
+        <div class="tier-section">
+          <div class="tier-header" style="background: #F0FDF4;">
+            <span class="tier-summary" style="color: #15803D;">B. OFFLINE-FIRST FIELD SYNCHRONIZATION PIPELINE (CRDT)</span>
+          </div>
+          <div class="tier-body">
+            <div class="flow-sequence">
+              <div class="flow-step">
+                <span class="flow-num" style="background: #047857;">1</span>
+                <div><strong>Remote Shed Data Entry:</strong> Pashu Sakhi logs cattle RFID, symptoms and photos in remote cowshed with zero cellular signal.</div>
+              </div>
+              <div class="flow-step">
+                <span class="flow-num" style="background: #047857;">2</span>
+                <div><strong>Local IndexedDB Storage:</strong> Browser-native encrypted IndexedDB stores record with SHA-256 integrity hash.</div>
+              </div>
+              <div class="flow-step">
+                <span class="flow-num" style="background: #047857;">3</span>
+                <div><strong>Signal Restoration Detection:</strong> Background ServiceWorker polls for 2G/4G or Gram Panchayat Wi-Fi connectivity.</div>
+              </div>
+              <div class="flow-step">
+                <span class="flow-num" style="background: #047857;">4</span>
+                <div><strong>Sync Manager &amp; CRDT Resolution:</strong> Atomic batch upload reconciling timestamps to eliminate duplicate case entries.</div>
+              </div>
+              <div class="flow-step">
+                <span class="flow-num" style="background: #047857;">5</span>
+                <div><strong>Central DB Write:</strong> Transaction committed to PostgreSQL 16; hot cache updated in Redis.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Deep Dive C: Lab Chain of Custody -->
+        <div class="tier-section">
+          <div class="tier-header" style="background: #EFF6FF;">
+            <span class="tier-summary" style="color: #1E40AF;">C. 8-STEP DIAGNOSTIC LAB CHAIN OF CUSTODY (BSL-2/3 LIMS)</span>
+          </div>
+          <div class="tier-body">
+            <div class="flow-sequence">
+              <div class="flow-step">
+                <span class="flow-num" style="background: #2563EB;">1</span>
+                <div><strong>Clinical Order:</strong> Dr. Anand signs laboratory order in clinical portal.</div>
+              </div>
+              <div class="flow-step">
+                <span class="flow-num" style="background: #2563EB;">2</span>
+                <div><strong>Physical Collection:</strong> Pashu Sakhi collects nasal/scab swab using sterile collection vial.</div>
+              </div>
+              <div class="flow-step">
+                <span class="flow-num" style="background: #2563EB;">3</span>
+                <div><strong>Barcode Association:</strong> Barcode sticker #PS-SMP-0198 scanned &amp; linked to RFID MH-PUN-0241.</div>
+              </div>
+              <div class="flow-step">
+                <span class="flow-num" style="background: #2563EB;">4</span>
+                <div><strong>Cold-Chain IoT (4.2°C):</strong> Carrier telemetry logged to TimescaleDB to ensure zero sample degradation.</div>
+              </div>
+              <div class="flow-step">
+                <span class="flow-num" style="background: #2563EB;">5</span>
+                <div><strong>Lab Ingress &amp; RT-PCR Test:</strong> Aundh Lab receives sample and completes real-time Capripox PCR assay.</div>
+              </div>
+              <div class="flow-step">
+                <span class="flow-num" style="background: #DC2626;">6</span>
+                <div><strong>Validation &amp; Escalation:</strong> Senior Microbiologist approves result; positive result triggers district escalation.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Deep Dive D: RBAC Matrix -->
+        <div class="tier-section">
+          <div class="tier-header" style="background: #FCE7F3;">
+            <span class="tier-summary" style="color: #831843;">D. ROLE-BASED ACCESS CONTROL (RBAC) &amp; PERMISSION MATRIX</span>
+          </div>
+          <div class="tier-body" style="overflow-x: auto;">
+            <table class="rbac-table">
+              <thead>
+                <tr>
+                  <th>Role</th>
+                  <th>Auth Method</th>
+                  <th>Data Visibility Boundary</th>
+                  <th>Permitted Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Farmer</strong></td>
+                  <td>Mobile OTP</td>
+                  <td>Own registered animals &amp; reports</td>
+                  <td>Create report, view e-Rx, receive advisories</td>
+                </tr>
+                <tr>
+                  <td><strong>Field Worker</strong></td>
+                  <td>Staff PIN + Device ID</td>
+                  <td>Assigned Gram Panchayat village cluster</td>
+                  <td>RFID tag scan, swab collection, offline sync</td>
+                </tr>
+                <tr>
+                  <td><strong>Veterinarian</strong></td>
+                  <td>Vet Council ID + OTP</td>
+                  <td>Taluka veterinary jurisdiction</td>
+                  <td>Validate triage, issue digital e-Rx, order lab tests</td>
+                </tr>
+                <tr>
+                  <td><strong>District Officer</strong></td>
+                  <td>Gov SSO / 2FA</td>
+                  <td>District-wide data (Pune)</td>
+                  <td>GIS outbreak map, deploy RRT, allocate ring vaccines</td>
+                </tr>
+                <tr>
+                  <td><strong>State Admin</strong></td>
+                  <td>Directorate 2FA + Hardware Key</td>
+                  <td>State-wide 36 Maharashtra districts</td>
+                  <td>Strategic buffer release, emergency fund grants, policy</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- VIEW 4: RAW VECTOR SVGS -->
+    <!-- ========================================================================= -->
+    <div id="viewSvg" style="display: none; flex-direction: column; gap: 14px;">
+      <div style="display: flex; gap: 10px; background: white; padding: 10px; border-radius: 10px; border: 1px solid var(--border);">
+        <button id="btnSvg1" class="btn btn-primary" onclick="switchSvg(1)">View Diagram 1: System Architecture SVG</button>
+        <button id="btnSvg2" class="btn btn-secondary" onclick="switchSvg(2)">View Diagram 2: Surveillance Flow SVG</button>
+      </div>
+
+      <div id="svgContainer1" class="svg-container">
+        <img src="/system_architecture_diagram.svg" alt="PashuSuraksha 6-Layer System Architecture Diagram">
+      </div>
+
+      <div id="svgContainer2" class="svg-container" style="display: none;">
+        <img src="/surveillance_flow_diagram.svg" alt="PashuSuraksha End-to-End Closed-Loop Surveillance Flow">
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function switchView(tab) {
+      const v1 = document.getElementById('viewDiagram1');
+      const v2 = document.getElementById('viewDiagram2');
+      const v3 = document.getElementById('viewDeepDives');
+      const v4 = document.getElementById('viewSvg');
+      const btns = document.querySelectorAll('.tab-btn');
+
+      v1.style.display = 'none';
+      v2.style.display = 'none';
+      v3.style.display = 'none';
+      v4.style.display = 'none';
+
+      btns.forEach(b => b.classList.remove('active'));
+
+      if (tab === 'diagram1') {
+        v1.style.display = 'flex';
+        btns[0].classList.add('active');
+      } else if (tab === 'diagram2') {
+        v2.style.display = 'flex';
+        btns[1].classList.add('active');
+      } else if (tab === 'deepdives') {
+        v3.style.display = 'flex';
+        btns[2].classList.add('active');
+      } else if (tab === 'svg') {
+        v4.style.display = 'flex';
+        btns[3].classList.add('active');
+      }
+    }
+
+    function switchSvg(num) {
+      const s1 = document.getElementById('svgContainer1');
+      const s2 = document.getElementById('svgContainer2');
+      const b1 = document.getElementById('btnSvg1');
+      const b2 = document.getElementById('btnSvg2');
+
+      if (num === 1) {
+        s1.style.display = 'block';
+        s2.style.display = 'none';
+        b1.className = 'btn btn-primary';
+        b2.className = 'btn btn-secondary';
+      } else {
+        s1.style.display = 'none';
+        s2.style.display = 'block';
+        b1.className = 'btn btn-secondary';
+        b2.className = 'btn btn-primary';
+      }
+    }
+  </script>
+</body>
+</html>
