@@ -93,12 +93,12 @@ export default function PublicFooter() {
           </ul>
         </div>
 
-        {/* Col 4: Prototype Disclaimer */}
+        {/* Col 4: System Architecture */}
         <div className="space-y-3">
-          <h4 className="text-white font-bold text-sm tracking-wide font-display">PROTOTYPE NOTICE</h4>
+          <h4 className="text-white font-bold text-sm tracking-wide font-display">SYSTEM ARCHITECTURE</h4>
           <div className="bg-slate-900/80 p-3.5 rounded-xl border border-slate-800 text-[11px] leading-relaxed text-slate-400">
-            <p className="font-semibold text-amber-400 mb-1">Simulated Prototype Environment</p>
-            This prototype has been designed for Smart India Hackathon 2026 evaluation. All case IDs, geolocation cluster coordinates, and sample barcodes are simulated for demonstration.
+            <p className="font-semibold text-emerald-400 mb-1">Rural-First Digital Network</p>
+            Engineered with offline-first client storage, spatial disease clustering engine, and end-to-end laboratory tracking across Maharashtra.
           </div>
         </div>
       </div>

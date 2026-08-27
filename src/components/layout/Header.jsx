@@ -113,28 +113,30 @@ export default function Header() {
         {/* Right: Telemetry Controls & User Profile */}
         <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
           
-          {/* Online/Offline Status Indicator */}
-          <button
-            onClick={toggleOffline}
-            className={`px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-xl text-[10px] sm:text-xs font-mono font-bold flex items-center gap-1 sm:gap-1.5 transition ${
-              isOffline 
-                ? 'bg-amber-100 text-amber-900 border border-amber-300' 
-                : 'bg-emerald-50 text-emerald-800 border border-emerald-200'
-            }`}
-            title="Click to toggle offline mode simulation"
-          >
-            {isOffline ? (
-              <>
-                <WifiOff className="w-3 h-3 text-amber-600" />
-                <span>OFFLINE</span>
-              </>
-            ) : (
-              <>
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
-                <span>ONLINE</span>
-              </>
-            )}
-          </button>
+          {/* Online/Offline Status Indicator (Only for field workers / command staff) */}
+          {role !== 'farmer' && (
+            <button
+              onClick={toggleOffline}
+              className={`px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-xl text-[10px] sm:text-xs font-mono font-bold flex items-center gap-1 sm:gap-1.5 transition ${
+                isOffline 
+                  ? 'bg-amber-100 text-amber-900 border border-amber-300' 
+                  : 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+              }`}
+              title="Toggle offline connectivity mode"
+            >
+              {isOffline ? (
+                <>
+                  <WifiOff className="w-3 h-3 text-amber-600" />
+                  <span>OFFLINE</span>
+                </>
+              ) : (
+                <>
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
+                  <span>ONLINE</span>
+                </>
+              )}
+            </button>
+          )}
 
           {/* 1800 IVR Quick Link (Desktop Only) */}
           <button

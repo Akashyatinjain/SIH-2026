@@ -168,14 +168,14 @@ export default function Sidebar() {
         <div className="p-3.5 bg-gradient-to-br from-emerald-900 to-[#0A1020] text-white rounded-xl space-y-2 text-xs">
           <div className="flex items-center gap-2 font-bold text-emerald-300">
             <PhoneCall className="w-4 h-4" />
-            <span>{t.ivrTitle || "24x7 Pashu Seva IVR"}</span>
+            <span>{language === 'mr' ? 'मोफत पशु हेल्पलाइन' : language === 'hi' ? 'मुफ्त पशु हेल्पलाइन' : 'Toll-Free Helpline'}</span>
           </div>
-          <p className="text-[11px] text-emerald-100 font-mono">Dial 1800-180-1551</p>
+          <p className="text-[11px] text-emerald-100 font-mono">1800-180-1551</p>
           <button
             onClick={() => setIsIVROpen(true)}
             className="w-full py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-bold text-[11px] transition"
           >
-            {language === 'mr' ? 'व्हॉइस सेवा सुरू करा' : language === 'hi' ? 'वॉयस सेवा शुरू करें' : 'Launch Voice Simulator'}
+            {language === 'mr' ? 'हेल्पलाइनवर संपर्क करा' : language === 'hi' ? 'हेल्पलाइन से जुड़ें' : 'Call Helpline'}
           </button>
         </div>
       </div>

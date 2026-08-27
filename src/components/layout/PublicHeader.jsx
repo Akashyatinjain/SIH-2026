@@ -37,20 +37,6 @@ export default function PublicHeader({ activeNav = "home", onNavigate }) {
 
   return (
     <header className="sticky top-0 z-50 bg-[#09101E]/95 backdrop-blur-md border-b border-slate-800/80 text-white">
-      {/* Official Government Flag Bar */}
-      <div className="bg-[#073B32] text-xs py-1.5 px-3 sm:px-4 text-emerald-100 border-b border-emerald-800/40">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2 font-medium text-[10px] sm:text-xs truncate">
-            <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
-            <span className="tracking-wide truncate">GOVERNMENT OF MAHARASHTRA • DEPARTMENT OF ANIMAL HUSBANDRY</span>
-          </div>
-          <div className="hidden sm:flex items-center gap-4 text-[11px] text-emerald-200 shrink-0">
-            <span className="bg-emerald-900/60 px-2 py-0.5 rounded border border-emerald-700/50">SIH 2026 • Problem Statement 26128</span>
-            <span className="text-emerald-300 font-mono">🟢 36 Districts Active</span>
-          </div>
-        </div>
-      </div>
-
       {/* Main Public Navigation Bar */}
       <div className="max-w-7xl mx-auto px-3 sm:px-6 h-16 sm:h-18 flex items-center justify-between gap-3">
         {/* Brand Logo */}
@@ -66,10 +52,10 @@ export default function PublicHeader({ activeNav = "home", onNavigate }) {
           <div className="min-w-0">
             <div className="flex items-center gap-1.5 sm:gap-2">
               <span className="font-extrabold text-base sm:text-xl tracking-tight text-white font-display truncate">JIVSANKET</span>
-              <span className="text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider bg-teal-500/10 text-teal-400 border border-teal-500/30 px-1 sm:px-1.5 py-0.5 rounded shrink-0">MH</span>
+              <span className="text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider bg-teal-500/10 text-teal-400 border border-teal-500/30 px-1 sm:px-1.5 py-0.5 rounded shrink-0">Govt of Maharashtra</span>
             </div>
             <p className="text-[10px] sm:text-[11px] text-slate-400 tracking-tight font-medium hidden md:block truncate">
-              Livestock Health Intelligence & Early Warning Network
+              Animal Health Intelligence & Disease Early Warning Network
             </p>
           </div>
         </button>
@@ -135,7 +121,7 @@ export default function PublicHeader({ activeNav = "home", onNavigate }) {
           <button
             onClick={() => setIsIVROpen(true)}
             className="hidden sm:flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700/80 text-xs font-semibold text-slate-200 hover:border-teal-500/50 hover:text-teal-300 transition-colors"
-            title="Simulated 24/7 Toll-Free Voice Line"
+            title="Toll-Free Helpline 1800-180-1551"
           >
             <PhoneCall className="w-3.5 h-3.5 text-teal-400" />
             <span className="hidden md:inline">1800-180-1551</span>
@@ -162,18 +148,6 @@ export default function PublicHeader({ activeNav = "home", onNavigate }) {
               हिंदी
             </button>
           </div>
-
-          {/* Try Demo CTA Button */}
-          <button
-            onClick={() => {
-              setIsDemoModalOpen(false);
-              setCurrentScreen('demoCenter');
-            }}
-            className="hidden md:flex items-center gap-1.5 px-3 py-1.5 sm:py-2 rounded-xl bg-amber-500/10 border border-amber-500/40 text-amber-300 hover:bg-amber-500/20 text-xs font-bold transition-all shadow-sm"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-spin-slow" />
-            <span>Try Demo</span>
-          </button>
 
           {/* Access Platform CTA */}
           <button

@@ -144,33 +144,6 @@ export function AppProvider({ children }) {
     }
   ]);
 
-  // Dynamic Live Simulation Ticker
-  useEffect(() => {
-    const simulatedEvents = [
-      { text: "Automated cold-chain sensor verified: 4.1°C at Baramati Sub-center", type: "info" },
-      { text: "New report received: 1 Cattle with high fever in Supa village", type: "report" },
-      { text: "Pashu Sakhi completed ring vaccination of 14 cattle in Malegaon", type: "field" },
-      { text: "District Command updated spatial risk score for Daund to HIGH", type: "cluster" },
-      { text: "Real-time RT-PCR run initiated for Capripoxvirus batch #982", type: "sample" },
-      { text: "Offline batch synchronization completed for Sector 4 (6 records)", type: "sync" }
-    ];
-
-    const timer = setInterval(() => {
-      const randomEvt = simulatedEvents[Math.floor(Math.random() * simulatedEvents.length)];
-      setLiveEventStream(prev => [
-        {
-          id: `EVT-${Date.now()}`,
-          text: randomEvt.text,
-          timeAgo: "Just now",
-          type: randomEvt.type
-        },
-        ...prev.slice(0, 7)
-      ]);
-    }, 24000);
-
-    return () => clearInterval(timer);
-  }, []);
-
   // Persist State to LocalStorage
   useEffect(() => {
     try {

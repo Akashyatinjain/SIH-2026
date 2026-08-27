@@ -44,24 +44,7 @@ export default function LandingPage({ onAccessPlatform, onReportIssue }) {
   } = useApp();
 
   const [hoveredNode, setHoveredNode] = useState(null);
-  const [secondsAgo, setSecondsAgo] = useState(32);
   const [activeTabLoop, setActiveTabLoop] = useState(0);
-
-  // Live timer tick
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setSecondsAgo(prev => (prev > 5 ? prev - 1 : 45));
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Response loop auto rotator
-  useEffect(() => {
-    const loopInterval = setInterval(() => {
-      setActiveTabLoop(prev => (prev + 1) % 8);
-    }, 4000);
-    return () => clearInterval(loopInterval);
-  }, []);
 
   const responseNetworkNodes = [
     {
@@ -314,16 +297,16 @@ export default function LandingPage({ onAccessPlatform, onReportIssue }) {
               {/* Bottom Mini Telemetry Bar */}
               <div className="relative z-10 grid grid-cols-3 gap-2 pt-3 border-t border-slate-800/80 text-center">
                 <div className="bg-slate-900/60 p-2 rounded-xl border border-slate-800">
-                  <div className="text-[10px] text-slate-400 font-medium">Index Case</div>
-                  <div className="text-xs font-bold text-teal-300 font-mono">PS-2026-004281</div>
+                  <div className="text-[10px] text-slate-400 font-medium">Index Cluster</div>
+                  <div className="text-xs font-bold text-teal-300">Baramati Sector</div>
                 </div>
                 <div className="bg-slate-900/60 p-2 rounded-xl border border-slate-800">
-                  <div className="text-[10px] text-slate-400 font-medium">Lab Pipeline</div>
-                  <div className="text-xs font-bold text-purple-300 font-mono">PS-SMP-0198</div>
+                  <div className="text-[10px] text-slate-400 font-medium">Diagnostic Lab</div>
+                  <div className="text-xs font-bold text-purple-300">Aundh Regional</div>
                 </div>
                 <div className="bg-slate-900/60 p-2 rounded-xl border border-slate-800">
-                  <div className="text-[10px] text-slate-400 font-medium">RRT Response</div>
-                  <div className="text-xs font-bold text-emerald-400 font-mono">Baramati Ring</div>
+                  <div className="text-[10px] text-slate-400 font-medium">Field Response</div>
+                  <div className="text-xs font-bold text-emerald-400">Ring Vaccination</div>
                 </div>
               </div>
             </div>
@@ -343,7 +326,7 @@ export default function LandingPage({ onAccessPlatform, onReportIssue }) {
               <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
             </span>
             <div className="text-xs font-extrabold tracking-wider text-emerald-400 font-mono uppercase">
-              SURVEILLANCE NETWORK: OPERATIONAL
+              STATEWIDE SURVEILLANCE NETWORK: OPERATIONAL
             </div>
           </div>
 
@@ -369,8 +352,9 @@ export default function LandingPage({ onAccessPlatform, onReportIssue }) {
             </div>
           </div>
 
-          <div className="text-[11px] font-mono text-slate-400 bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-800">
-            Updated <span className="text-teal-300 font-bold">{secondsAgo} sec ago</span> (Demo Stream)
+          <div className="text-[11px] font-medium text-emerald-400 bg-emerald-950/60 px-3 py-1.5 rounded-lg border border-emerald-800/60 flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+            <span>Live Health Telemetry</span>
           </div>
         </div>
       </section>

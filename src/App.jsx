@@ -84,7 +84,6 @@ function MainAppContent() {
   if (currentScreen === 'home') {
     return (
       <div className="min-h-screen flex flex-col font-sans">
-        <DemoBar />
         <LandingPage 
           onAccessPlatform={() => setCurrentScreen('login')}
           onReportIssue={() => {
@@ -111,7 +110,6 @@ function MainAppContent() {
   if (currentScreen === 'about') {
     return (
       <div className="min-h-screen flex flex-col font-sans">
-        <DemoBar />
         <AboutPage />
         <IVRModal />
         <NotificationCenter />
@@ -123,7 +121,6 @@ function MainAppContent() {
   if (currentScreen === 'howItWorks') {
     return (
       <div className="min-h-screen flex flex-col font-sans">
-        <DemoBar />
         <HowItWorksPage />
         <IVRModal />
         <NotificationCenter />
@@ -135,7 +132,6 @@ function MainAppContent() {
   if (currentScreen === 'impact') {
     return (
       <div className="min-h-screen flex flex-col font-sans">
-        <DemoBar />
         <ImpactPage />
         <IVRModal />
         <NotificationCenter />
@@ -147,7 +143,6 @@ function MainAppContent() {
   if (currentScreen === 'judgeMode') {
     return (
       <div className="min-h-screen flex flex-col font-sans">
-        <DemoBar />
         <JudgeMode />
         <IVRModal />
         <NotificationCenter />
@@ -159,7 +154,6 @@ function MainAppContent() {
   if (currentScreen === 'login') {
     return (
       <div className="min-h-screen flex flex-col font-sans">
-        <DemoBar />
         <LoginPage 
           onLoginSuccess={() => setCurrentScreen('workspaceSelect')}
           onOpenDemoModal={() => setIsDemoModalOpen(true)}
@@ -184,7 +178,6 @@ function MainAppContent() {
   if (currentScreen === 'workspaceSelect') {
     return (
       <div className="min-h-screen flex flex-col bg-[#F6F3EA] font-sans">
-        <DemoBar />
         <WorkspaceSelectPage 
           onInspectDetails={() => setCurrentScreen('workspaceDetails')}
           onEnterWorkspace={(wsKey) => enterWorkspace(wsKey)}
@@ -210,7 +203,6 @@ function MainAppContent() {
   if (currentScreen === 'workspaceDetails') {
     return (
       <div className="min-h-screen flex flex-col bg-[#F6F3EA] font-sans">
-        <DemoBar />
         <WorkspaceDetailsPage 
           onBack={() => setCurrentScreen('workspaceSelect')}
           onEnterDashboard={() => enterWorkspace(selectedWorkspace)}
@@ -235,7 +227,6 @@ function MainAppContent() {
   if (currentScreen === 'demoCenter') {
     return (
       <div className="min-h-screen flex flex-col bg-[#F6F3EA] font-sans">
-        <DemoBar />
         <DemoCenter 
           onExit={() => setCurrentScreen('workspaceSelect')}
           onOpenRoleDashboard={(roleKey) => enterWorkspace(roleKey)}
