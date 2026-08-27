@@ -12,7 +12,8 @@ import {
   Layers, 
   TrendingUp, 
   Database, 
-  Calendar 
+  Calendar,
+  Pill
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
@@ -22,11 +23,11 @@ export default function BottomNav() {
   const getNavTabs = () => {
     if (role === 'farmer') {
       return [
-        { id: 'dashboard', label: t.dashboard || 'Home', icon: Home },
-        { id: 'animals', label: t.myAnimals || 'Animals', icon: ListChecks },
-        { id: 'report', label: language === 'mr' ? 'नोंदवा' : language === 'hi' ? 'रिपोर्ट' : 'Report', icon: PlusCircle, isMain: true },
-        { id: 'vaccines', label: t.vaccination || 'Vaccines', icon: Syringe },
-        { id: 'alerts', label: t.localAlerts || 'Alerts', icon: AlertTriangle }
+        { id: 'dashboard', label: language === 'mr' ? 'मुख्य' : language === 'hi' ? 'होम' : 'Home', icon: Home },
+        { id: 'animals', label: language === 'mr' ? 'जनावरे' : language === 'hi' ? 'पशु' : 'Animals', icon: ListChecks },
+        { id: 'report', label: language === 'mr' ? 'आजारी नोंद' : language === 'hi' ? 'बीमार नोंद' : 'Report', icon: PlusCircle, isMain: true, isEmergency: true },
+        { id: 'vaccines', label: language === 'mr' ? 'लसीकरण' : language === 'hi' ? 'टीके' : 'Vaccines', icon: Syringe },
+        { id: 'treatments', label: language === 'mr' ? 'औषधे' : language === 'hi' ? 'दवाइयां' : 'Medicines', icon: Pill }
       ];
     } else if (role === 'fieldWorker') {
       return [
@@ -72,8 +73,8 @@ export default function BottomNav() {
   };
 
   return (
-    <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 z-40 px-1 sm:px-2 py-1 shadow-lg pb-[max(env(safe-area-inset-bottom),6px)]">
-      <div className="flex items-center justify-around max-w-md mx-auto">
+    <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white/98 backdrop-blur-lg border-t border-slate-200 z-40 px-2 py-1.5 shadow-2xl pb-[max(env(safe-area-inset-bottom),8px)]">
+      <div className="flex items-center justify-around max-w-lg mx-auto">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id || (tab.id === 'dashboard' && activeTab === 'home') || (tab.id === 'vaccinationGaps' && activeTab === 'vaccines');
@@ -83,10 +84,15 @@ export default function BottomNav() {
               <button
                 key={tab.id}
                 onClick={() => handleTabClick(tab)}
-                className="flex flex-col items-center justify-center -mt-5 bg-gradient-to-tr from-[#149A84] to-[#073B32] text-white rounded-full w-12 h-12 shadow-xl border-2 border-white transform active:scale-95 transition"
+                className={`flex flex-col items-center justify-center -mt-6 rounded-full w-14 h-14 shadow-xl border-4 border-white transform active:scale-90 transition ${
+                  tab.isEmergency
+                    ? 'bg-gradient-to-tr from-red-600 to-rose-500 text-white animate-pulse'
+                    : 'bg-gradient-to-tr from-[#149A84] to-[#073B32] text-white'
+                }`}
                 aria-label={tab.label}
               >
-                <Icon className="w-5 h-5 text-emerald-300" />
+                <Icon className="w-6 h-6 text-white" />
+                <span className="text-[9px] font-black text-white leading-none mt-0.5">{tab.label}</span>
               </button>
             );
           }
@@ -95,12 +101,12 @@ export default function BottomNav() {
             <button
               key={tab.id}
               onClick={() => handleTabClick(tab)}
-              className={`flex flex-col items-center py-1 px-2 text-[10px] font-bold transition min-w-[50px] ${
-                isActive ? 'text-[#073B32]' : 'text-slate-500 hover:text-slate-800'
+              className={`tap-target-48 flex flex-col items-center justify-center py-1 px-2.5 rounded-2xl text-[11px] font-black transition min-w-[56px] active:scale-95 ${
+                isActive ? 'text-[#073B32] bg-emerald-50/70' : 'text-slate-500 hover:text-slate-800'
               }`}
             >
-              <Icon className={`w-4 h-4 mb-0.5 ${isActive ? 'text-[#149A84]' : 'text-slate-400'}`} />
-              <span className="truncate max-w-[64px]">{tab.label}</span>
+              <Icon className={`w-5 h-5 mb-0.5 ${isActive ? 'text-[#073B32]' : 'text-slate-400'}`} />
+              <span className="truncate max-w-[68px] leading-tight">{tab.label}</span>
             </button>
           );
         })}

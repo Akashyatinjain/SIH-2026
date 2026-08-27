@@ -107,3 +107,24 @@
   stroke-dasharray: 6, 6;
   animation: flowDash 1.5s linear infinite;
 }
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.animate-fadeInScale {
+  animation: fadeInScale 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Minimum 48px Touch Target Utility for Mobile */
+.tap-target-48 {
+  min-height: 48px;
+  min-width: 48px;
+}
+

@@ -21,22 +21,19 @@ export default function AnimalProfileModal({ animal: propAnimal, onClose: propOn
         {/* Modal Header */}
         <div className="sticky top-0 bg-white/95 backdrop-blur-md px-5 py-4 border-b border-slate-200 flex items-center justify-between z-10">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-emerald-100 rounded-lg text-emerald-800">
-              <Tag className="w-5 h-5" />
+            <div className="p-2 bg-emerald-100 rounded-xl text-emerald-800">
+              <ShieldCheck className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-bold text-lg text-slate-900 flex items-center gap-2">
+              <h3 className="font-black text-lg text-slate-900 flex items-center gap-2">
                 {animal.name}
-                <span className="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-mono font-normal">
-                  {animal.id}
-                </span>
               </h3>
-              <p className="text-xs text-slate-500">Government Livestock Digital Health Passport</p>
+              <p className="text-xs text-slate-500 font-medium">{animal.species} • {animal.breed}</p>
             </div>
           </div>
           <button 
             onClick={handleClose}
-            className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition"
+            className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition"
           >
             <X className="w-5 h-5" />
           </button>
@@ -45,63 +42,58 @@ export default function AnimalProfileModal({ animal: propAnimal, onClose: propOn
         {/* Content Body */}
         <div className="p-5 space-y-6">
           {/* Top Profile Card */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-xl border border-emerald-100">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-2xl border border-emerald-100">
             <img 
               src={animal.imageUrl} 
-              alt={animal.name}
-              className="w-20 h-20 rounded-xl object-cover border-2 border-white shadow-sm"
+              alt={animal.name} 
+              className="w-20 h-20 rounded-2xl object-cover border-2 border-white shadow-sm"
             />
             <div className="flex-1 space-y-1">
               <div className="flex flex-wrap items-center gap-2">
-                <h4 className="font-bold text-slate-900">{animal.species} • {animal.breed}</h4>
+                <h4 className="font-black text-slate-900">{animal.name} ({animal.breed})</h4>
                 <RiskBadge level={animal.healthStatus === 'healthy' ? 'LOW' : 'MEDIUM'} size="sm" />
               </div>
-              <p className="text-xs text-slate-600 flex items-center gap-1.5">
+              <p className="text-xs text-slate-600 flex items-center gap-1.5 font-medium">
                 <User className="w-3.5 h-3.5 text-slate-400" />
-                <span>Owner: <strong>{animal.owner}</strong> ({animal.phone})</span>
+                <span>मालक / Owner: <strong>{animal.owner}</strong></span>
               </p>
-              <p className="text-xs text-slate-600 flex items-center gap-1.5">
+              <p className="text-xs text-slate-600 flex items-center gap-1.5 font-medium">
                 <MapPin className="w-3.5 h-3.5 text-slate-400" />
-                <span>Location: {animal.location}</span>
+                <span>गाव / Village: {animal.location}</span>
               </p>
-              <div className="flex gap-4 pt-1 text-xs text-slate-700 font-medium">
-                <span>Age: <strong>{animal.age}</strong></span>
-                <span>Sex: <strong>{animal.sex}</strong></span>
-                <span>Milk: <strong>{animal.milkYield}</strong></span>
+              <div className="flex gap-3 pt-1 text-xs text-slate-700 font-bold">
+                <span className="bg-white/80 px-2 py-0.5 rounded-md">वय: {animal.age}</span>
+                <span className="bg-white/80 px-2 py-0.5 rounded-md">दूध: {animal.milkYield}</span>
               </div>
             </div>
 
-            {/* RFID Barcode Simulation */}
-            <div className="p-2.5 bg-white rounded-xl border border-slate-200 text-center shadow-xs self-center sm:self-auto">
+            {/* QR Card Simulation */}
+            <div className="p-2.5 bg-white rounded-2xl border border-slate-200 text-center shadow-xs self-center sm:self-auto shrink-0">
               <QrCode className="w-12 h-12 mx-auto text-slate-800" />
-              <p className="text-[10px] font-mono text-slate-500 mt-1">RFID: {animal.rfidTag || '8904018274'}</p>
+              <p className="text-[10px] font-bold text-[#073B32] mt-1">Digital QR Passport</p>
             </div>
           </div>
 
           {/* Tab 1: Vaccination Passport */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <h4 className="font-bold text-sm text-slate-900 flex items-center gap-2">
+              <h4 className="font-black text-sm text-slate-900 flex items-center gap-2">
                 <Syringe className="w-4 h-4 text-emerald-600" />
-                <span>Vaccination History & Schedule</span>
+                <span>लसीकरण माहिती (Vaccination Status)</span>
               </h4>
-              <span className="text-xs bg-emerald-100 text-emerald-800 font-semibold px-2 py-0.5 rounded-full">
-                {animal.vaccinations?.length || 0} Vaccines Logged
-              </span>
             </div>
 
-            <div className="border border-slate-200 rounded-xl overflow-hidden divide-y divide-slate-100 text-xs">
+            <div className="border border-slate-200 rounded-2xl overflow-hidden divide-y divide-slate-100 text-xs">
               {animal.vaccinations?.map((vac, idx) => (
                 <div key={idx} className="p-3 flex items-center justify-between hover:bg-slate-50 transition">
                   <div>
                     <p className="font-bold text-slate-800">{vac.name}</p>
-                    <p className="text-slate-500 text-[11px]">Given: {vac.date} | Batch: <span className="font-mono">{vac.batch}</span></p>
+                    <p className="text-slate-500 text-[11px]">दिनांक: {vac.date}</p>
                   </div>
                   <div className="text-right">
-                    <span className="inline-block px-2 py-0.5 rounded-full font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    <span className="inline-block px-2.5 py-0.5 rounded-full font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
                       {vac.status}
                     </span>
-                    <p className="text-[10px] text-slate-400 mt-0.5">Due: {vac.nextDue}</p>
                   </div>
                 </div>
               ))}
